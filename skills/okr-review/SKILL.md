@@ -1,24 +1,24 @@
 ---
-name: ok-review
-description: "Lookback & điều chỉnh dự án. Phân tích tiến độ tổng thể, tìm root cause trễ, đề xuất điều chỉnh plan. Trigger: /ok-review"
+name: okr-review
+description: "Lookback & điều chỉnh dự án. Phân tích tiến độ tổng thể, tìm root cause trễ, đề xuất điều chỉnh plan. Trigger: /okr-review"
 ---
 
-# ok-review: Lookback & điều chỉnh
+# okr-review: Lookback & điều chỉnh
 
 Đọc SOT + log, phân tích toàn diện, đề xuất và áp dụng điều chỉnh.
 
 ## Điều kiện tiên quyết
 
-- `.ok/objective.md`, `.ok/plan.md`, `.ok/actions/` phải tồn tại.
+- `.okr/objective.md`, `.okr/plan.md`, `.okr/actions/` phải tồn tại.
 
 ## Checklist
 
-1. Đọc `.ok/objective.md` + `.ok/plan.md` (SOT: trạng thái hiện tại)
-2. Đọc `.ok/log/*.md` (Log: lịch sử thay đổi theo thời gian)
+1. Đọc `.okr/objective.md` + `.okr/plan.md` (SOT: trạng thái hiện tại)
+2. Đọc `.okr/log/*.md` (Log: lịch sử thay đổi theo thời gian)
 3. Tính tổng kết:
    - Mỗi KR: Target vs Current, %, trend
    - Timeline: % thời gian đã dùng vs % tiến độ thực
-4. Phân tích (đọc `../shared/data-format.md` phần `log/reviews/`):
+4. Phân tích (đọc `references/data-format.md` cho schema log/reviews/):
    - Cái gì đạt tốt, tại sao
    - Cái gì trượt, root cause (hỏi "tại sao?" ít nhất 3 lần, không dừng ở triệu chứng)
    - Actions blocked lâu nhất, nguyên nhân
@@ -30,8 +30,8 @@ description: "Lookback & điều chỉnh dự án. Phân tích tiến độ tổ
    - Thay đổi PIC, thêm resource
 6. Hỏi user từng đề xuất (đồng ý/từ chối/sửa)
 7. Áp dụng điều chỉnh: cập nhật SOT files
-8. Tạo thư mục `.ok/log/reviews/` nếu chưa có
-9. Ghi log vào `.ok/log/reviews/YYYY-MM-DD.md`
+8. Tạo thư mục `.okr/log/reviews/` nếu chưa có
+9. Ghi log vào `.okr/log/reviews/YYYY-MM-DD.md`
 
 ## Format review
 

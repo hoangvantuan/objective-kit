@@ -4,13 +4,13 @@ Bộ skill quản lý mục tiêu & dự án theo OKR.
 
 ## Cấu trúc
 
-- `/ok` : Orchestrator, tự phát hiện phase phù hợp
-- `/ok-init` : Khởi tạo mục tiêu (Project hoặc Habit)
-- `/ok-plan` : Lập kế hoạch hành động
-- `/ok-resource` : Quản lý tài nguyên & vai trò
-- `/ok-track` : Theo dõi tiến độ
-- `/ok-review` : Lookback & điều chỉnh
+- `/okr` : Orchestrator, tự phát hiện phase phù hợp
+- `/okr-init` : Khởi tạo mục tiêu (Project hoặc Habit)
+- `/okr-plan` : Lập kế hoạch hành động
+- `/okr-resource` : Quản lý tài nguyên & vai trò
+- `/okr-track` : Theo dõi tiến độ
+- `/okr-review` : Lookback & điều chỉnh
 
 ## Quy ước dữ liệu
 
-Mọi skill đọc/ghi trong thư mục `.ok/` của dự án hiện tại. Xem `skills/shared/data-format.md` cho schema chi tiết.
+Mọi skill đọc/ghi trong thư mục `.okr/` của dự án hiện tại. Mỗi skill chứa schema chi tiết trong `references/data-format.md` của riêng nó.

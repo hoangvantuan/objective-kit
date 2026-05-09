@@ -2,7 +2,7 @@
 
 ## Tạo file action
 
-Mỗi action = 1 file trong `.ok/actions/`. Tên file: `AXXX-slug.md` (XXX = số thứ tự 3 chữ số, slug = tên ngắn dùng dấu gạch ngang).
+Mỗi action = 1 file trong `.okr/actions/`. Tên file: `AXXX-slug.md` (XXX = số thứ tự 3 chữ số, slug = tên ngắn dùng dấu gạch ngang).
 
 Ví dụ: `A001-thiet-ke-database.md`, `A002-viet-api-auth.md`
 

@@ -6,7 +6,7 @@
 
 **Đối tượng**: Cá nhân hoặc nhóm (nhiều người).
 **Quy mô**: Không giới hạn, từ dự án nhỏ đến dài hạn.
-**Lưu trữ**: Markdown + YAML frontmatter trong thư mục `.ok/` của dự án.
+**Lưu trữ**: Markdown + YAML frontmatter trong thư mục `.okr/` của dự án.
 
 ## WHY: Vấn đề cần giải quyết
 
@@ -25,31 +25,31 @@ Claude Code hoạt động theo session. Mỗi session mới mất context về 
 ```
 objective-kit/
 ├── skills/
-│   ├── ok/
+│   ├── okr/
 │   │   └── SKILL.md            # Orchestrator: router tự chọn phase
-│   ├── ok-init/
+│   ├── okr-init/
 │   │   ├── SKILL.md            # Khởi tạo mục tiêu
 │   │   └── references/
 │   │       └── okr-guide.md
-│   ├── ok-plan/
+│   ├── okr-plan/
 │   │   ├── SKILL.md            # Lập kế hoạch hành động
 │   │   └── references/
 │   │       └── task-format.md
-│   ├── ok-resource/
+│   ├── okr-resource/
 │   │   ├── SKILL.md            # Quản lý resource & vai trò
 │   │   └── references/
 │   │       └── role-matrix.md
-│   ├── ok-track/
+│   ├── okr-track/
 │   │   ├── SKILL.md            # Tracking tiến độ
 │   │   └── references/
 │   │       └── metrics.md
-│   ├── ok-review/
+│   ├── okr-review/
 │   │   └── SKILL.md            # Lookback & điều chỉnh
 │   └── shared/
 │       └── data-format.md      # Schema chung cho YAML frontmatter
 ```
 
-User gọi skill trực tiếp (`/ok-plan`, `/ok-track`) hoặc qua orchestrator (`/ok`).
+User gọi skill trực tiếp (`/okr-plan`, `/okr-track`) hoặc qua orchestrator (`/okr`).
 
 ### Hai loại mục tiêu
 
@@ -68,7 +68,7 @@ User gọi skill trực tiếp (`/ok-plan`, `/ok-track`) hoặc qua orchestrator
 Luôn phản ánh trạng thái mới nhất. Không chứa lịch sử. Khi thay đổi, file ghi đè giá trị mới.
 
 ```
-<project>/.ok/
+<project>/.okr/
 ├── objective.md            # Objective + Key Results (giá trị hiện tại)
 ├── plan.md                 # Roadmap, milestones (trạng thái hiện tại)
 ├── actions/                # Mỗi action = trạng thái hiện tại
@@ -82,7 +82,7 @@ Luôn phản ánh trạng thái mới nhất. Không chứa lịch sử. Khi tha
 Ghi theo thời gian. Append-only. Dùng khi cần xem lại quá trình.
 
 ```
-<project>/.ok/
+<project>/.okr/
 └── log/
     ├── 2026-05-09.md       # Thay đổi ngày này
     ├── 2026-05-16.md
@@ -107,9 +107,9 @@ Khi user muốn xem lịch sử:
 
 ## WHAT: Chi tiết từng Skill
 
-### ok-init: Khởi tạo mục tiêu
+### okr-init: Khởi tạo mục tiêu
 
-**Trigger**: Chưa có `.ok/` trong dự án, hoặc `/ok-init`
+**Trigger**: Chưa có `.okr/` trong dự án, hoặc `/okr-init`
 
 **Workflow**:
 1. Hỏi loại mục tiêu: Project hay Habit
@@ -117,7 +117,7 @@ Khi user muốn xem lịch sử:
 3. Hỗ trợ viết Objective (định tính, truyền cảm hứng)
 4. Hỗ trợ viết Key Results (định lượng, đo được, có baseline + target)
 5. Kiểm tra SMART cho mỗi Key Result
-6. Tạo `.ok/objective.md`
+6. Tạo `.okr/objective.md`
 
 **Format `objective.md` (Project)**:
 
@@ -180,9 +180,9 @@ status: active
 - [ ] [Hành động 2]
 ```
 
-### ok-plan: Lập kế hoạch hành động
+### okr-plan: Lập kế hoạch hành động
 
-**Trigger**: Có objective.md nhưng chưa có plan.md, hoặc `/ok-plan`
+**Trigger**: Có objective.md nhưng chưa có plan.md, hoặc `/okr-plan`
 
 **Workflow**:
 1. Đọc objective.md
@@ -255,9 +255,9 @@ depends_on: []
 
 **Status values**: `pending` | `doing` | `done` | `blocked`
 
-### ok-resource: Quản lý tài nguyên & vai trò
+### okr-resource: Quản lý tài nguyên & vai trò
 
-**Trigger**: `/ok-resource`
+**Trigger**: `/okr-resource`
 
 **Workflow**:
 1. Đọc plan.md và actions/ để hiểu cần gì
@@ -298,9 +298,9 @@ last_updated: 2026-05-09
 - [Liệt kê resource chưa có nhưng cần, rủi ro tiềm ẩn]
 ```
 
-### ok-track: Theo dõi tiến độ
+### okr-track: Theo dõi tiến độ
 
-**Trigger**: `/ok-track` hoặc `/ok` khi đang phase thực thi
+**Trigger**: `/okr-track` hoặc `/okr` khi đang phase thực thi
 
 **Workflow**:
 1. Đọc objective.md + frontmatter tất cả actions/
@@ -339,9 +339,9 @@ type: tracking
 [Nhận xét, context bổ sung]
 ```
 
-### ok-review: Lookback & điều chỉnh
+### okr-review: Lookback & điều chỉnh
 
-**Trigger**: `/ok-review`
+**Trigger**: `/okr-review`
 
 **Workflow**:
 1. Đọc objective.md + plan.md (SOT) để biết trạng thái hiện tại
@@ -389,28 +389,28 @@ period: "2026-05-09 to 2026-06-01"
 - [Liệt kê thay đổi đã đồng ý]
 ```
 
-### ok: Orchestrator (router)
+### okr: Orchestrator (router)
 
-**Trigger**: `/ok` không kèm tham số
+**Trigger**: `/okr` không kèm tham số
 
 **Logic**:
 
 ```
-1. .ok/ tồn tại?
-   Không → gọi ok-init
+1. .okr/ tồn tại?
+   Không → gọi okr-init
 
-2. .ok/objective.md tồn tại?
-   Không → gọi ok-init
+2. .okr/objective.md tồn tại?
+   Không → gọi okr-init
 
-3. .ok/plan.md tồn tại?
-   Không → gọi ok-plan
+3. .okr/plan.md tồn tại?
+   Không → gọi okr-plan
 
 4. Đọc trạng thái actions:
-   Tất cả done → gọi ok-review
+   Tất cả done → gọi okr-review
    Có blocked → hiển thị blockers, hỏi user
-   Bình thường → gọi ok-track
+   Bình thường → gọi okr-track
 
-5. User override: /ok init|plan|resource|track|review
+5. User override: /okr init|plan|resource|track|review
 ```
 
 ## Tham khảo

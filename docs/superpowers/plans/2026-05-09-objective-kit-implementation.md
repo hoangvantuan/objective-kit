@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Xây dựng bộ 6 skill Claude Code quản lý mục tiêu & dự án theo OKR, lưu trữ bằng markdown + YAML frontmatter trong thư mục `.ok/`.
+**Goal:** Xây dựng bộ 6 skill Claude Code quản lý mục tiêu & dự án theo OKR, lưu trữ bằng markdown + YAML frontmatter trong thư mục `.okr/`.
 
-**Architecture:** Orchestrator (`/ok`) router tới 5 skill con (`ok-init`, `ok-plan`, `ok-resource`, `ok-track`, `ok-review`). Dữ liệu 2 tầng: SOT (trạng thái hiện tại) + Log (lịch sử). Shared reference file định nghĩa schema chung.
+**Architecture:** Orchestrator (`/okr`) router tới 5 skill con (`okr-init`, `okr-plan`, `okr-resource`, `okr-track`, `okr-review`). Dữ liệu 2 tầng: SOT (trạng thái hiện tại) + Log (lịch sử). Shared reference file định nghĩa schema chung.
 
 **Tech Stack:** Claude Code Skills (SKILL.md markdown), YAML frontmatter, Bash (cho verification)
 
@@ -16,25 +16,25 @@
 objective-kit/
 ├── CLAUDE.md                           # Plugin-level instructions (ngắn)
 ├── skills/
-│   ├── ok/
+│   ├── okr/
 │   │   └── SKILL.md                    # Orchestrator router
-│   ├── ok-init/
+│   ├── okr-init/
 │   │   ├── SKILL.md                    # Khởi tạo mục tiêu
 │   │   └── references/
 │   │       └── okr-guide.md            # Hướng dẫn viết OKR + SMART
-│   ├── ok-plan/
+│   ├── okr-plan/
 │   │   ├── SKILL.md                    # Lập kế hoạch hành động
 │   │   └── references/
 │   │       └── task-format.md          # Template action file
-│   ├── ok-resource/
+│   ├── okr-resource/
 │   │   ├── SKILL.md                    # Quản lý resource & vai trò
 │   │   └── references/
 │   │       └── role-matrix.md          # Template resource file
-│   ├── ok-track/
+│   ├── okr-track/
 │   │   ├── SKILL.md                    # Tracking tiến độ
 │   │   └── references/
 │   │       └── metrics.md              # Cách tính metrics + log format
-│   ├── ok-review/
+│   ├── okr-review/
 │   │   └── SKILL.md                    # Lookback & điều chỉnh
 │   └── shared/
 │       └── data-format.md              # Schema chung YAML frontmatter
@@ -64,33 +64,33 @@ Bộ skill quản lý mục tiêu & dự án theo OKR.
 
 ## Cấu trúc
 
-- `/ok` : Orchestrator, tự phát hiện phase phù hợp
-- `/ok-init` : Khởi tạo mục tiêu (Project hoặc Habit)
-- `/ok-plan` : Lập kế hoạch hành động
-- `/ok-resource` : Quản lý tài nguyên & vai trò
-- `/ok-track` : Theo dõi tiến độ
-- `/ok-review` : Lookback & điều chỉnh
+- `/okr` : Orchestrator, tự phát hiện phase phù hợp
+- `/okr-init` : Khởi tạo mục tiêu (Project hoặc Habit)
+- `/okr-plan` : Lập kế hoạch hành động
+- `/okr-resource` : Quản lý tài nguyên & vai trò
+- `/okr-track` : Theo dõi tiến độ
+- `/okr-review` : Lookback & điều chỉnh
 
 ## Quy ước dữ liệu
 
-Mọi skill đọc/ghi trong thư mục `.ok/` của dự án hiện tại. Xem `skills/shared/data-format.md` cho schema chi tiết.
+Mọi skill đọc/ghi trong thư mục `.okr/` của dự án hiện tại. Xem `skills/shared/data-format.md` cho schema chi tiết.
 ```
 
 - [ ] **Step 3: Tạo `skills/shared/data-format.md`**
 
-File này định nghĩa schema YAML frontmatter cho mọi file trong `.ok/`. Mọi skill reference file này để đảm bảo format thống nhất.
+File này định nghĩa schema YAML frontmatter cho mọi file trong `.okr/`. Mọi skill reference file này để đảm bảo format thống nhất.
 
 ```markdown
 # Data Format: Schema YAML Frontmatter
 
-Mọi file trong `.ok/` dùng markdown + YAML frontmatter. Skill đọc frontmatter để hiểu trạng thái nhanh, đọc body khi cần chi tiết.
+Mọi file trong `.okr/` dùng markdown + YAML frontmatter. Skill đọc frontmatter để hiểu trạng thái nhanh, đọc body khi cần chi tiết.
 
 ## Hai tầng dữ liệu
 
 | Tầng | Vị trí | Hành vi |
 |------|--------|---------|
-| **SOT** (Source of Truth) | `.ok/objective.md`, `.ok/plan.md`, `.ok/actions/`, `.ok/resources.md` | Ghi đè khi cập nhật. Luôn phản ánh trạng thái mới nhất |
-| **Log** | `.ok/log/YYYY-MM-DD.md`, `.ok/log/reviews/` | Append-only. Ghi lịch sử thay đổi |
+| **SOT** (Source of Truth) | `.okr/objective.md`, `.okr/plan.md`, `.okr/actions/`, `.okr/resources.md` | Ghi đè khi cập nhật. Luôn phản ánh trạng thái mới nhất |
+| **Log** | `.okr/log/YYYY-MM-DD.md`, `.okr/log/reviews/` | Append-only. Ghi lịch sử thay đổi |
 
 Nguyên tắc: SOT = hiện tại. Log = quá khứ.
 
@@ -222,13 +222,13 @@ git commit -m "feat: init repo + shared data format schema"
 
 ---
 
-### Task 2: Skill ok-init (khởi tạo mục tiêu)
+### Task 2: Skill okr-init (khởi tạo mục tiêu)
 
 **Files:**
-- Create: `skills/ok-init/SKILL.md`
-- Create: `skills/ok-init/references/okr-guide.md`
+- Create: `skills/okr-init/SKILL.md`
+- Create: `skills/okr-init/references/okr-guide.md`
 
-- [ ] **Step 1: Tạo `skills/ok-init/references/okr-guide.md`**
+- [ ] **Step 1: Tạo `skills/okr-init/references/okr-guide.md`**
 
 Reference file chứa hướng dẫn viết OKR tốt + checklist SMART.
 
@@ -277,21 +277,21 @@ Ví dụ:
 Nếu user chưa rõ, hỏi: "Mục tiêu này có ngày kết thúc không?"
 ```
 
-- [ ] **Step 2: Tạo `skills/ok-init/SKILL.md`**
+- [ ] **Step 2: Tạo `skills/okr-init/SKILL.md`**
 
 ```markdown
 ---
-name: ok-init
-description: "Khởi tạo mục tiêu dự án theo OKR. Dùng khi bắt đầu dự án mới hoặc khi chưa có thư mục .ok/ trong folder hiện tại. Trigger: /ok-init, hoặc tự động khi /ok phát hiện chưa có .ok/"
+name: okr-init
+description: "Khởi tạo mục tiêu dự án theo OKR. Dùng khi bắt đầu dự án mới hoặc khi chưa có thư mục .okr/ trong folder hiện tại. Trigger: /okr-init, hoặc tự động khi /okr phát hiện chưa có .okr/"
 ---
 
-# ok-init: Khởi tạo mục tiêu
+# okr-init: Khởi tạo mục tiêu
 
-Tạo `.ok/objective.md` cho dự án hiện tại. Hỗ trợ 2 loại: Project (có kỳ hạn) và Habit (thói quen).
+Tạo `.okr/objective.md` cho dự án hiện tại. Hỗ trợ 2 loại: Project (có kỳ hạn) và Habit (thói quen).
 
 ## Checklist
 
-1. Kiểm tra `.ok/` đã tồn tại chưa. Nếu rồi, hỏi user muốn tạo mới hay cập nhật
+1. Kiểm tra `.okr/` đã tồn tại chưa. Nếu rồi, hỏi user muốn tạo mới hay cập nhật
 2. Hỏi loại mục tiêu: Project hay Habit
 3. Thu thập thông tin:
    - **WHY**: Tại sao mục tiêu này quan trọng?
@@ -300,7 +300,7 @@ Tạo `.ok/objective.md` cho dự án hiện tại. Hỗ trợ 2 loại: Project
 4. Viết Objective (hỏi 1 câu tại 1 thời điểm, không hỏi nhiều câu cùng lúc)
 5. Viết Key Results (Project) hoặc Key Indicators (Habit). Đọc `references/okr-guide.md` để kiểm tra chất lượng
 6. Kiểm tra SMART cho mỗi KR/KI
-7. Tạo thư mục `.ok/` và file `objective.md`
+7. Tạo thư mục `.okr/` và file `objective.md`
 
 ## Format output
 
@@ -340,14 +340,14 @@ Body: `## Objective` (mô tả WHY), `## Key Indicators` (bảng), `## Checklist
 - Hỏi từng câu một, không hỏi hàng loạt
 - Đề xuất Objective và KR, nhưng luôn để user quyết
 - Nếu KR không đạt SMART, chỉ ra cụ thể thiếu tiêu chí nào và gợi ý sửa
-- Tạo `.ok/` folder nếu chưa có
+- Tạo `.okr/` folder nếu chưa có
 - Chỉ tạo `objective.md`. Không tạo plan.md hay file khác
 ```
 
 - [ ] **Step 3: Verify file tồn tại**
 
 ```bash
-ls -la skills/ok-init/SKILL.md skills/ok-init/references/okr-guide.md
+ls -la skills/okr-init/SKILL.md skills/okr-init/references/okr-guide.md
 ```
 
 Expected: cả 2 file tồn tại.
@@ -355,26 +355,26 @@ Expected: cả 2 file tồn tại.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add skills/ok-init/
-git commit -m "feat: add ok-init skill (khởi tạo mục tiêu OKR)"
+git add skills/okr-init/
+git commit -m "feat: add okr-init skill (khởi tạo mục tiêu OKR)"
 ```
 
 ---
 
-### Task 3: Skill ok-plan (lập kế hoạch hành động)
+### Task 3: Skill okr-plan (lập kế hoạch hành động)
 
 **Files:**
-- Create: `skills/ok-plan/SKILL.md`
-- Create: `skills/ok-plan/references/task-format.md`
+- Create: `skills/okr-plan/SKILL.md`
+- Create: `skills/okr-plan/references/task-format.md`
 
-- [ ] **Step 1: Tạo `skills/ok-plan/references/task-format.md`**
+- [ ] **Step 1: Tạo `skills/okr-plan/references/task-format.md`**
 
 ```markdown
 # Task Format: Template action file
 
 ## Tạo file action
 
-Mỗi action = 1 file trong `.ok/actions/`. Tên file: `AXXX-slug.md` (XXX = số thứ tự 3 chữ số, slug = tên ngắn dùng dấu gạch ngang).
+Mỗi action = 1 file trong `.okr/actions/`. Tên file: `AXXX-slug.md` (XXX = số thứ tự 3 chữ số, slug = tên ngắn dùng dấu gạch ngang).
 
 Ví dụ: `A001-thiet-ke-database.md`, `A002-viet-api-auth.md`
 
@@ -438,33 +438,33 @@ depends_on: []
 | xl | > 1 tuần |
 ```
 
-- [ ] **Step 2: Tạo `skills/ok-plan/SKILL.md`**
+- [ ] **Step 2: Tạo `skills/okr-plan/SKILL.md`**
 
 ```markdown
 ---
-name: ok-plan
-description: "Lập kế hoạch hành động cho dự án. Phân tách Key Results thành milestones và actions cụ thể. Dùng khi có objective nhưng chưa có plan. Trigger: /ok-plan, hoặc tự động khi /ok phát hiện thiếu plan.md"
+name: okr-plan
+description: "Lập kế hoạch hành động cho dự án. Phân tách Key Results thành milestones và actions cụ thể. Dùng khi có objective nhưng chưa có plan. Trigger: /okr-plan, hoặc tự động khi /okr phát hiện thiếu plan.md"
 ---
 
-# ok-plan: Lập kế hoạch hành động
+# okr-plan: Lập kế hoạch hành động
 
-Đọc `.ok/objective.md`, phân tách Key Results thành milestones và actions, tạo `.ok/plan.md` + `.ok/actions/`.
+Đọc `.okr/objective.md`, phân tách Key Results thành milestones và actions, tạo `.okr/plan.md` + `.okr/actions/`.
 
 ## Điều kiện tiên quyết
 
-- `.ok/objective.md` phải tồn tại. Nếu chưa có, hướng user chạy `/ok-init` trước.
+- `.okr/objective.md` phải tồn tại. Nếu chưa có, hướng user chạy `/okr-init` trước.
 
 ## Checklist
 
-1. Đọc `.ok/objective.md` để hiểu Objective và Key Results
+1. Đọc `.okr/objective.md` để hiểu Objective và Key Results
 2. Với mỗi Key Result, đề xuất Initiatives (sáng kiến lớn)
 3. Với mỗi Initiative, phân tách thành Actions cụ thể
 4. Nhóm actions thành Milestones (theo thời gian)
 5. Xác định dependencies giữa actions
 6. Hỏi user về deadline milestones
 7. Hỏi user về PIC (Person In Charge) cho từng action nếu có nhiều người
-8. Tạo `.ok/plan.md` với roadmap tổng
-9. Tạo file cho mỗi action trong `.ok/actions/`
+8. Tạo `.okr/plan.md` với roadmap tổng
+9. Tạo file cho mỗi action trong `.okr/actions/`
 
 ## Format output
 
@@ -484,25 +484,25 @@ description: "Lập kế hoạch hành động cho dự án. Phân tách Key Res
 - [ ] **Step 3: Verify**
 
 ```bash
-ls -la skills/ok-plan/SKILL.md skills/ok-plan/references/task-format.md
+ls -la skills/okr-plan/SKILL.md skills/okr-plan/references/task-format.md
 ```
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add skills/ok-plan/
-git commit -m "feat: add ok-plan skill (lập kế hoạch hành động)"
+git add skills/okr-plan/
+git commit -m "feat: add okr-plan skill (lập kế hoạch hành động)"
 ```
 
 ---
 
-### Task 4: Skill ok-resource (quản lý tài nguyên & vai trò)
+### Task 4: Skill okr-resource (quản lý tài nguyên & vai trò)
 
 **Files:**
-- Create: `skills/ok-resource/SKILL.md`
-- Create: `skills/ok-resource/references/role-matrix.md`
+- Create: `skills/okr-resource/SKILL.md`
+- Create: `skills/okr-resource/references/role-matrix.md`
 
-- [ ] **Step 1: Tạo `skills/ok-resource/references/role-matrix.md`**
+- [ ] **Step 1: Tạo `skills/okr-resource/references/role-matrix.md`**
 
 ```markdown
 # Role Matrix: Template resource file
@@ -540,31 +540,31 @@ Kiểm tra:
 - Effort tổng vượt khả dụng?
 ```
 
-- [ ] **Step 2: Tạo `skills/ok-resource/SKILL.md`**
+- [ ] **Step 2: Tạo `skills/okr-resource/SKILL.md`**
 
 ```markdown
 ---
-name: ok-resource
-description: "Quản lý tài nguyên, vai trò và trách nhiệm trong dự án. Mapping resource vào actions, phát hiện thiếu hụt và xung đột. Trigger: /ok-resource"
+name: okr-resource
+description: "Quản lý tài nguyên, vai trò và trách nhiệm trong dự án. Mapping resource vào actions, phát hiện thiếu hụt và xung đột. Trigger: /okr-resource"
 ---
 
-# ok-resource: Quản lý tài nguyên & vai trò
+# okr-resource: Quản lý tài nguyên & vai trò
 
-Tạo/cập nhật `.ok/resources.md`. Mapping nhân sự, công cụ, ngân sách vào actions cụ thể.
+Tạo/cập nhật `.okr/resources.md`. Mapping nhân sự, công cụ, ngân sách vào actions cụ thể.
 
 ## Điều kiện tiên quyết
 
-- `.ok/plan.md` và `.ok/actions/` phải tồn tại. Nếu chưa, hướng user chạy `/ok-plan`.
+- `.okr/plan.md` và `.okr/actions/` phải tồn tại. Nếu chưa, hướng user chạy `/okr-plan`.
 
 ## Checklist
 
-1. Đọc `.ok/plan.md` và frontmatter tất cả `.ok/actions/*.md`
+1. Đọc `.okr/plan.md` và frontmatter tất cả `.okr/actions/*.md`
 2. Liệt kê actions chưa có PIC
 3. Hỏi user về nhân sự: tên, vai trò, trách nhiệm, khả dụng
 4. Mapping PIC vào actions (cập nhật frontmatter `pic` trong action files)
 5. Hỏi user về công cụ, tài liệu, ngân sách
 6. Kiểm tra xung đột (đọc `references/role-matrix.md` phần phát hiện xung đột)
-7. Tạo/cập nhật `.ok/resources.md`
+7. Tạo/cập nhật `.okr/resources.md`
 
 ## Format output
 
@@ -581,25 +581,25 @@ Tạo/cập nhật `.ok/resources.md`. Mapping nhân sự, công cụ, ngân sá
 - [ ] **Step 3: Verify**
 
 ```bash
-ls -la skills/ok-resource/SKILL.md skills/ok-resource/references/role-matrix.md
+ls -la skills/okr-resource/SKILL.md skills/okr-resource/references/role-matrix.md
 ```
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add skills/ok-resource/
-git commit -m "feat: add ok-resource skill (quản lý tài nguyên & vai trò)"
+git add skills/okr-resource/
+git commit -m "feat: add okr-resource skill (quản lý tài nguyên & vai trò)"
 ```
 
 ---
 
-### Task 5: Skill ok-track (theo dõi tiến độ)
+### Task 5: Skill okr-track (theo dõi tiến độ)
 
 **Files:**
-- Create: `skills/ok-track/SKILL.md`
-- Create: `skills/ok-track/references/metrics.md`
+- Create: `skills/okr-track/SKILL.md`
+- Create: `skills/okr-track/references/metrics.md`
 
-- [ ] **Step 1: Tạo `skills/ok-track/references/metrics.md`**
+- [ ] **Step 1: Tạo `skills/okr-track/references/metrics.md`**
 
 ```markdown
 # Metrics: Cách tính và log format
@@ -644,34 +644,34 @@ Log ghi:
 - Ghi chú của user
 ```
 
-- [ ] **Step 2: Tạo `skills/ok-track/SKILL.md`**
+- [ ] **Step 2: Tạo `skills/okr-track/SKILL.md`**
 
 ```markdown
 ---
-name: ok-track
-description: "Theo dõi tiến độ dự án. Cập nhật Key Results, actions, phát hiện trễ và blockers. Trigger: /ok-track, hoặc tự động khi /ok phát hiện dự án đang thực thi"
+name: okr-track
+description: "Theo dõi tiến độ dự án. Cập nhật Key Results, actions, phát hiện trễ và blockers. Trigger: /okr-track, hoặc tự động khi /okr phát hiện dự án đang thực thi"
 ---
 
-# ok-track: Theo dõi tiến độ
+# okr-track: Theo dõi tiến độ
 
 Đọc SOT files, nhận update từ user, cập nhật SOT + ghi log.
 
 ## Điều kiện tiên quyết
 
-- `.ok/objective.md` và `.ok/plan.md` phải tồn tại.
+- `.okr/objective.md` và `.okr/plan.md` phải tồn tại.
 
 ## Checklist
 
-1. Đọc `.ok/objective.md` (KR hiện tại)
-2. Đọc frontmatter tất cả `.ok/actions/*.md` (status)
+1. Đọc `.okr/objective.md` (KR hiện tại)
+2. Đọc frontmatter tất cả `.okr/actions/*.md` (status)
 3. Hiển thị dashboard ngắn:
    - Mỗi KR: Current/Target, %, trend
    - Actions: tổng, done, doing, blocked
    - Highlight: actions chậm deadline, blocked
 4. Hỏi user có update gì mới (tiến độ, hoàn thành task, blockers)
 5. Cập nhật SOT files (đọc `references/metrics.md` cho cách tính)
-6. Tạo thư mục `.ok/log/` nếu chưa có
-7. Ghi entry vào `.ok/log/YYYY-MM-DD.md`
+6. Tạo thư mục `.okr/log/` nếu chưa có
+7. Ghi entry vào `.okr/log/YYYY-MM-DD.md`
 
 ## Dashboard format
 
@@ -695,7 +695,7 @@ Actions: 12 tổng | 4 done | 3 doing | 1 blocked | 4 pending
 
 - Luôn hiển thị dashboard trước khi hỏi update
 - Sau khi nhận update, cập nhật SOT files ngay (ghi đè giá trị mới)
-- Ghi log mọi thay đổi vào `.ok/log/YYYY-MM-DD.md`
+- Ghi log mọi thay đổi vào `.okr/log/YYYY-MM-DD.md`
 - Nếu log ngày hôm nay đã có, append section mới (không ghi đè log)
 - Với habit type: hiển thị streak thay vì %, checklist thay vì actions
 ```
@@ -703,43 +703,43 @@ Actions: 12 tổng | 4 done | 3 doing | 1 blocked | 4 pending
 - [ ] **Step 3: Verify**
 
 ```bash
-ls -la skills/ok-track/SKILL.md skills/ok-track/references/metrics.md
+ls -la skills/okr-track/SKILL.md skills/okr-track/references/metrics.md
 ```
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add skills/ok-track/
-git commit -m "feat: add ok-track skill (theo dõi tiến độ)"
+git add skills/okr-track/
+git commit -m "feat: add okr-track skill (theo dõi tiến độ)"
 ```
 
 ---
 
-### Task 6: Skill ok-review (lookback & điều chỉnh)
+### Task 6: Skill okr-review (lookback & điều chỉnh)
 
 **Files:**
-- Create: `skills/ok-review/SKILL.md`
+- Create: `skills/okr-review/SKILL.md`
 
-- [ ] **Step 1: Tạo `skills/ok-review/SKILL.md`**
+- [ ] **Step 1: Tạo `skills/okr-review/SKILL.md`**
 
 ```markdown
 ---
-name: ok-review
-description: "Lookback & điều chỉnh dự án. Phân tích tiến độ tổng thể, tìm root cause trễ, đề xuất điều chỉnh plan. Trigger: /ok-review"
+name: okr-review
+description: "Lookback & điều chỉnh dự án. Phân tích tiến độ tổng thể, tìm root cause trễ, đề xuất điều chỉnh plan. Trigger: /okr-review"
 ---
 
-# ok-review: Lookback & điều chỉnh
+# okr-review: Lookback & điều chỉnh
 
 Đọc SOT + log, phân tích toàn diện, đề xuất và áp dụng điều chỉnh.
 
 ## Điều kiện tiên quyết
 
-- `.ok/objective.md`, `.ok/plan.md`, `.ok/actions/` phải tồn tại.
+- `.okr/objective.md`, `.okr/plan.md`, `.okr/actions/` phải tồn tại.
 
 ## Checklist
 
-1. Đọc `.ok/objective.md` + `.ok/plan.md` (SOT: trạng thái hiện tại)
-2. Đọc `.ok/log/*.md` (Log: lịch sử thay đổi theo thời gian)
+1. Đọc `.okr/objective.md` + `.okr/plan.md` (SOT: trạng thái hiện tại)
+2. Đọc `.okr/log/*.md` (Log: lịch sử thay đổi theo thời gian)
 3. Tính tổng kết:
    - Mỗi KR: Target vs Current, %, trend
    - Timeline: % thời gian đã dùng vs % tiến độ thực
@@ -755,8 +755,8 @@ description: "Lookback & điều chỉnh dự án. Phân tích tiến độ tổ
    - Thay đổi PIC, thêm resource
 6. Hỏi user từng đề xuất (đồng ý/từ chối/sửa)
 7. Áp dụng điều chỉnh: cập nhật SOT files
-8. Tạo thư mục `.ok/log/reviews/` nếu chưa có
-9. Ghi log vào `.ok/log/reviews/YYYY-MM-DD.md`
+8. Tạo thư mục `.okr/log/reviews/` nếu chưa có
+9. Ghi log vào `.okr/log/reviews/YYYY-MM-DD.md`
 
 ## Format review
 
@@ -793,54 +793,54 @@ Cần cải thiện:
 - [ ] **Step 2: Verify**
 
 ```bash
-ls -la skills/ok-review/SKILL.md
+ls -la skills/okr-review/SKILL.md
 ```
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/ok-review/
-git commit -m "feat: add ok-review skill (lookback & điều chỉnh)"
+git add skills/okr-review/
+git commit -m "feat: add okr-review skill (lookback & điều chỉnh)"
 ```
 
 ---
 
-### Task 7: Skill ok (orchestrator router)
+### Task 7: Skill okr (orchestrator router)
 
 **Files:**
-- Create: `skills/ok/SKILL.md`
+- Create: `skills/okr/SKILL.md`
 
-- [ ] **Step 1: Tạo `skills/ok/SKILL.md`**
+- [ ] **Step 1: Tạo `skills/okr/SKILL.md`**
 
 ```markdown
 ---
-name: ok
-description: "Quản lý mục tiêu & dự án theo OKR. Entry point chính, tự phát hiện phase phù hợp. Gọi /ok để bắt đầu hoặc tiếp tục dự án. Gọi /ok init|plan|resource|track|review để vào phase cụ thể."
+name: okr
+description: "Quản lý mục tiêu & dự án theo OKR. Entry point chính, tự phát hiện phase phù hợp. Gọi /okr để bắt đầu hoặc tiếp tục dự án. Gọi /okr init|plan|resource|track|review để vào phase cụ thể."
 ---
 
-# ok: Orchestrator quản lý dự án
+# okr: Orchestrator quản lý dự án
 
-Entry point chính. Phân tích trạng thái `.ok/` rồi route đến skill phù hợp.
+Entry point chính. Phân tích trạng thái `.okr/` rồi route đến skill phù hợp.
 
 ## Logic routing
 
-Khi user gọi `/ok` không kèm tham số:
+Khi user gọi `/okr` không kèm tham số:
 
-1. `.ok/` chưa tồn tại → thông báo "Chưa có mục tiêu. Dùng `/ok-init` để khởi tạo."
-2. `.ok/objective.md` chưa có → thông báo tương tự
-3. `.ok/plan.md` chưa có → thông báo "Có mục tiêu nhưng chưa có kế hoạch. Dùng `/ok-plan` để lập plan."
-4. Đọc frontmatter tất cả `.ok/actions/*.md`:
-   - Tất cả status=done → thông báo "Mọi action hoàn thành. Dùng `/ok-review` để review tổng kết."
-   - Có status=blocked → hiển thị blockers + hỏi user muốn `/ok-track` hay `/ok-review`
-   - Có actions đang thực thi → thông báo "Dự án đang thực thi. Dùng `/ok-track` để cập nhật tiến độ."
+1. `.okr/` chưa tồn tại → thông báo "Chưa có mục tiêu. Dùng `/okr-init` để khởi tạo."
+2. `.okr/objective.md` chưa có → thông báo tương tự
+3. `.okr/plan.md` chưa có → thông báo "Có mục tiêu nhưng chưa có kế hoạch. Dùng `/okr-plan` để lập plan."
+4. Đọc frontmatter tất cả `.okr/actions/*.md`:
+   - Tất cả status=done → thông báo "Mọi action hoàn thành. Dùng `/okr-review` để review tổng kết."
+   - Có status=blocked → hiển thị blockers + hỏi user muốn `/okr-track` hay `/okr-review`
+   - Có actions đang thực thi → thông báo "Dự án đang thực thi. Dùng `/okr-track` để cập nhật tiến độ."
 
-Khi user gọi `/ok <phase>`:
+Khi user gọi `/okr <phase>`:
 
-- `/ok init` → hướng dẫn dùng `/ok-init`
-- `/ok plan` → hướng dẫn dùng `/ok-plan`
-- `/ok resource` → hướng dẫn dùng `/ok-resource`
-- `/ok track` → hướng dẫn dùng `/ok-track`
-- `/ok review` → hướng dẫn dùng `/ok-review`
+- `/okr init` → hướng dẫn dùng `/okr-init`
+- `/okr plan` → hướng dẫn dùng `/okr-plan`
+- `/okr resource` → hướng dẫn dùng `/okr-resource`
+- `/okr track` → hướng dẫn dùng `/okr-track`
+- `/okr review` → hướng dẫn dùng `/okr-review`
 
 ## Hiển thị khi routing
 
@@ -868,24 +868,24 @@ find skills/ -name "SKILL.md" -o -name "*.md" | sort
 
 Expected output:
 ```
-skills/ok/SKILL.md
-skills/ok-init/SKILL.md
-skills/ok-init/references/okr-guide.md
-skills/ok-plan/SKILL.md
-skills/ok-plan/references/task-format.md
-skills/ok-resource/SKILL.md
-skills/ok-resource/references/role-matrix.md
-skills/ok-review/SKILL.md
-skills/ok-track/SKILL.md
-skills/ok-track/references/metrics.md
+skills/okr/SKILL.md
+skills/okr-init/SKILL.md
+skills/okr-init/references/okr-guide.md
+skills/okr-plan/SKILL.md
+skills/okr-plan/references/task-format.md
+skills/okr-resource/SKILL.md
+skills/okr-resource/references/role-matrix.md
+skills/okr-review/SKILL.md
+skills/okr-track/SKILL.md
+skills/okr-track/references/metrics.md
 skills/shared/data-format.md
 ```
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add skills/ok/
-git commit -m "feat: add ok orchestrator skill (router)"
+git add skills/okr/
+git commit -m "feat: add okr orchestrator skill (router)"
 ```
 
 ---
