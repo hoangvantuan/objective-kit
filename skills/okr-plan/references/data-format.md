@@ -33,20 +33,21 @@ status: pending | doing | done | blocked
 priority: critical | high | medium | low
 effort: xs | s | m | l | xl
 pic: "string"
+verifier: "string (người hoặc cơ chế verify output)"
 due_date: YYYY-MM-DD
 depends_on: [A001, A002]
 ---
 ```
 
-Body: `## Definition of Done` (checklist), `## Output/Deliverable`, `## Ghi chú`.
+Body: `## Definition of Done` (checklist), `## Output/Deliverable`, `## Tiêu chí chất lượng`, `## Ghi chú`.
 
 ## Tham chiếu objective.md
 
 Skill đọc `.okr/objective.md` để biết Key Results. Frontmatter quan trọng:
 
 ```yaml
-type: project | habit
+type: project | ongoing
 objective: "string"
 ```
 
-Nếu type=habit, plan.md chứa recurring tasks thay vì milestones cố định.
+Nếu type=ongoing, plan.md body chứa `## Practices` (hành động lặp lại). Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI cụ thể (vd: "Mua đồ tập gym"). Actions tuân quy tắc bình thường. Milestones không bắt buộc với Ongoing.

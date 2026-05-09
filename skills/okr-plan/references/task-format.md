@@ -19,6 +19,7 @@ status: pending
 priority: high
 effort: m
 pic: ""
+verifier: ""
 due_date: YYYY-MM-DD
 depends_on: []
 ---
@@ -33,6 +34,10 @@ depends_on: []
 ## Output/Deliverable
 
 [Mô tả sản phẩm đầu ra khi task hoàn thành. Phải cụ thể: file gì, ở đâu, chứa gì]
+
+## Tiêu chí chất lượng
+
+[Output đạt khi nào? Đo bằng gì? Vd: "Report cover đủ 5 đối thủ, mỗi đối thủ có ≥3 điểm so sánh"]
 
 ## Ghi chú
 

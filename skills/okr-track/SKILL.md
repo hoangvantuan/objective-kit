@@ -1,40 +1,43 @@
 ---
 name: okr-track
-description: "Đánh giá trạng thái dự án + nhận update progress từ user + đề xuất next action. Skill này gộp cả tracking thường ngày lẫn review sâu (lookback). Tự chọn mode `light` (cập nhật progress: KR.current, action.status), `deep` (phân tích root cause + ĐỀ XUẤT điều chỉnh cấu trúc, delegate sang `okr-init`/`okr-plan` để áp dụng), hoặc `closure` (chốt khi mọi action done). Skill được kích hoạt từ `/okr` khi đã có SOT đầy đủ và actions còn mở. KHÔNG gọi trực tiếp trừ khi user gõ `/okr track`."
+description: "Sub-skill của /okr. Đánh giá trạng thái + cập nhật progress + xử lý inbox + đề xuất next action. 3 mode: light (progress nhanh), deep (review sâu + delegate), closure (chốt project). Được kích hoạt từ orchestrator /okr. KHÔNG gọi trực tiếp trừ khi user gõ /okr-track."
 ---
 
-# okr-track: Track + Review hợp nhất
+# okr-track: Track + Review + Inbox Processing
 
-Một skill duy nhất cho 2 use case "đánh giá trạng thái": cập nhật progress nhanh (daily) và review sâu (milestone/period-end). Tự chọn mode dựa trên context.
+Một skill duy nhất cho 3 use case: cập nhật progress nhanh (daily), review sâu (milestone/period-end), và xử lý inbox items. Tự chọn mode dựa trên context.
 
 **Phân vai rõ ràng**:
-- `okr-track` ghi đè **progress fields** (KR.current, action.status) và ghi log.
+- `okr-track` ghi đè **progress fields** (KR.current, KI.current, action.status) và ghi log.
+- `okr-track` **xử lý inbox**: phân loại items → delegate hoặc tự apply tuỳ loại.
 - Thay đổi **cấu trúc** (KR target, action mới, dời deadline, đổi PIC) → delegate sang `okr-init` hoặc `okr-plan` mode `update-*`. Track đề xuất, init/plan áp dụng.
 
 ## Điều kiện tiên quyết
 
-- `.okr/objective.md` + `.okr/plan.md` + `.okr/actions/` tồn tại.
-- Thiếu → quay lại `/okr` để init/plan.
+- `.okr/objective.md` tồn tại (tối thiểu).
+- `.okr/plan.md` + `.okr/actions/` nên có (nếu type=project). Thiếu → cảnh báo, vẫn cho track KR/KI + xử lý inbox.
+- Ongoing type có thể track chỉ với `objective.md` (KI status).
 
 ## Flow
 
 ### Phase 1: Đọc state + tính toán
 
 Đọc song song:
-- `.okr/objective.md` (KR hiện tại)
-- `.okr/plan.md` (milestones)
-- frontmatter `.okr/actions/*.md` (status, due_date, pic)
-- `.okr/resources.md` (PIC khả dụng)
+- `.okr/objective.md` (KR/KI hiện tại)
+- `.okr/plan.md` (milestones) (nếu có)
+- frontmatter `.okr/actions/*.md` (status, due_date, pic) (nếu có)
+- `.okr/resources.md` (PIC khả dụng) (nếu có)
+- `.okr/inbox/*.md` với status=pending (đếm + đọc frontmatter)
 - File log gần nhất trong `.okr/log/` và `.okr/log/reviews/` (nếu có)
 
 Tính metrics (xem `references/metrics.md`):
-- KR: % đạt, trend so với log trước
-- Timeline: % thời gian đã dùng vs % tiến độ trung bình
-- Actions: tổng / done / doing / blocked / pending
-- Tốc độ: actions hoàn thành/tuần
-- Highlight: action quá hạn, blocked >X ngày
+- Project: KR % đạt, trend so với log trước, timeline, actions tổng/done/doing/blocked/pending, tốc độ done/tuần
+- Ongoing: KI status (healthy/warning/critical), trend so với review trước
+- Inbox: số items pending
 
 ### Phase 2: Hiển thị dashboard
+
+**Project type:**
 
 ```
 Dashboard: [Tên Objective]
@@ -47,6 +50,7 @@ Key Results
 
 Actions: 12 tổng | 4 done | 3 doing | 1 blocked | 4 pending
 Tốc độ: 1.2 done/tuần (kế hoạch: 1.5)
+Inbox: 3 items chưa xử lý
 
 Cần chú ý
   - A005 blocked 5 ngày: chờ approve từ stakeholder
@@ -54,7 +58,25 @@ Cần chú ý
   - KR2 cần +8 đơn vị/tháng để kịp target
 ```
 
-### Phase 3: Tự xác định mode
+**Ongoing type:**
+
+```
+Dashboard: [Tên Objective]
+Review cycle: weekly (lần cuối: 2026-05-02, 7 ngày trước)
+
+Key Indicators
+  KI1: Tập thể dục    ≥3 lần/tuần   current: 4   ✅ healthy
+  KI2: Ngủ đủ giấc    ≥7 giờ/đêm    current: 5.5 ⚠️ critical
+  KI3: Khám định kỳ   ≥1 lần/6th    current: 1   ✅ healthy
+
+Trend: declining (KI2 từ warning → critical)
+Inbox: 1 item chưa xử lý
+
+Cần chú ý
+  - KI2 dưới ngưỡng 3 tuần liên tiếp
+```
+
+### Phase 3: Tự xác định mode + check inbox
 
 Heuristic, sau đó hỏi user xác nhận:
 
@@ -65,9 +87,12 @@ Heuristic, sau đó hỏi user xác nhận:
 | User nói "review", "tổng kết", "đánh giá", "lookback" | `deep` |
 | User nói "update", "xong rồi", "cập nhật" | `light` |
 | Mọi action `done` → đề xuất | `closure` (deep + chốt) |
+| Ongoing + đến review_cycle | `deep` |
+| User nói "inbox", "xử lý inbox" hoặc vào từ `/okr inbox` | `inbox-only` (skip progress, vào Phase 5 ngay) |
 
 ```
 Đề xuất mode: light (cập nhật nhanh, không phân tích sâu).
+Inbox: 3 items chưa xử lý. Xử lý sau khi track xong.
 Đổi mode? (light/deep/closure)
 ```
 
@@ -77,7 +102,9 @@ Heuristic, sau đó hỏi user xác nhận:
 
 Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 
-1. Hỏi user có thay đổi: KR current, action status (done/doing/blocked), blocker mới.
+**Project type:**
+
+1. Hỏi user có thay đổi: KR current, action status (pending/doing/done/blocked), blocker mới.
 2. CONFIRM trước khi ghi:
    ```
    Thay đổi sắp ghi
@@ -87,9 +114,22 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
    Xác nhận? (y/sửa/huỷ)
    ```
 3. Áp dụng:
-   - Ghi đè progress: `objective.md` (KR.current, KR.status), `plan.md` (counters), `actions/*.md` (frontmatter status).
+   - Ghi đè progress: `objective.md` (KR.current, KR status), `plan.md` (counters), `actions/*.md` (frontmatter status).
    - Append log: `.okr/log/YYYY-MM-DD.md`. File ngày đã có → append section mới.
-4. Đề xuất next action: highlight việc cần làm trong 1-7 ngày tới.
+4. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
+5. Đề xuất next action: highlight việc cần làm trong 1-7 ngày tới.
+
+**Ongoing type:**
+
+1. Hiển thị KI hiện tại (tên, ngưỡng, current, status).
+2. Hỏi user update từng KI: "KI1 (Tập thể dục, hiện tại: 2, ngưỡng: ≥3). Tuần này bao nhiêu?"
+3. Tính status mới theo logic: healthy (≥ ngưỡng), warning (< ngưỡng, chênh < 20%), critical (< 80% ngưỡng). Xem `references/metrics.md`.
+4. Nếu có action files (task cải thiện KI) → hỏi update status (pending/doing/done/blocked) như Project.
+5. CONFIRM trước khi ghi (tương tự Project).
+6. Áp dụng: ghi đè `objective.md` (KI current, status). Nếu có actions → cập nhật `plan.md` counters + `actions/*.md`.
+7. Append log.
+8. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
+9. Đề xuất: nếu KI warning/critical → gợi ý tạo action cải thiện qua `/okr plan`.
 
 ---
 
@@ -103,7 +143,7 @@ Hỏi user có update progress nào trước phân tích (giống light). Nếu 
 
 #### Bước 2: Phân tích root cause
 
-Cho mỗi vấn đề (KR at-risk, blocker, quá hạn):
+Cho mỗi vấn đề (KR at-risk, KI critical/warning, blocker, quá hạn):
 - Hỏi "tại sao?" tối thiểu 3 lần.
 - Phân biệt nhân (gốc) vs duyên (điều kiện).
 - Tách triệu chứng vs nguyên nhân.
@@ -148,16 +188,21 @@ Gom đề xuất user đồng ý theo skill target:
 
 Skill được delegate sẽ tự chạy phase confirm + ghi file (theo flow của riêng nó). Track CHỈ truyền context (lý do + giá trị mới), KHÔNG tự ghi SOT objective/plan.
 
-#### Bước 6: Ghi log review
+#### Bước 6: Xử lý inbox (nếu có items pending)
 
-Sau khi tất cả delegate hoàn tất, append `.okr/log/reviews/YYYY-MM-DD.md`:
-- Tổng kết KR
+Chạy Inbox Processing Flow (xem Phase 5).
+
+#### Bước 7: Ghi log review
+
+Sau khi tất cả delegate + inbox processing hoàn tất, append `.okr/log/reviews/YYYY-MM-DD.md`:
+- Tổng kết KR/KI
 - Phân tích root cause
 - Đề xuất + cái nào đã apply (kèm skill nào áp dụng)
+- Inbox items đã xử lý
 
 Đồng thời append `log/YYYY-MM-DD.md` link sang file review.
 
-#### Bước 7: Đề xuất next action
+#### Bước 8: Đề xuất next action
 
 ---
 
@@ -167,7 +212,72 @@ Như deep + thêm:
 1. Tính tổng kết toàn period: KR đạt vs target, % thời gian, lessons learned.
 2. Hỏi user: chuyển status objective → `completed`, hay tạo follow-up project?
 3. Nếu user đồng ý → delegate sang `okr-init` mode `update-objective` để đổi `status: completed`.
-4. Ghi log review closure (kèm section `## Lessons`).
+4. Xử lý inbox còn lại (nếu có).
+5. Ghi log review closure (kèm section `## Lessons`).
+
+---
+
+### Phase 5: Inbox Processing Flow
+
+Chạy sau khi update progress (light) hoặc sau delegate (deep). Cũng có thể chạy độc lập nếu user gọi `/okr track` chỉ để xử lý inbox.
+
+#### Bước 1: Đọc inbox
+
+Đọc tất cả `.okr/inbox/*.md` có `status: pending`. Nếu không có → skip.
+
+#### Bước 2: Hiển thị inbox + gợi ý xử lý
+
+Agent đọc context từng item, đối chiếu với SOT hiện tại (objective, plan, actions, resources), rồi gợi ý cách xử lý:
+
+```
+Inbox: 3 items chưa xử lý
+| # | Type     | Title                         | Captured  | Gợi ý xử lý                    |
+|---|----------|-------------------------------|-----------|----------------------------------|
+| 1 | action   | Viết unit test cho API auth   | 05-09     | → Tạo A014, gán M2, PIC: Bình   |
+| 2 | idea     | Thử framework X cho frontend  | 05-08     | → Giữ inbox (chưa rõ scope)     |
+| 3 | blocker  | Server staging down           | 05-09     | → Block A007, ghi log            |
+
+Xử lý items nào? (1,3 / all / skip / bỏ N)
+```
+
+Gợi ý xử lý dựa trên:
+- `action`: map vào KR/milestone nào, PIC ai có capacity, deadline nào hợp lý
+- `idea`: đủ rõ để thành action chưa? Nếu chưa → giữ inbox
+- `blocker`: action nào bị ảnh hưởng?
+- `resource`: resources.md cần thêm gì?
+- `note`: ghi vào log ngày nào?
+
+#### Bước 3: Xử lý từng item user chọn
+
+| Inbox type | Xử lý | Ai thực hiện |
+|------------|--------|--------------|
+| `action` | Chuyển thành action file trong `actions/`, cập nhật `plan.md` | Delegate → `okr-plan` mode `update` |
+| `idea` | User chọn: giữ inbox / chuyển thành action / bỏ | Tuỳ lựa chọn |
+| `blocker` | Đánh dấu action liên quan = `blocked` + ghi lý do | `okr-track` tự xử lý (progress field) |
+| `resource` | Thêm người/tool/doc vào resources.md | Delegate → `okr-init` mode `update-resource` |
+| `note` | Append vào `log/YYYY-MM-DD.md` | `okr-track` tự xử lý |
+
+Với mỗi item xử lý xong → đổi `status: processed` trong file inbox.
+
+User chọn "bỏ N" → đổi `status: discarded`.
+
+Giữ inbox (idea chưa rõ) → giữ `status: pending`, không làm gì.
+
+#### Bước 4: Gom delegate
+
+Nếu nhiều items cùng delegate sang 1 skill (vd: 3 actions mới cùng sang `okr-plan update`) → gom thành 1 lần delegate. Skill được delegate sẽ tự chạy phase confirm + ghi file.
+
+#### Bước 5: Báo cáo
+
+```
+Inbox đã xử lý: 2/3 items
+  - #1 → A014 (tạo mới, gán M2)
+  - #3 → A007 blocked (ghi log)
+  - #2 → giữ inbox (chờ rõ hơn)
+Inbox còn lại: 1 item pending
+```
+
+---
 
 ## Schema
 
@@ -176,17 +286,20 @@ Như deep + thêm:
 - `log/reviews/YYYY-MM-DD.md` (review entries)
 - Progress fields được phép ghi đè
 - Cấu trúc fields delegate sang skill khác
+- Inbox processing rules
 
-Đọc `references/metrics.md` cho cách tính KR %, trend, timeline.
+Đọc `references/metrics.md` cho cách tính KR %, KI status, trend, timeline.
 
 ## Quy tắc
 
 - Dashboard luôn hiển thị TRƯỚC khi hỏi update.
 - Mọi thay đổi qua phase confirm.
-- Mode `light`: chỉ sửa progress fields (KR.current, action.status, plan counters). Cấm sửa cấu trúc.
+- Mode `light`: chỉ sửa progress fields (KR.current, KI.current, action.status, plan counters). Cấm sửa cấu trúc.
 - Mode `deep`: KHÔNG tự sửa KR target / action mới / dời deadline / đổi PIC. Delegate sang `okr-init` / `okr-plan`.
 - Phân tích root cause BẮT BUỘC ≥3 lần "tại sao", không dừng ở triệu chứng.
 - Ghi đè SOT progress fields, append log. Không ngược lại.
 - Log review (deep) ghi vào `log/reviews/`. Log thường ghi vào `log/`.
 - Cuối flow LUÔN đề xuất next action cụ thể (file/người/thời điểm).
-- Habit type: dashboard hiển thị streak + adherence rate thay vì %.
+- Ongoing type: dashboard hiển thị KI status (healthy/warning/critical) + practices adherence thay vì % target.
+- Inbox: xử lý SAU khi update progress. Không xử lý inbox trước khi dashboard hiển thị.
+- Inbox items processed → giữ file, đổi status. Không xoá file.

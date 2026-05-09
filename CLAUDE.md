@@ -1,59 +1,49 @@
 # Objective Kit
 
-Bộ skill quản lý mục tiêu & dự án theo OKR.
+Bộ skill quản lý mục tiêu theo OKR. Mỗi thư mục `.okr/` chứa đúng **1 objective**.
 
-## Triết lý
+## Entry point
 
-User chỉ làm việc với `**/okr**` (entry point duy nhất). Skill này tự đánh giá trạng thái hiện tại và chủ động kích hoạt skill con phù hợp với context user cung cấp. Không cần nhớ tên skill con.
+User chỉ làm việc với **`/okr`** (orchestrator). Skill tự đánh giá trạng thái `.okr/` và kích hoạt skill con phù hợp. Không cần nhớ tên skill con.
 
-## Cấu trúc (3 skill con + 1 orchestrator)
+Chi tiết routing, status dashboard, keyword mapping: xem `skills/okr/SKILL.md`.
 
-| Skill        | Vai trò                                   | Sub-mode                                     |
-| ------------ | ----------------------------------------- | -------------------------------------------- |
-| `/okr`       | Orchestrator điều phối                    | n/a                                          |
-| `/okr-init`  | Quản lý SOT objective + resource          | `new`, `update-objective`, `update-resource` |
-| `/okr-plan`  | Quản lý plan + actions                    | `new`, `update`                              |
-| `/okr-track` | Đánh giá + cập nhật + đề xuất next action | `light`, `deep`, `closure`                   |
+## Skill con (4)
 
+| Skill | Vai trò | Sub-mode |
+|-------|---------|----------|
+| `okr-init` | SOT objective + resource | `new`, `update-objective`, `update-resource` |
+| `okr-plan` | SOT plan + actions | `new`, `update` |
+| `okr-track` | Progress + review + inbox | `light`, `deep`, `closure`, `inbox-only` |
+| `okr-capture` | Thu thập nhanh → inbox | n/a |
 
-## Phân nhóm logic
+Tất cả skill con được kích hoạt qua orchestrator `/okr`. Không trigger trực tiếp.
 
-- **Source of Truth (tạo + cập nhật cấu trúc)**: `init` (objective + resource) và `plan` (kế hoạch + actions). Mỗi skill BẮT BUỘC có phase confirm bảng tóm tắt trước khi ghi/sửa file.
-- **Đánh giá + cập nhật progress + delegate điều chỉnh cấu trúc**: `track` (gộp tracking thường ngày + review sâu). Track tự ghi đè progress fields (KR.current, action.status); thay đổi cấu trúc (KR target, action mới, dời deadline, đổi PIC) → ĐỀ XUẤT rồi delegate sang `init`/`plan` mode `update-*` để apply.
-- **Điều phối**: `okr`.
+## Hai loại mục tiêu
 
-## Phân vai SOT fields
+- **Project**: có deadline, đo bằng Key Results (baseline → target), đạt target rồi kết thúc.
+- **Ongoing**: duy trì liên tục (giống lĩnh vực), đo bằng Key Indicators (ngưỡng tối thiểu), không "xong".
 
-| Field | Skill được phép sửa |
-|-------|---------------------|
-| Objective text, KR target/baseline, period, status | `okr-init` `update-objective` |
-| Người, tool, ngân sách, PIC, khả dụng | `okr-init` `update-resource` |
-| Milestones, action structure (title, deadline, deps, deliverable, thêm/xoá) | `okr-plan` `update` |
-| KR.current, action.status, plan counters | `okr-track` `light` hoặc `deep` |
+Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI cụ thể.
 
-## Quy ước dữ liệu
-
-Mọi skill đọc/ghi trong thư mục `.okr/` của dự án hiện tại:
+## Dữ liệu
 
 ```
 .okr/
-├── objective.md       # SOT - mục tiêu + KR              (do okr-init quản)
-├── resources.md       # SOT - người + tool + ngân sách   (do okr-init quản)
-├── plan.md            # SOT - milestones + counters      (do okr-plan quản)
-├── actions/           # SOT - 1 file/action              (do okr-plan + okr-track quản)
-│   └── AXXX-*.md
-└── log/               # Append-only                       (do okr-track ghi)
-    ├── YYYY-MM-DD.md          # tracking light
-    └── reviews/
-        └── YYYY-MM-DD.md      # tracking deep / review
+├── objective.md       # SOT mục tiêu + KR/KI       (okr-init)
+├── resources.md       # SOT người + tool + ngân sách (okr-init)
+├── plan.md            # SOT milestones + counters    (okr-plan)
+├── actions/           # SOT 1 file/action            (okr-plan + okr-track)
+├── inbox/             # Capture items chờ xử lý      (okr-capture → okr-track)
+└── log/               # Append-only                  (okr-track)
 ```
 
-Mỗi skill chứa schema chi tiết trong `references/data-format.md` của riêng nó.
+Mỗi skill chứa schema chi tiết trong `references/` của riêng nó.
 
-## Nguyên tắc thiết kế
+## Nguyên tắc
 
-1. **Single entry point**: User chỉ gọi `/okr`. Orchestrator route + truyền context.
-2. **Confirm trước khi ghi**: `init` và `plan` BẮT BUỘC có bảng tóm tắt + xác nhận trước khi tạo/sửa file.
-3. **SOT vs Log**: SOT ghi đè (luôn phản ánh trạng thái mới). Log append-only (lịch sử thay đổi theo thời gian).
-4. **Resource gộp vào init**: Khởi tạo lần đầu (`new`) thu thập cả objective lẫn resource. Update sau qua mode `update-resource` của cùng skill `okr-init`.
-5. **Track gộp Review**: 1 skill 2 mode chính (light/deep) thay vì 2 skill riêng. Tự chọn mode dựa trên context.
+1. **1 objective / `.okr/`**: Mỗi thư mục chỉ chứa 1 mục tiêu. Muốn nhiều mục tiêu → tạo nhiều thư mục project.
+2. **Single entry point**: User chỉ gọi `/okr`.
+3. **Confirm trước khi ghi**: `init` và `plan` bắt buộc có bảng tóm tắt + xác nhận.
+4. **SOT vs Log vs Inbox**: SOT ghi đè. Log append-only. Inbox status transition.
+5. **Track đề xuất, init/plan áp dụng**: Track không sửa cấu trúc, chỉ progress fields.

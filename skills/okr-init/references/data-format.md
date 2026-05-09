@@ -24,22 +24,31 @@ Body:
 
 KR Status: `pending` | `in-progress` | `achieved` | `missed`
 
-### Habit type
+### Ongoing type
+
+Mục tiêu liên tục, không có deadline. Giống "lĩnh vực" cần duy trì (sức khoẻ, chất lượng code, tài chính...). Không bao giờ "xong", chỉ duy trì ở trạng thái khoẻ.
 
 ```yaml
 ---
-type: habit
+type: ongoing
 objective: "string"
 start_date: YYYY-MM-DD
-frequency: daily | weekly | monthly
-status: active | paused
+review_cycle: weekly | biweekly | monthly
+status: active | paused | archived
 ---
 ```
 
 Body:
-- `## Objective` (WHY)
-- `## Key Indicators` (bảng: #, Chỉ số, Tần suất, Streak hiện tại, Streak dài nhất)
-- `## Checklist lặp lại`
+- `## Objective` (WHY: tại sao lĩnh vực này quan trọng)
+- `## Key Indicators` (bảng: #, Chỉ số, Ngưỡng tối thiểu, Current, Status)
+- `## Practices` (danh sách hành động thường xuyên để duy trì)
+
+KI Status: `healthy` | `warning` | `critical`
+
+Phân biệt KR (Project) vs KI (Ongoing):
+- KR có target cụ thể, đạt rồi thì done. KI có ngưỡng tối thiểu, duy trì liên tục.
+- KR đo outcome một lần. KI đo trạng thái hiện tại so với ngưỡng.
+- Ví dụ KR: "DAU 1k → 5k". Ví dụ KI: "Tập thể dục ≥3 lần/tuần" (ngưỡng = 3, current = 2 → warning).
 
 ## resources.md (SOT)
 
@@ -50,12 +59,13 @@ last_updated: YYYY-MM-DD
 ```
 
 Body sections (giữ section header dù rỗng):
-- `## Vai trò & Trách nhiệm` (bảng: Tên, Vai trò, Trách nhiệm, Actions, Khả dụng %)
-- `## Công cụ & Tài liệu` (bảng: Tài nguyên, Mục đích, Status, Người quản lý)
+- `## Nhân sự (Vai trò & Trách nhiệm)` (bảng: Họ Tên, Liên lạc (Zalo/FB/SĐT/Địa chỉ), Vai trò & Trách nhiệm, Ngày tham gia, Khả dụng %, Actions)
+- `## Công cụ` (bảng: Tên công cụ, Khi nào dùng, Mục đích, Resource (URL/Account), Người quản lý)
+- `## Tài liệu & Knowledge Base` (bảng: Tên/Loại, Vị trí (Link/Folder/File), Mục đích, Status)
 - `## Ngân sách` (bảng: Khoản mục, Dự kiến, Thực tế, Ghi chú)
 - `## Thiếu hụt & Rủi ro` (danh sách bullet)
 
-Tại thời điểm `mode: new`, cột `Actions` trong section "Vai trò" để trống (plan chưa có). Mode `update-resource` sẽ map sau khi `okr-plan` tạo actions.
+Tại thời điểm `mode: new`, cột `Actions` trong section "Nhân sự" để trống (plan chưa có). Mode `update-resource` sẽ map sau khi `okr-plan` tạo actions.
 
 ## Tham chiếu actions/
 

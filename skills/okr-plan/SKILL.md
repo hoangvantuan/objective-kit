@@ -1,6 +1,6 @@
 ---
 name: okr-plan
-description: "Quản lý kế hoạch + actions: tạo mới hoặc điều chỉnh dựa trên feedback từ `okr-track`. Skill được kích hoạt từ `/okr` khi cần khởi tạo plan, hoặc khi `okr-track` mode `deep` đề xuất thay đổi cấu trúc plan (thêm/bớt actions, dời milestone, đổi PIC). 2 sub-mode: `new` (tạo mới khi chưa có plan.md), `update` (điều chỉnh plan/actions hiện có). KHÔNG gọi trực tiếp trừ khi user gõ `/okr plan` hoặc `/okr-plan`."
+description: "Sub-skill của /okr. Tạo hoặc điều chỉnh kế hoạch (plan.md) và actions. 2 mode: new, update. Được kích hoạt từ orchestrator /okr hoặc khi okr-track delegate thay đổi cấu trúc. KHÔNG gọi trực tiếp trừ khi user gõ /okr-plan."
 ---
 
 # okr-plan: Tạo + cập nhật plan & actions
@@ -11,6 +11,23 @@ Skill quản lý 2 SOT: `plan.md` và `actions/`. Hỗ trợ tạo mới và đi
 
 - `.okr/objective.md` tồn tại. Thiếu → quay lại `/okr` để init.
 - `.okr/resources.md` tồn tại. Thiếu → hỏi user có bổ sung trước (`/okr` → `okr-init` mode `update-resource`) hay tiếp tục với PIC trống.
+
+## Quality Gate: đánh giá câu trả lời trước khi đi tiếp
+
+Mỗi khi user trả lời (chọn initiative, confirm action, assign PIC...), agent tự kiểm tra 3 câu (KHÔNG hiển thị cho user):
+
+1. **Đủ cụ thể?** Có thể chuyển thành action có deliverable đo được không? Vd: "Nghiên cứu thêm" → FAIL (output là gì? ai verify?).
+2. **Giả định ẩn?** User bỏ qua constraint quan trọng không? Vd: thêm 5 actions mới nhưng không nói ai làm.
+3. **Mâu thuẫn?** Có xung đột với resource/timeline đã có không? Vd: PIC 50% available nhưng gán 6 actions cùng deadline.
+
+**Hành vi theo kết quả:**
+
+| Kết quả | Hành vi |
+|---------|--------|
+| Cả 3 pass | Đi tiếp |
+| Bất kỳ fail | Follow-up ngay, dùng kỹ thuật phù hợp (xem Deepening Techniques) |
+| User nói "chưa biết" / "để sau" | Ghi nhận, đánh dấu `⚠️ TBD`. Phase confirm PHẢI nhắc lại |
+| User sốt ruột | Giảm độ sâu, giữ câu 1 (đủ cụ thể?). Không skip hoàn toàn |
 
 ## Phase 0: Detect mode
 
@@ -29,7 +46,7 @@ Skill quản lý 2 SOT: `plan.md` và `actions/`. Hỗ trợ tạo mới và đi
 - `.okr/objective.md`: Objective + Key Results.
 - `.okr/resources.md`: PIC available + công cụ + ngân sách.
 
-### Phase 2: Đề xuất phân rã (KHÔNG ghi file)
+### Phase 2: Đề xuất phân rã (KHÔNG ghi file, có đào sâu)
 
 Với mỗi KR:
 1. Đề xuất 1-3 **Initiatives** (sáng kiến lớn).
@@ -38,7 +55,21 @@ Với mỗi KR:
 4. Đề xuất dependencies (action B chờ A).
 5. Đề xuất PIC từ resources.md cho mỗi action.
 
-### Phase 3: CONFIRM Plan (BẮT BUỘC)
+**Deepening Techniques (agent tự challenge trước khi trình user):**
+
+| Khía cạnh | Kỹ thuật | Ví dụ |
+|-----------|---------|-------|
+| **Initiative** | Hỏi "nếu chỉ được làm 1, chọn cái nào?" | Buộc user ưu tiên, tránh plan phình to |
+| **Action** | Yêu cầu mô tả output cụ thể (file, event, metric) | "Action 'Nghiên cứu thị trường': output là gì? Report? Slide? Data raw?" |
+| **PIC** | Challenge khả dụng thực tế | "Bình 50% available, đang có 3 actions. Thêm action này thì Bình có kịp không?" |
+| **Dependencies** | Vẽ critical path, hỏi user confirm | "A003 chờ A001 + A002. Nếu A002 trễ 1 tuần, plan có chịu được không?" |
+| **Timeline** | So sánh tổng effort vs. available time | "12 actions, 3 tháng, 2 người = 6 person-months. Mỗi action ước 2 tuần = 6 months. Vừa khít, không buffer. OK?" |
+
+Không cần challenge tất cả. Chỉ challenge khía cạnh nào Quality Gate chưa pass.
+
+### Phase 3: CONFIRM Plan (BẮT BUỘC, kèm đánh giá)
+
+Bảng confirm PHẢI kèm phần "Đánh giá nhanh" do agent tự phân tích. Không chỉ echo data.
 
 ```
 Tóm tắt Plan
@@ -55,8 +86,24 @@ Actions (12 total)
 | A002  | Phân tích đối thủ  | M1        | Bình | -        | competitor.xlsx   |
 | A003  | Spec MVP           | M2        | An   | A001,A002| spec.md           |
 
+Đánh giá nhanh
+  Resource fit:
+  - Tổng capacity: [X] person-months. Tổng actions: [Y]. Fit: [✅/⚠️]
+  - PIC tải nhiều nhất: [tên], [N] actions, [%] available
+  Timeline:
+  - Critical path: [A001 → A003 → A007]. Độ dài: [X tuần]. Buffer: [Y tuần]
+  Rủi ro:
+  - [vd: A005 có dependency ngoài team, chưa có backup plan]
+  - [vd: ⚠️ 3 actions chưa có PIC (TBD)]
+
 Xác nhận? (y / sửa <ID>: <field>=<value> / xoá <ID> / thêm)
 ```
+
+Quy tắc đánh giá:
+- **Resource fit**: tính tổng capacity vs. số actions. PIC nào gánh nhiều nhất?
+- **Timeline**: xác định critical path dài nhất, còn buffer không?
+- **Rủi ro**: liệt kê field TBD, dependency ngoài, bottleneck tiềm ẩn.
+- Nếu có rủi ro nghiêm trọng → đề xuất giải pháp cụ thể (thêm người, dời deadline, cắt scope).
 
 ### Phase 4: Ghi file
 
@@ -141,6 +188,7 @@ Xác nhận? (y / sửa / huỷ)
 
 - `references/data-format.md`: schema `plan.md` + frontmatter `actions/*.md`.
 - `references/task-format.md`: template body action file.
+- `references/action-guide.md`: hướng dẫn viết action chất lượng (5 tiêu chí bắt buộc, effort, priority, verifier, anti-patterns). Đọc trước khi tạo/review actions.
 
 ## Quy tắc
 
@@ -149,8 +197,11 @@ Xác nhận? (y / sửa / huỷ)
   - Definition of Done rõ ràng
   - Output/Deliverable cụ thể (file, số liệu, sự kiện)
   - PIC (hoặc `unassigned` nếu resource thiếu)
-- Action mơ hồ kiểu "Nghiên cứu thêm" không có output đo được → CẤM.
+  - **Ai verify output?** (người hoặc cơ chế kiểm tra kết quả)
+  - **Tiêu chí chất lượng** (output đạt khi nào? đo bằng gì?)
+- Action mơ hồ kiểu "Nghiên cứu thêm" không có output đo được → CẤM. Agent phải follow-up: "Output cụ thể là gì? Ai đọc/dùng output này?"
+- Nếu user không trả lời được "ai verify" hoặc "output đo bằng gì" → action chưa đủ rõ, cần refine trước khi ghi.
 - Dependencies hợp lệ: ID tồn tại, không vòng tròn.
 - Mode `update` không sửa KR target. Đó là việc của `okr-init` mode `update-objective`.
 - Mode `update` không sửa action.status hay KR.current. Đó là việc của `okr-track` mode `light`.
-- Habit type: plan.md chứa recurring tasks thay vì milestones, không tạo action files.
+- Ongoing type: plan.md body chứa `## Practices` (hành động lặp lại để duy trì KI). Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI (vd: "Mua đồ tập gym", "Đặt lịch khám sức khoẻ"). Actions này vẫn tuân quy tắc action bình thường (DoD, output, PIC, effort). Milestones không bắt buộc với Ongoing.

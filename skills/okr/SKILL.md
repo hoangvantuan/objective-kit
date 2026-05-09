@@ -1,6 +1,6 @@
 ---
 name: okr
-description: "Entry point chính cho mọi tương tác OKR. LUÔN dùng skill này đầu tiên khi user nhắc đến mục tiêu, dự án, OKR, tracking, kế hoạch, tài nguyên, PIC, hoặc gọi `/okr`. Skill tự đánh giá trạng thái `.okr/` hiện tại và chủ động kích hoạt skill phù hợp (init/plan/track) với context user cung cấp. User KHÔNG cần biết tên skill con, chỉ làm việc với `/okr`."
+description: "Entry point chính cho mọi tương tác OKR. LUÔN dùng skill này đầu tiên khi user nhắc đến mục tiêu, dự án, OKR, tracking, kế hoạch, tài nguyên, PIC, inbox, capture, ghi nhanh, hoặc gọi `/okr`. Skill tự đánh giá trạng thái `.okr/` hiện tại và chủ động kích hoạt skill phù hợp (init/plan/track/capture) với context user cung cấp. User KHÔNG cần biết tên skill con, chỉ làm việc với `/okr`."
 ---
 
 # okr: Orchestrator quản lý OKR
@@ -14,22 +14,25 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 3. **Truyền context**: Mọi câu chữ user nói khi gọi `/okr` phải forward sang skill con (vd: "/okr tôi muốn làm app X" → kích hoạt `okr-init` mode `new` với context dự án app X).
 4. **Không tự ghi file**: Skill này CHỈ phân tích, route, gọi skill con. Mọi thay đổi file do skill con xử lý (kèm phase confirm với user).
 
-## Skill con (3)
+## Skill con (4)
 
 | Skill | Vai trò | Sub-mode |
 |-------|---------|----------|
 | `okr-init` | Quản lý SOT objective + resource | `new`, `update-objective`, `update-resource` |
 | `okr-plan` | Quản lý SOT plan + actions | `new`, `update` |
-| `okr-track` | Đánh giá state + cập nhật progress + đề xuất + delegate điều chỉnh cấu trúc | `light`, `deep`, `closure` |
+| `okr-track` | Đánh giá state + cập nhật progress + xử lý inbox + đề xuất + delegate điều chỉnh cấu trúc | `light`, `deep`, `closure` |
+| `okr-capture` | Thu thập nhanh ý tưởng/ghi chú → inbox | n/a |
 
 ## Phân vai SOT (quan trọng)
 
 | Field | Skill được phép sửa |
 |-------|---------------------|
-| Objective text, KR target/baseline, period, status | `okr-init` `update-objective` |
+| Objective text, KR/KI target/baseline/ngưỡng, period, status | `okr-init` `update-objective` |
 | Người, tool, ngân sách, PIC, khả dụng | `okr-init` `update-resource` |
 | Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update` |
-| KR.current, action.status, plan counters | `okr-track` `light`/`deep` |
+| KR.current, KI.current, action.status, plan counters | `okr-track` `light`/`deep` |
+| Inbox items (tạo mới) | `okr-capture` |
+| Inbox items (xử lý: status transition) | `okr-track` |
 
 `okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, KHÔNG tự sửa. Nó delegate sang `okr-init`/`okr-plan` mode `update-*` để apply.
 
@@ -38,10 +41,11 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 ### Bước 1: Đọc trạng thái `.okr/`
 
 Đọc song song nếu file tồn tại:
-- `.okr/objective.md` (frontmatter + KR)
+- `.okr/objective.md` (frontmatter + KR/KI)
 - `.okr/plan.md` (frontmatter)
 - `.okr/resources.md` (frontmatter)
 - glob `.okr/actions/*.md` (chỉ frontmatter)
+- glob `.okr/inbox/*.md` có status=pending (đếm)
 - Latest file trong `.okr/log/` (nếu có)
 
 ### Bước 2: Hiển thị status ngắn (luôn luôn)
@@ -49,10 +53,12 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 ```
 Trạng thái OKR
   Objective : [tên hoặc "(chưa có)"]
-  Period    : [start > end hoặc "n/a"]
-  KR        : X/Y đạt | Y total
+  Type      : [project / ongoing]
+  Period    : [start > end hoặc "review cycle: weekly"]
+  KR/KI     : X/Y đạt | Y total [hoặc N healthy / M warning / K critical]
   Actions   : a done / b doing / c blocked / d pending
   Resource  : [đã có / thiếu PIC: tên action]
+  Inbox     : N items chưa xử lý
   Log gần   : YYYY-MM-DD ([X ngày trước])
 ```
 
@@ -61,7 +67,7 @@ Trạng thái OKR
 | State / Intent | Skill + Mode |
 |----------------|--------------|
 | `.okr/` chưa có HOẶC objective.md thiếu | `okr-init` mode `new` |
-| User nhắc objective/KR/period/mục tiêu | `okr-init` mode `update-objective` |
+| User nhắc objective/KR/KI/period/mục tiêu | `okr-init` mode `update-objective` |
 | User nhắc người/tài nguyên/PIC/ngân sách/tool | `okr-init` mode `update-resource` |
 | Có objective + resource, thiếu plan.md | `okr-plan` mode `new` |
 | Có plan.md + user nhắc thêm/sửa action, dời deadline, đổi milestone | `okr-plan` mode `update` |
@@ -69,15 +75,17 @@ Trạng thái OKR
 | Đủ SOT + actions còn mở + user nhắc tiến độ/cập nhật/xong/blocked | `okr-track` mode `light` |
 | Đủ SOT + user nhắc review/tổng kết/lookback/đánh giá sâu | `okr-track` mode `deep` |
 | Mọi action `done` | `okr-track` mode `closure` |
+| User nhắc thêm nhanh/ghi lại/capture/inbox/note | `okr-capture` |
 
 Keyword routing khi user cung cấp context:
 - "tài liệu / tài nguyên / nhân sự / công cụ / PIC / ngân sách" → `okr-init` `update-resource`
-- "đổi target / sửa KR / đổi deadline objective" → `okr-init` `update-objective`
+- "đổi target / sửa KR / sửa KI / đổi ngưỡng / đổi deadline objective" → `okr-init` `update-objective`
 - "kế hoạch / plan / lộ trình / milestone / action mới" → `okr-plan` `new` (nếu chưa có) hoặc `update`
 - "thêm action / sửa action / dời deadline / xoá action" → `okr-plan` `update`
 - "khởi tạo / mục tiêu mới / dự án mới" → `okr-init` `new`
 - "tiến độ / cập nhật / xong rồi / blocked" → `okr-track` `light`
 - "review / tổng kết / lookback / đánh giá" → `okr-track` `deep`
+- "thêm nhanh / ghi lại / note / capture / nhớ cái này / inbox" → `okr-capture`
 
 ### Bước 4: Xác nhận với user (1 câu)
 
@@ -105,6 +113,8 @@ User reply `y` → kích hoạt skill con. User reply context khác → re-route
 | `/okr resource` | Alias cho `okr-init` mode `update-resource` |
 | `/okr track` | Gọi `okr-track` (mode tự detect) |
 | `/okr track light\|deep\|closure` | Gọi `okr-track` mode tương ứng |
+| `/okr capture` hoặc `/okr add` | Gọi `okr-capture` |
+| `/okr inbox` | Gọi `okr-track` chỉ xử lý inbox (skip update progress) |
 | `/okr status` | Chỉ hiển thị status (Bước 2), không kích hoạt skill |
 
 ## Quy tắc

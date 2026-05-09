@@ -1,0 +1,99 @@
+---
+name: okr-capture
+description: "Sub-skill của /okr. Thu thập nhanh ý tưởng, ghi chú, action tiềm năng, blocker vào inbox (.okr/inbox/). Phân tích input thô, phân loại, lưu file. Được kích hoạt từ orchestrator /okr khi user nhắc capture/ghi nhanh/inbox. KHÔNG gọi trực tiếp trừ khi user gõ /okr-capture."
+---
+
+# okr-capture: Thu thập nhanh → Inbox
+
+Skill giúp user ghi lại bất kỳ nội dung gì nhanh nhất có thể, không cần biết nó thuộc skill nào hay mode nào. Agent phân tích, tinh chỉnh, phân loại, rồi lưu vào inbox. Việc xử lý inbox (chuyển thành action, update resource, ghi log...) là trách nhiệm của `okr-track`.
+
+## Tại sao cần skill này?
+
+Giữa lúc làm việc, user thường nảy ra ý tưởng hoặc phát hiện vấn đề. Nếu phải vào đúng mode (`okr-plan update`, `okr-init update-resource`) mới thêm được, ma sát quá lớn → user bỏ qua → mất thông tin. Capture giải quyết vấn đề này: ghi trước, xử lý sau.
+
+## Nguyên tắc
+
+- Nhanh: tối thiểu bước xác nhận. Mục tiêu là ghi xong trong 1-2 turn.
+- Không sửa SOT: chỉ tạo file trong `inbox/`. Mọi thay đổi SOT do skill khác xử lý khi inbox được process.
+- Giữ nguyên văn gốc: dù agent tinh chỉnh title/description, phần context gốc (nguyên văn user nhập) luôn được giữ lại.
+- Cho phép capture khi chưa có `.okr/objective.md`: tạo `.okr/inbox/` ngay, cảnh báo user nên chạy `/okr init` khi sẵn sàng.
+
+## Flow
+
+### Phase 1: Nhận input
+
+User cung cấp input bằng 1 trong các cách:
+- Câu nói ngắn: "thêm nhanh: viết unit test cho API auth"
+- Đoạn text dài (paste từ meeting notes, chat, doc)
+- Nhiều ý cùng lúc cách bởi bullet hoặc xuống dòng
+
+### Phase 2: Phân tích + phân loại
+
+Agent phân tích input và phân loại mỗi ý thành 1 item với type:
+
+| Type | Khi nào | Ví dụ |
+|------|---------|-------|
+| `action` | Việc cần làm cụ thể, có output rõ | "Viết unit test cho API auth" |
+| `idea` | Ý tưởng chưa rõ, cần suy nghĩ thêm | "Có thể dùng framework X cho frontend?" |
+| `blocker` | Vấn đề đang chặn tiến độ | "Server staging bị down, không deploy được" |
+| `resource` | Tài nguyên mới phát hiện (người, tool, doc) | "Tìm được thư viện Y hỗ trợ chart, miễn phí" |
+| `note` | Ghi chú tự do, context bổ sung | "Khách hàng muốn demo trước 15/6" |
+
+**Tinh chỉnh cho mỗi item:**
+- Title: viết lại ngắn gọn, rõ ràng (≤15 từ)
+- Description: 1-2 câu mô tả (agent viết dựa trên context)
+- Related KR/KI: gợi ý KR/KI liên quan (nếu `.okr/objective.md` tồn tại)
+- Related action: gợi ý action liên quan (nếu `.okr/actions/` tồn tại)
+
+Nếu không chắc chắn type → hỏi user. Nếu không map được KR/action → để `null`.
+
+### Phase 3: Confirm (nhanh)
+
+**Single item:**
+
+```
+Inbox item
+| Field    | Value                                     |
+|----------|-------------------------------------------|
+| Type     | action                                    |
+| Title    | Viết unit test cho API auth               |
+| Related  | KR2 (code coverage), A005 (implement API) |
+
+Lưu vào inbox? (y / sửa / huỷ)
+```
+
+**Batch (nhiều items):**
+
+```
+Inbox: 3 items từ input của bạn
+| # | Type     | Title                         | Related |
+|---|----------|-------------------------------|---------|
+| 1 | action   | Viết unit test cho API auth   | KR2     |
+| 2 | blocker  | Server staging down           | A007    |
+| 3 | idea     | Thử framework X cho frontend  | -       |
+
+Lưu tất cả? (y / sửa N / bỏ N / huỷ)
+```
+
+### Phase 4: Ghi file
+
+1. Tạo `.okr/inbox/` nếu chưa có.
+2. Ghi mỗi item thành 1 file: `YYYY-MM-DD-HHmm-slug.md`
+3. Hiển thị: "Đã lưu N items vào inbox. Chạy `/okr track` để xử lý inbox."
+
+### Phase 5: Gợi ý (tuỳ chọn)
+
+Nếu inbox đã có ≥5 items chưa xử lý → nhắc: "Inbox có N items. Nên xử lý sớm bằng `/okr track`."
+
+## Schema
+
+Đọc `references/data-format.md` cho schema inbox item.
+
+## Quy tắc
+
+- KHÔNG sửa SOT (objective.md, plan.md, resources.md, actions/).
+- KHÔNG tự phân loại nếu mơ hồ. Hỏi user.
+- Giữ nguyên văn gốc trong body (section "## Context gốc").
+- Batch: tách rõ từng item, confirm tất cả 1 lần.
+- File name: `YYYY-MM-DD-HHmm-slug.md`. Slug dùng tiếng Việt không dấu hoặc tiếng Anh, dấu gạch ngang.
+- Nếu `.okr/` chưa có → vẫn tạo `.okr/inbox/` + cảnh báo chạy init.

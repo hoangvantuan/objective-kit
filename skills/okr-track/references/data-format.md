@@ -76,3 +76,48 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 | **SOT** | `.okr/objective.md`, `plan.md`, `resources.md`, `actions/` | Ghi đè |
 | **Log thường** | `.okr/log/YYYY-MM-DD.md` | Append-only |
 | **Log review** | `.okr/log/reviews/YYYY-MM-DD.md` | Append-only |
+| **Inbox** | `.okr/inbox/*.md` | Status transition (pending → processed/discarded) |
+
+## Inbox Processing
+
+`okr-track` xử lý inbox items khi chạy track (sau update progress).
+
+### Quy trình
+
+1. Đọc tất cả `.okr/inbox/*.md` có `status: pending`
+2. Đối chiếu với SOT hiện tại (objective, plan, actions, resources) để gợi ý xử lý
+3. Hiển thị bảng tóm tắt + gợi ý cho user chọn
+4. Xử lý từng item: delegate hoặc tự apply
+5. Đổi status trong file inbox (không xoá file)
+
+### Status transitions
+
+```
+pending → processed   (đã xử lý: tạo action, update resource, ghi log...)
+pending → discarded   (user quyết định bỏ)
+pending → pending     (giữ inbox, chờ rõ hơn)
+```
+
+### Delegate rules
+
+| Inbox type | Track tự xử lý? | Delegate sang |
+|------------|-----------------|---------------|
+| `action` | Không | `okr-plan` mode `update` (tạo action file) |
+| `idea` → action | Không | `okr-plan` mode `update` |
+| `idea` → giữ | Có (không làm gì) | - |
+| `blocker` | Có (sửa action.status = blocked) | - |
+| `resource` | Không | `okr-init` mode `update-resource` |
+| `note` | Có (append log) | - |
+
+### Gom delegate
+
+Nhiều inbox items cùng delegate sang 1 skill → gom thành 1 lần delegate. Ví dụ: 3 items type=action → 1 lần gọi `okr-plan update` với danh sách 3 actions mới.
+
+### Ghi log
+
+Inbox items đã xử lý ghi vào `log/YYYY-MM-DD.md`:
+```
+## Inbox processed
+- [item title] → [hành động: tạo A014, block A007, ghi log...]
+```
+
