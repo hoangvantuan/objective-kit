@@ -121,3 +121,66 @@ Inbox items đã xử lý ghi vào `log/YYYY-MM-DD.md`:
 - [item title] → [hành động: tạo A014, block A007, ghi log...]
 ```
 
+## Archive Rules
+
+### Trigger
+
+Khi `okr-track` (light hoặc deep) đánh `status: done` cho action, **trong cùng lần track, sau phase confirm**.
+
+### Flow
+
+1. Dời file `actions/AXXX-slug.md` → `actions/archive/AXXX-slug.md` (tạo thư mục `archive/` nếu chưa có).
+2. Xóa dòng action đó khỏi `## Roadmap` body trong `plan.md`.
+3. Nếu milestone trống (tất cả actions thuộc milestone đều done) → xóa heading milestone khỏi Roadmap body. Giữ milestone trong frontmatter `plan.md` (với `status: done`).
+4. Cập nhật counters frontmatter `plan.md` (`completed` +N).
+
+### Invisible by Default
+
+| Nguồn dữ liệu | Mặc định đọc | Khi nào đọc thêm |
+|----------------|-------------|-------------------|
+| `actions/*.md` | Có (chỉ active) | Luôn đọc |
+| `actions/archive/` | **Không** | User trace hoặc mode closure |
+| `log/` | **Không** | User trace theo ngày |
+| `log/reviews/` latest | Có | Luôn đọc |
+| `log/reviews/` cũ hơn | **Không** | User trace theo ngày |
+
+### Quy tắc theo skill
+
+| Skill | Actions archive | Log cũ |
+|-------|----------------|--------|
+| Orchestrator `/okr` | Không đọc | Không đọc log. Chỉ latest review |
+| `okr-track` light | Không đọc | Chỉ latest log (để so trend) |
+| `okr-track` deep | Không đọc | Chỉ latest log + latest review |
+| `okr-track` closure | **Đọc archive** (tổng kết) | **Đọc tất cả reviews** (tổng kết) |
+| `okr-track` trace | **Đọc archive** (lazy) | **Đọc log cũ** (lazy) |
+| `okr-plan` update | Không đọc, không sửa | Không đọc |
+
+### Archive file schema
+
+Giống hệt `actions/AXXX-slug.md` (cùng frontmatter + body). Archive files là **read-only**, không bị sửa sau khi archive.
+
+## Log Reading Rules
+
+- Orchestrator `/okr` Bước 1: **KHÔNG đọc `log/`**. Chỉ đọc **1 file mới nhất** trong `log/reviews/`.
+- `okr-track` Phase 1: chỉ đọc **1 file mới nhất** trong `log/` và **1 file mới nhất** trong `log/reviews/` (để so trend).
+- Log cũ hơn: KHÔNG đọc, trừ khi user yêu cầu trace.
+- `okr-track` closure: đọc tất cả `log/reviews/` (cần tổng kết period).
+
+## Trace Flow
+
+Mode `trace` dùng nguyên tắc **lazy loading**: đọc dần, không đọc hết.
+
+### 4 kiểu trace
+
+| Kiểu | Trigger | Đọc gì |
+|------|---------|--------|
+| Action cụ thể | "trace A003" | `actions/archive/A003-*.md` frontmatter → body khi drill-down |
+| Milestone | "trace M1" | `plan.md` frontmatter + lọc `actions/archive/*.md` theo milestone (frontmatter) |
+| Theo thời gian | "actions done tháng 4" | Lọc `actions/archive/*.md` theo `due_date` (frontmatter) |
+| Log | "xem log tuần trước" | Lọc `log/*.md` hoặc `log/reviews/*.md` theo filename (ngày) |
+
+### Quy trình chung
+
+1. Frontmatter trước (hiển thị tóm tắt)
+2. User chọn item cụ thể → đọc body
+3. Không đọc toàn bộ archive cùng lúc

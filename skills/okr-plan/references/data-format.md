@@ -51,3 +51,12 @@ objective: "string"
 ```
 
 Nếu type=ongoing, plan.md body chứa `## Practices` (hành động lặp lại). Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI cụ thể (vd: "Mua đồ tập gym"). Actions tuân quy tắc bình thường. Milestones không bắt buộc với Ongoing.
+
+## actions/archive/
+
+Chứa action files đã hoàn thành (`status: done`), được dời từ `actions/` bởi `okr-track` sau phase confirm.
+
+- **Schema**: giống hệt `actions/AXXX-slug.md` (cùng frontmatter + body).
+- **Read-only**: archive files KHÔNG bị sửa sau khi archive. Không ai ghi đè, không ai thêm field.
+- **Khi nào đọc**: chỉ khi `okr-track` mode `closure` (tổng kết) hoặc mode `trace` (user yêu cầu xem lại).
+- `okr-plan` KHÔNG đọc, KHÔNG sửa, KHÔNG tạo file trong `actions/archive/`.

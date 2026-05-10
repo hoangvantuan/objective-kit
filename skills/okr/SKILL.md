@@ -44,9 +44,10 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 - `.okr/objective.md` (frontmatter + KR/KI)
 - `.okr/plan.md` (frontmatter)
 - `.okr/resources.md` (frontmatter)
-- glob `.okr/actions/*.md` (chỉ frontmatter)
+- glob `.okr/actions/*.md` (chỉ frontmatter, **không đệ quy**, bỏ qua `actions/archive/`)
 - glob `.okr/inbox/*.md` có status=pending (đếm)
-- Latest file trong `.okr/log/` (nếu có)
+- `.okr/log/`: **KHÔNG đọc**. Log thô không cần cho state assessment.
+- **Chỉ 1 file mới nhất** trong `.okr/log/reviews/` (sorted by filename desc, lấy đầu tiên). KHÔNG đọc review cũ hơn.
 
 ### Bước 2: Hiển thị status ngắn (luôn luôn)
 
@@ -76,6 +77,7 @@ Trạng thái OKR
 | Đủ SOT + user nhắc review/tổng kết/lookback/đánh giá sâu | `okr-track` mode `deep` |
 | Mọi action `done` | `okr-track` mode `closure` |
 | User nhắc thêm nhanh/ghi lại/capture/inbox/note | `okr-capture` |
+| User nhắc trace/xem lại/history/lịch sử action/milestone/log | `okr-track` mode `trace` |
 
 Keyword routing khi user cung cấp context:
 - "tài liệu / tài nguyên / nhân sự / công cụ / PIC / ngân sách" → `okr-init` `update-resource`
@@ -86,6 +88,7 @@ Keyword routing khi user cung cấp context:
 - "tiến độ / cập nhật / xong rồi / blocked" → `okr-track` `light`
 - "review / tổng kết / lookback / đánh giá" → `okr-track` `deep`
 - "thêm nhanh / ghi lại / note / capture / nhớ cái này / inbox" → `okr-capture`
+- "trace / xem lại / history / lịch sử / xem action cũ / xem log cũ" → `okr-track` `trace`
 
 ### Bước 4: Xác nhận với user (1 câu)
 
@@ -115,6 +118,8 @@ User reply `y` → kích hoạt skill con. User reply context khác → re-route
 | `/okr track light\|deep\|closure` | Gọi `okr-track` mode tương ứng |
 | `/okr capture` hoặc `/okr add` | Gọi `okr-capture` |
 | `/okr inbox` | Gọi `okr-track` chỉ xử lý inbox (skip update progress) |
+| `/okr trace <ID>` | Gọi `okr-track` mode `trace`, truyền ID (vd: A003, M1) |
+| `/okr history` | Gọi `okr-track` mode `trace`, hiển thị danh sách archive + log cũ |
 | `/okr status` | Chỉ hiển thị status (Bước 2), không kích hoạt skill |
 
 ## Quy tắc

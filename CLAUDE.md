@@ -34,8 +34,10 @@ Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI cụ thể.
 ├── resources.md       # SOT người + tool + ngân sách (okr-init)
 ├── plan.md            # SOT milestones + counters    (okr-plan)
 ├── actions/           # SOT 1 file/action            (okr-plan + okr-track)
+│   └── archive/       # Actions done (read-only)      (okr-track archive)
 ├── inbox/             # Capture items chờ xử lý      (okr-capture → okr-track)
 └── log/               # Append-only                  (okr-track)
+    └── reviews/       # Deep/closure reviews          (okr-track deep/closure)
 ```
 
 Mỗi skill chứa schema chi tiết trong `references/` của riêng nó.
@@ -47,3 +49,4 @@ Mỗi skill chứa schema chi tiết trong `references/` của riêng nó.
 3. **Confirm trước khi ghi**: `init` và `plan` bắt buộc có bảng tóm tắt + xác nhận.
 4. **SOT vs Log vs Inbox**: SOT ghi đè. Log append-only. Inbox status transition.
 5. **Track đề xuất, init/plan áp dụng**: Track không sửa cấu trúc, chỉ progress fields.
+6. **Archive + Log tiết kiệm token**: Actions done tự động archive vào `actions/archive/` (read-only, invisible by default). Log chỉ đọc file mới nhất. Trace khi cần xem lại dữ liệu cũ.

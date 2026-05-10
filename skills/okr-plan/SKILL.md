@@ -125,7 +125,7 @@ Trigger phổ biến: `okr-track` mode `deep` phát hiện KR at-risk hoặc blo
 
 ### Phase 1: Hiển thị state hiện tại
 
-Đọc `plan.md` + frontmatter `actions/*.md` + `objective.md`. Hiển thị:
+Đọc `plan.md` + frontmatter `actions/*.md` (**không đệ quy**, bỏ qua `actions/archive/`) + `objective.md` + `resources.md`. Hiển thị:
 
 ```
 Plan hiện tại
@@ -178,7 +178,7 @@ Xác nhận? (y / sửa / huỷ)
 ### Phase 5: Áp dụng
 
 1. Ghi đè `plan.md` (counters, milestones).
-2. Ghi/sửa file `actions/AXXX-*.md` tương ứng.
+2. Ghi/sửa file `actions/AXXX-*.md` tương ứng. **Không** tạo hoặc sửa file trong `actions/archive/`.
 3. Sync `resources.md` (cột Actions của PIC) + `last_updated`.
 4. Đề xuất chạy `okr-track` mode `light` để confirm state mới.
 
