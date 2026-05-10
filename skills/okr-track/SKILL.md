@@ -1,6 +1,6 @@
 ---
 name: okr-track
-description: "Sub-skill của /okr. Đánh giá trạng thái + cập nhật progress + xử lý inbox + đề xuất next action. 3 mode: light (progress nhanh), deep (review sâu + delegate), closure (chốt project). Được kích hoạt từ orchestrator /okr. KHÔNG gọi trực tiếp trừ khi user gõ /okr-track."
+description: "Sub-skill của /okr. Đánh giá trạng thái + cập nhật progress + xử lý inbox + đề xuất next action. 5 mode: light (progress nhanh), deep (review sâu + delegate), closure (chốt project), inbox-only (chỉ xử lý inbox), trace (xem lại archive/log). Được kích hoạt từ orchestrator /okr. KHÔNG gọi trực tiếp trừ khi user gõ /okr-track."
 ---
 
 # okr-track: Track + Review + Inbox Processing
