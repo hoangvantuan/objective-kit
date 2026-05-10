@@ -176,7 +176,7 @@ status: active
 
 KI Status: `healthy` (≥ ngưỡng) | `warning` (< ngưỡng, chênh < 20%) | `critical` (< 80% ngưỡng).
 
-> **Lưu ý đổi tên**: Trước đây spec dùng `type: habit` + `frequency` + `streak`. Đã đổi sang `type: ongoing` + `review_cycle` + KI threshold-based. Không còn streak. Practices (hành động lặp lại) chuyển sang `plan.md` body, schema xem `skills/okr-plan/references/data-format.md`.
+> **Lưu ý đổi tên**: Trước đây spec dùng `type: habit` + `frequency` + `streak`. Đã đổi sang `type: ongoing` + `review_cycle` + KI threshold-based. KI không còn dùng streak (đo bằng ngưỡng tối thiểu). Practices (hành động lặp lại) chuyển sang `plan.md` body và VẪN có streak riêng (`current_streak` trên từng practice), schema xem `skills/okr-plan/references/data-format.md`.
 ```
 
 ### okr-plan: Lập kế hoạch hành động
