@@ -53,13 +53,13 @@ User gọi skill trực tiếp (`/okr-plan`, `/okr-track`) hoặc qua orchestrat
 
 ### Hai loại mục tiêu
 
-| | Project (có kỳ hạn) | Habit (thói quen) |
+| | Project (có kỳ hạn) | Ongoing (lĩnh vực duy trì) |
 |---|---|---|
 | Tính chất | Có điểm bắt đầu và kết thúc | Liên tục, không kết thúc |
-| Đo lường | Key Results với target cụ thể | Tần suất thực hiện, streak |
-| Ví dụ | "Ra mắt MVP trước 30/7" | "Viết blog mỗi tuần" |
-| Khi nào xong | Đạt target hoặc hết deadline | Không bao giờ "xong", chỉ duy trì |
-| Actions | Tasks có deadline, output, DoD | Recurring tasks, checklist lặp lại |
+| Đo lường | Key Results với target cụ thể (baseline → target) | Key Indicators với ngưỡng tối thiểu |
+| Ví dụ | "Ra mắt MVP trước 30/7" | "Sức khoẻ thể chất duy trì healthy" |
+| Khi nào xong | Đạt target hoặc hết deadline | Không bao giờ "xong", chỉ duy trì ở trạng thái khoẻ |
+| Actions | Tasks có deadline, output, DoD | CÓ THỂ tạo action khi cần task cải thiện KI cụ thể (vd: "Mua đồ tập gym") |
 
 ### Hai tầng dữ liệu
 
@@ -112,7 +112,7 @@ Khi user muốn xem lịch sử:
 **Trigger**: Chưa có `.okr/` trong dự án, hoặc `/okr-init`
 
 **Workflow**:
-1. Hỏi loại mục tiêu: Project hay Habit
+1. Hỏi loại mục tiêu: Project hay Ongoing
 2. Hỏi Why/How/What của dự án
 3. Hỗ trợ viết Objective (định tính, truyền cảm hứng)
 4. Hỗ trợ viết Key Results (định lượng, đo được, có baseline + target)
@@ -150,14 +150,14 @@ status: active
 [Bối cảnh dự án, HOW/WHAT tổng quan]
 ```
 
-**Format `objective.md` (Habit)**:
+**Format `objective.md` (Ongoing)**:
 
 ```yaml
 ---
-type: habit
-objective: "Mô tả thói quen muốn xây dựng"
+type: ongoing
+objective: "Mô tả lĩnh vực muốn duy trì"
 start_date: 2026-05-09
-frequency: weekly
+review_cycle: weekly
 status: active
 ---
 ```
@@ -165,19 +165,18 @@ status: active
 ```markdown
 ## Objective
 
-[Mô tả WHY, tại sao thói quen này quan trọng]
+[Mô tả WHY, tại sao lĩnh vực này quan trọng]
 
 ## Key Indicators
 
-| # | Chỉ số | Tần suất | Streak hiện tại | Streak dài nhất |
-|---|--------|----------|-----------------|-----------------|
-| KI1 | [Mô tả] | weekly | 0 | 0 |
-| KI2 | [Mô tả] | daily | 0 | 0 |
+| # | Chỉ số | Ngưỡng tối thiểu | Current | Status |
+|---|--------|------------------|---------|--------|
+| KI1 | Tập thể dục | ≥3 lần/tuần | 0 | pending |
+| KI2 | Ngủ đủ giấc | ≥7 giờ/đêm | 0 | pending |
 
-## Checklist lặp lại
+KI Status: `healthy` (≥ ngưỡng) | `warning` (< ngưỡng, chênh < 20%) | `critical` (< 80% ngưỡng).
 
-- [ ] [Hành động 1]
-- [ ] [Hành động 2]
+> **Lưu ý đổi tên**: Trước đây spec dùng `type: habit` + `frequency` + `streak`. Đã đổi sang `type: ongoing` + `review_cycle` + KI threshold-based. Không còn streak. Practices (hành động lặp lại) chuyển sang `plan.md` body, schema xem `skills/okr-plan/references/data-format.md`.
 ```
 
 ### okr-plan: Lập kế hoạch hành động
