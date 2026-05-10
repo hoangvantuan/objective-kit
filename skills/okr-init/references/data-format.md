@@ -41,7 +41,8 @@ status: active | paused | archived
 Body:
 - `## Objective` (WHY: tại sao lĩnh vực này quan trọng)
 - `## Key Indicators` (bảng: #, Chỉ số, Ngưỡng tối thiểu, Current, Status)
-- `## Practices` (danh sách hành động thường xuyên để duy trì)
+
+> **Practices không nằm ở `objective.md`**. Hành động lặp lại để duy trì KI nằm ở `plan.md` body section `## Practices`. Schema xem `skills/okr-plan/references/data-format.md`.
 
 KI Status: `healthy` | `warning` | `critical`
 
