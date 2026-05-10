@@ -4,18 +4,19 @@ Bộ skill quản lý mục tiêu theo OKR. Mỗi thư mục `.okr/` chứa đú
 
 ## Entry point
 
-User chỉ làm việc với **`/okr`** (orchestrator). Skill tự đánh giá trạng thái `.okr/` và kích hoạt skill con phù hợp. Không cần nhớ tên skill con.
+User chỉ làm việc với `**/okr**` (orchestrator). Skill tự đánh giá trạng thái `.okr/` và kích hoạt skill con phù hợp. Không cần nhớ tên skill con.
 
 Chi tiết routing, status dashboard, keyword mapping: xem `skills/okr/SKILL.md`.
 
 ## Skill con (4)
 
-| Skill | Vai trò | Sub-mode |
-|-------|---------|----------|
-| `okr-init` | SOT objective + resource | `new`, `update-objective`, `update-resource` |
-| `okr-plan` | SOT plan + actions | `new`, `update` |
-| `okr-track` | Progress + review + inbox | `light`, `deep`, `closure`, `inbox-only` |
-| `okr-capture` | Thu thập nhanh → inbox | n/a |
+| Skill         | Vai trò                   | Sub-mode                                     |
+| ------------- | ------------------------- | -------------------------------------------- |
+| `okr-init`    | SOT objective + resource  | `new`, `update-objective`, `update-resource` |
+| `okr-plan`    | SOT plan + actions        | `new`, `update`                              |
+| `okr-track`   | Progress + review + inbox | `light`, `deep`, `closure`, `inbox-only`     |
+| `okr-capture` | Thu thập nhanh → inbox    | n/a                                          |
+
 
 Tất cả skill con được kích hoạt qua orchestrator `/okr`. Không trigger trực tiếp.
 
@@ -44,7 +45,7 @@ Mỗi skill chứa schema chi tiết trong `references/` của riêng nó.
 
 ## Nguyên tắc
 
-1. **1 objective / `.okr/`**: Mỗi thư mục chỉ chứa 1 mục tiêu. Muốn nhiều mục tiêu → tạo nhiều thư mục project.
+1. **1 objective / `.okr/**`: Mỗi thư mục chỉ chứa 1 mục tiêu. Muốn nhiều mục tiêu → tạo nhiều thư mục project.
 2. **Single entry point**: User chỉ gọi `/okr`.
 3. **Confirm trước khi ghi**: `init` và `plan` bắt buộc có bảng tóm tắt + xác nhận.
 4. **SOT vs Log vs Inbox**: SOT ghi đè. Log append-only. Inbox status transition.
