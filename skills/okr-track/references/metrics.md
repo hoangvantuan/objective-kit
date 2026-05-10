@@ -10,6 +10,26 @@ Cập nhật Current bằng 2 cách:
 
 Ưu tiên cách 1 vì KR đo outcome (kết quả), không phải output (sản lượng).
 
+## KR Status auto-compute (Project type)
+
+KR Status có 4 giá trị: `pending` | `in-progress` | `achieved` | `missed`. `okr-track` (mode `light` hoặc `deep`) tự compute lại status mỗi lần KR.current thay đổi, theo rule:
+
+Status được compute theo **thứ tự ưu tiên** (first match wins, rule trên đè rule dưới):
+
+| # | Status | Điều kiện |
+|---|--------|-----------|
+| 1 | `achieved` | `current >= target` (đạt hoặc vượt target, kể cả khi đã quá hạn) |
+| 2 | `missed` | `current < target` AND `now > end_date` (hết hạn, chưa đạt) |
+| 3 | `pending` | `current == baseline` AND `now <= end_date` (chưa bắt đầu, còn hạn) |
+| 4 | `in-progress` | còn lại (còn hạn, current khác baseline và chưa đạt target — gồm cả regression `current < baseline`) |
+
+**Lưu ý**:
+- Rule `achieved` (1) đè `missed` (2): vượt target rồi thì coi như đạt, dù đã quá hạn.
+- Rule `missed` (2) đè `in-progress` (4): quá hạn mà chưa đạt thì miss, không còn "đang chạy".
+- Regression (`current < baseline` khi còn hạn) rơi vào `in-progress` (rule 4 catch-all). Vẫn coi là đang chạy, chỉ là tụt lùi.
+- KR `missed` không tự reset: user extend `end_date` qua `okr-init update-objective` thì lần track kế re-compute (rule 4 catch-all → `in-progress`).
+- Không cần user tự set status khi tạo KR mới: mặc định `pending` (rule 3) vì `current == baseline`. Khi user nhập `current` lần đầu, status tự nhảy theo rule.
+
 ## Key Indicator Status (Ongoing type)
 
 KI không tính % tiến độ. KI đánh giá trạng thái so với ngưỡng tối thiểu.
