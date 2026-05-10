@@ -14,7 +14,7 @@ Chi tiết routing, status dashboard, keyword mapping: xem `skills/okr/SKILL.md`
 | ------------- | ------------------------- | -------------------------------------------- |
 | `okr-init`    | SOT objective + resource  | `new`, `update-objective`, `update-resource` |
 | `okr-plan`    | SOT plan + actions        | `new`, `update`                              |
-| `okr-track`   | Progress + review + inbox | `light`, `deep`, `closure`, `inbox-only`     |
+| `okr-track`   | Progress + review + inbox | `light`, `deep`, `closure`, `inbox-only`, `trace` |
 | `okr-capture` | Thu thập nhanh → inbox    | n/a                                          |
 
 
