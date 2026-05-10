@@ -50,7 +50,47 @@ type: project | ongoing
 objective: "string"
 ```
 
-Nếu type=ongoing, plan.md body chứa `## Practices` (hành động lặp lại). Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI cụ thể (vd: "Mua đồ tập gym"). Actions tuân quy tắc bình thường. Milestones không bắt buộc với Ongoing.
+Nếu type=ongoing, plan.md body chứa `## Practices` (hành động lặp lại để duy trì KI). Schema xem section "## Practices schema" bên dưới. Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI cụ thể (vd: "Mua đồ tập gym"). Actions tuân quy tắc bình thường. Milestones không bắt buộc với Ongoing.
+
+## Practices schema (chỉ Ongoing)
+
+Practices là hành động lặp lại theo chu kỳ để duy trì KI healthy. Nằm trong body `plan.md` dưới heading `## Practices`. KHÔNG nằm ở `objective.md`. KHÔNG có frontmatter riêng (đọc từ markdown body).
+
+Mỗi practice là 1 sub-heading `### PN: <Tên>` với các field bullet:
+
+```markdown
+## Practices
+
+### P1: Tập thể dục
+- frequency: weekly
+- target_count: 3
+- current_streak: 2
+- description: Cardio + strength, mỗi buổi 45 phút
+- ki_link: KI1
+
+### P2: Ngủ đủ giấc
+- frequency: daily
+- target_count: 7
+- current_streak: 5
+- description: Đi ngủ trước 23:00, ngủ ≥7 giờ
+- ki_link: KI2
+```
+
+Field meanings:
+
+| Field | Type | Mô tả |
+|-------|------|-------|
+| `frequency` | `daily` \| `weekly` \| `biweekly` \| `monthly` | Chu kỳ practice |
+| `target_count` | int | Số lần mục tiêu trong 1 chu kỳ (vd: 3 lần/tuần) |
+| `current_streak` | int | Số chu kỳ liên tiếp gần nhất đã đạt `target_count` |
+| `description` | string | Mô tả ngắn cách thực hiện |
+| `ki_link` | `KI<N>` | KI mà practice này phục vụ (vd: `KI1`, `KI2`), link tới Key Indicator trong `objective.md` |
+
+Quy tắc:
+- ID practice (`P1`, `P2`...) duy nhất trong file. Không reuse khi xoá.
+- 1 practice link tới đúng 1 KI. 1 KI có thể có nhiều practices.
+- `current_streak` được update bởi `okr-track` Ongoing flow (Phase 4a Ongoing): hỏi user "Tuần này đạt practice nào?" → tăng/reset streak.
+- `okr-plan` mode `update` thêm/sửa/xoá Practices structure (frequency, target_count, description, ki_link). KHÔNG sửa `current_streak`.
 
 ## actions/archive/
 
