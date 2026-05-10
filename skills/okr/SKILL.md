@@ -20,7 +20,7 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 |-------|---------|----------|
 | `okr-init` | Quản lý SOT objective + resource | `new`, `update-objective`, `update-resource` |
 | `okr-plan` | Quản lý SOT plan + actions | `new`, `update` |
-| `okr-track` | Đánh giá state + cập nhật progress + xử lý inbox + đề xuất + delegate điều chỉnh cấu trúc | `light`, `deep`, `closure` |
+| `okr-track` | Đánh giá state + cập nhật progress + xử lý inbox + đề xuất + delegate điều chỉnh cấu trúc | `light`, `deep`, `closure`, `inbox-only`, `trace` |
 | `okr-capture` | Thu thập nhanh ý tưởng/ghi chú → inbox | n/a |
 
 ## Phân vai SOT (quan trọng)
@@ -115,7 +115,7 @@ User reply `y` → kích hoạt skill con. User reply context khác → re-route
 | `/okr plan update` | `okr-plan` mode `update` |
 | `/okr resource` | Alias cho `okr-init` mode `update-resource` |
 | `/okr track` | Gọi `okr-track` (mode tự detect) |
-| `/okr track light\|deep\|closure` | Gọi `okr-track` mode tương ứng |
+| `/okr track light\|deep\|closure\|inbox-only\|trace` | Gọi `okr-track` mode tương ứng |
 | `/okr capture` hoặc `/okr add` | Gọi `okr-capture` |
 | `/okr inbox` | Gọi `okr-track` chỉ xử lý inbox (skip update progress) |
 | `/okr trace <ID>` | Gọi `okr-track` mode `trace`, truyền ID (vd: A003, M1) |
