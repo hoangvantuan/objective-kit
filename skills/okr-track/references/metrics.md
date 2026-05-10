@@ -21,7 +21,7 @@ Status được compute theo **thứ tự ưu tiên** (first match wins, rule tr
 | 1 | `achieved` | `current >= target` (đạt hoặc vượt target, kể cả khi đã quá hạn) |
 | 2 | `missed` | `current < target` AND `now > end_date` (hết hạn, chưa đạt) |
 | 3 | `pending` | `current == baseline` AND `now <= end_date` (chưa bắt đầu, còn hạn) |
-| 4 | `in-progress` | còn lại (còn hạn, current khác baseline và chưa đạt target — gồm cả regression `current < baseline`) |
+| 4 | `in-progress` | còn lại (còn hạn, current khác baseline và chưa đạt target, gồm cả regression `current < baseline`) |
 
 **Lưu ý**:
 - Rule `achieved` (1) đè `missed` (2): vượt target rồi thì coi như đạt, dù đã quá hạn.
