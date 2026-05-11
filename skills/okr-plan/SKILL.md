@@ -46,6 +46,8 @@ Với mỗi KR:
 3. Nhóm actions thành **Milestones** theo thời gian.
 4. Đề xuất dependencies (action B chờ A).
 5. Mặc định mỗi action `pic: self`. Cảnh báo nếu action cần skill chưa có trong Solo Profile (đề xuất thêm action học/outsource trước).
+6. Nếu action có ghi chú ngắn (dependency, blocker, context quan trọng), ghi vào field `notes` (≤50 ký tự). Không có thì để trống.
+7. Nếu action liên kết tool trong resources.md có `Cách dùng` là `skill:` hoặc `mcp:`, hỏi user có external ID để sync không. Nếu có → ghi `external_ids` frontmatter. Nếu không → bỏ qua.
 
 **Deepening Techniques (agent tự challenge trước khi trình user):**
 
@@ -72,11 +74,11 @@ Tóm tắt Plan
 | M3: Launch    | 2026-12-15  | 4         | KR2, KR3     |
 
 Actions (12 total, mọi action `pic: self`)
-| ID    | Title              | Milestone | Effort | Deps      | Output            |
-|-------|--------------------|-----------|--------|-----------|-------------------|
-| A001  | Khảo sát user      | M1        | m      | -         | survey-report.md  |
-| A002  | Phân tích đối thủ  | M1        | l      | -         | competitor.xlsx   |
-| A003  | Spec MVP           | M2        | l      | A001,A002 | spec.md           |
+| ID    | Title              | Milestone | Effort | Deps      | Output            | Notes         | Ext IDs      |
+|-------|--------------------|-----------|--------|-----------|-------------------|---------------|--------------|
+| A001  | Khảo sát user      | M1        | m      | -         | survey-report.md  |               |              |
+| A002  | Phân tích đối thủ  | M1        | l      | -         | competitor.xlsx   | Cần data từ X | things3: T01 |
+| A003  | Spec MVP           | M2        | l      | A001,A002 | spec.md           |               |              |
 
 Đánh giá nhanh
   Capacity fit:
@@ -103,6 +105,7 @@ Quy tắc đánh giá:
 2. Tạo thư mục `.okr/actions/`.
 3. Ghi mỗi action thành `AXXX-slug.md`. Mọi action `pic: self`.
 4. Cập nhật counters trong `plan.md`.
+5. **Render bảng Roadmap** trong `plan.md` body `## Roadmap`: sinh bảng per-milestone từ action files vừa tạo. Format xem `references/data-format.md` section "Roadmap format". Sắp xếp: Priority (critical > high > medium > low), rồi Deadline (sớm trước). Ongoing không có milestone → heading `### Chưa phân milestone`.
 
 ### Phase 5: Hậu xử lý
 
@@ -195,7 +198,8 @@ Quy tắc pre_confirmed:
 
 1. Ghi đè `plan.md` (counters, milestones).
 2. Ghi/sửa file `actions/AXXX-*.md` tương ứng. **Không** tạo hoặc sửa file trong `actions/archive/`. Mọi action mới `pic: self`.
-3. Đề xuất chạy `okr-track` mode `light` để confirm state mới.
+3. **Re-render bảng Roadmap** trong `plan.md` body `## Roadmap`: đọc lại tất cả `actions/*.md` (không archive), sinh lại bảng per-milestone. Format xem `references/data-format.md` section "Roadmap format".
+4. Đề xuất chạy `okr-track` mode `light` để confirm state mới.
 
 ---
 
