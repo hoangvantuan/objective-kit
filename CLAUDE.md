@@ -10,12 +10,12 @@ Chi tiết routing, status dashboard, keyword mapping: xem `skills/okr/SKILL.md`
 
 ## Skill con (4)
 
-| Skill         | Vai trò                   | Sub-mode                                     |
-| ------------- | ------------------------- | -------------------------------------------- |
-| `okr-init`    | SOT objective + resource  | `new`, `update-objective`, `update-resource` |
-| `okr-plan`    | SOT plan + actions        | `new`, `update`                              |
+| Skill         | Vai trò                   | Sub-mode                                          |
+| ------------- | ------------------------- | ------------------------------------------------- |
+| `okr-init`    | SOT objective + resource  | `new`, `update-objective`, `update-resource`      |
+| `okr-plan`    | SOT plan + actions        | `new`, `update`                                   |
 | `okr-track`   | Progress + review + inbox | `light`, `deep`, `closure`, `inbox-only`, `trace` |
-| `okr-capture` | Thu thập nhanh → inbox    | n/a                                          |
+| `okr-capture` | Thu thập nhanh → inbox    | n/a                                               |
 
 
 Tất cả skill con được kích hoạt qua orchestrator `/okr`. Không trigger trực tiếp.
@@ -24,16 +24,17 @@ Tất cả skill con được kích hoạt qua orchestrator `/okr`. Không trigg
 
 Mỗi field SOT chỉ được sửa bởi đúng 1 skill (`okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, delegate sang `okr-init`/`okr-plan` để apply).
 
-| Field | Skill được phép sửa |
-|-------|---------------------|
-| Objective text, KR/KI target/baseline/ngưỡng, period, status | `okr-init` `update-objective` |
-| Solo Profile (capacity, skills), tool, ngân sách | `okr-init` `update-resource` |
-| Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update` |
-| KR.current, KI.current, action.status, plan counters | `okr-track` `light`/`deep` |
-| Inbox items (tạo mới) | `okr-capture` |
-| Inbox items (xử lý: status transition) | `okr-track` |
-| Action notes, external_ids (tạo/sửa) | `okr-plan` `new`/`update` |
-| External sync (pull/push status) | `okr-track` `light`/`deep` |
+| Field                                                             | Skill được phép sửa           |
+| ----------------------------------------------------------------- | ----------------------------- |
+| Objective text, KR/KI target/baseline/ngưỡng, period, status      | `okr-init` `update-objective` |
+| Solo Profile (capacity, skills), tool, ngân sách                  | `okr-init` `update-resource`  |
+| Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update`           |
+| KR.current, KI.current, action.status, plan counters              | `okr-track` `light`/`deep`    |
+| Inbox items (tạo mới)                                             | `okr-capture`                 |
+| Inbox items (xử lý: status transition)                            | `okr-track`                   |
+| Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`     |
+| External sync (pull/push status)                                  | `okr-track` `light`/`deep`    |
+
 
 > Bảng này là **single source**. Các file `skills/okr/SKILL.md`, `skills/okr-track/references/data-format.md`, `docs/okr-system-review.md` link sang đây.
 
