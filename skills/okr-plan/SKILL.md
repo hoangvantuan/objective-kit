@@ -25,7 +25,7 @@ Mỗi khi user trả lời (chọn initiative, confirm action, assign PIC...), a
 | Kết quả | Hành vi |
 |---------|--------|
 | Cả 3 pass | Đi tiếp |
-| Bất kỳ fail | Follow-up ngay, dùng kỹ thuật phù hợp (xem Deepening Techniques) |
+| Bất kỳ fail | Trước follow-up, in 1 dòng `(Mình đào sâu thêm vì <lý do cụ thể>)` để user hiểu vì sao bị hỏi sâu. Vd: `(Mình đào sâu thêm vì action "Nghiên cứu thêm" chưa nói output là gì.)`. Sau đó dùng kỹ thuật phù hợp (xem Deepening Techniques). |
 | User nói "chưa biết" / "để sau" | Ghi nhận, đánh dấu `⚠️ TBD`. Phase confirm PHẢI nhắc lại |
 | User sốt ruột | Giảm độ sâu, giữ câu 1 (đủ cụ thể?). Không skip hoàn toàn |
 
