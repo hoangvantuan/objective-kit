@@ -57,7 +57,7 @@ Inbox: 3 items chưa xử lý
 
 Cần chú ý
   - A005 blocked 5 ngày: chờ approve từ stakeholder
-  - A007 quá hạn 3 ngày (PIC: An)
+  - A007 quá hạn 3 ngày
   - KR2 cần +8 đơn vị/tháng để kịp target
 ```
 
@@ -250,7 +250,7 @@ Agent đọc context từng item, đối chiếu với SOT hiện tại (objecti
 Inbox: 3 items chưa xử lý
 | # | Type     | Title                         | Captured  | Gợi ý xử lý                    |
 |---|----------|-------------------------------|-----------|----------------------------------|
-| 1 | action   | Viết unit test cho API auth   | 05-09     | → Tạo A014, gán M2, PIC: Bình   |
+| 1 | action   | Viết unit test cho API auth   | 05-09     | → Tạo A014, gán M2, due 05-15   |
 | 2 | thought  | Thử framework X cho frontend  | 05-08     | → Giữ inbox (chưa rõ scope)     |
 | 3 | blocker  | Server staging down           | 05-09     | → Block A007, ghi log            |
 
