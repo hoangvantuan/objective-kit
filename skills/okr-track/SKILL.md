@@ -113,11 +113,11 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 2. CONFIRM trước khi ghi (đếm số field thay đổi rồi chọn UI):
    - **Nếu ≤2 field thay đổi** → confirm 1 dòng (giảm friction quick check-in):
      ```
-     KR1: 40>50, A003 done. y/n/sửa?
+     KR1: 40>50, A003 done. (y/sửa/huỷ)
      ```
      hoặc:
      ```
-     A005 blocked (chờ approve). y/n/sửa?
+     A005 blocked (chờ approve). (y/sửa/huỷ)
      ```
    - **Nếu ≥3 field thay đổi** → confirm bảng đầy đủ:
      ```
@@ -127,7 +127,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
      - A005.status: doing > blocked, lý do: chờ approve
      Xác nhận? (y/sửa/huỷ)
      ```
-   - User trả lời `sửa` → quay lại bước 1 hỏi field nào sửa.
+   - Cả 2 nhánh: user trả lời `sửa` → hỏi field nào cần sửa, sửa xong CONFIRM lại. `huỷ` → bỏ toàn bộ thay đổi, kết thúc light mode.
 3. Áp dụng:
   - Ghi đè progress: `objective.md` (KR.current, KR status), `plan.md` (counters), `actions/*.md` (frontmatter status).
   - Append log: `.okr/log/YYYY-MM-DD.md`. File ngày đã có → append section mới.
