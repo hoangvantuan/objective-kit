@@ -33,7 +33,6 @@ status: pending | doing | done | blocked
 priority: critical | high | medium | low
 effort: xs | s | m | l | xl
 pic: "string"
-verifier: "string (người hoặc cơ chế verify output)"
 due_date: YYYY-MM-DD
 depends_on: [A001, A002]
 ---
