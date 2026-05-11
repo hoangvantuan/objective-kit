@@ -241,13 +241,48 @@ Mỗi đề xuất gắn nhãn skill sẽ áp dụng:
 
 #### Bước 5: Delegate sang skill phù hợp
 
-Gom đề xuất user đồng ý theo skill target:
+Gom đề xuất user đồng ý theo skill target. Mỗi delegate KÈM payload format:
 
-- Đề xuất gắn `okr-init update-objective` → kích hoạt `okr-init` mode `update-objective` với danh sách thay đổi KR/period.
-- Đề xuất gắn `okr-init update-resource` → kích hoạt `okr-init` mode `update-resource` với danh sách thay đổi PIC/khả dụng/tool.
-- Đề xuất gắn `okr-plan update` → kích hoạt `okr-plan` mode `update` với danh sách thay đổi action/milestone.
+```yaml
+delegate_to: okr-init update-objective | okr-init update-resource | okr-plan update
+context:
+  changes:
+    - field: <vd: KR2.target | A005.due_date | tool.X>
+      from: <giá trị cũ>
+      to: <giá trị mới>
+    - field: ...
+      from: ...
+      to: ...
+  reason: "<1-2 câu giải thích vì sao điều chỉnh, lấy từ Bước 2 root cause>"
+  source_review: log/reviews/YYYY-MM-DD.md
+  pre_confirmed: true
+```
 
-Skill được delegate sẽ tự chạy phase confirm + ghi file (theo flow của riêng nó). Track CHỈ truyền context (lý do + giá trị mới), KHÔNG tự ghi SOT objective/plan.
+Field meanings:
+
+| Field | Bắt buộc | Mô tả |
+|-------|----------|-------|
+| `delegate_to` | có | Skill + mode đích. 1 trong 3 giá trị. |
+| `context.changes[]` | có | Danh sách thay đổi (field, from, to). 1 payload có thể chứa nhiều changes nếu cùng skill đích. |
+| `context.reason` | có | Lý do GỐC từ Bước 2 root cause. Track viết vào, init/plan đọc + hiển thị trong CONFIRM diff. |
+| `context.source_review` | có | Path file review log để init/plan trace lại. Mặc định `log/reviews/<today>.md`. |
+| `context.pre_confirmed` | optional | `true` nếu user đã confirm tại Bước 4 ở track. Skill nhận có thể skip phase confirm riêng (xem T4 ở Đợt 4). Mặc định `false`. |
+
+Ví dụ payload thực tế (KR2 giảm target do market shift):
+
+```yaml
+delegate_to: okr-init update-objective
+context:
+  changes:
+    - field: KR2.target
+      from: 50
+      to: 35
+  reason: "Market shift Q4 (từ root cause Bước 2): tăng trưởng ngành chậm 30%, target 50 không khả thi."
+  source_review: log/reviews/2026-12-01.md
+  pre_confirmed: true
+```
+
+Skill được delegate sẽ tự chạy phase confirm + ghi file (theo flow của riêng nó). CONFIRM phase BẮT BUỘC hiển thị `reason` cùng diff (xem `skills/okr-init/SKILL.md` Phase 6 update-objective + `skills/okr-plan/SKILL.md` Phase 4 update). Track CHỈ truyền context, KHÔNG tự ghi SOT objective/plan.
 
 #### Bước 6: Xử lý inbox (nếu có items pending)
 
