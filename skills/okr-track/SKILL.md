@@ -144,12 +144,16 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 1. Hiển thị KI hiện tại (tên, ngưỡng, current, status).
 2. Hỏi user update từng KI: "KI1 (Tập thể dục, hiện tại: 2, ngưỡng: ≥3). Tuần này bao nhiêu?"
 3. Tính status mới theo logic: healthy (≥ ngưỡng), warning (< ngưỡng, chênh < 20%), critical (< 80% ngưỡng). Xem `references/metrics.md`.
-4. Nếu có action files (task cải thiện KI) → hỏi update status (pending/doing/done/blocked) như Project.
-5. CONFIRM trước khi ghi (tương tự Project: ≤2 field → 1 dòng, ≥3 field → bảng).
-6. Áp dụng: ghi đè `objective.md` (KI current, status). Nếu có actions → cập nhật `plan.md` counters + `actions/*.md`.
-7. Append log.
-8. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
-9. Đề xuất: nếu KI warning/critical → gợi ý tạo action cải thiện qua `/okr plan`.
+4. **Update practice streak**: đọc `plan.md` body section `## Practices` (nếu có). Với mỗi practice (`### PN: <Tên>` kèm field `frequency`, `target_count`, `current_streak`, `ki_link`):
+   - Tính chu kỳ vừa qua dựa trên `frequency` (vd `weekly` = tuần vừa rồi, `daily` = hôm qua). Hỏi: "Practice **P1: Tập thể dục** (target ≥3 lần/tuần, streak hiện tại: 2). Tuần vừa rồi đạt target chưa? (y = đạt → streak +1 / n = không đạt → reset streak về 0 / skip = bỏ qua không update)".
+   - User trả lời `y` → `current_streak += 1`. `n` → `current_streak = 0`. `skip` → giữ nguyên.
+   - Nếu practice `ki_link` đã có KI tương ứng vừa update ở step 2-3, hiển thị inline để user thấy liên kết: `(P1 → KI1 healthy)`.
+5. Nếu có action files (task cải thiện KI) → hỏi update status (pending/doing/done/blocked) như Project.
+6. CONFIRM trước khi ghi (tương tự Project: ≤2 field → 1 dòng, ≥3 field → bảng). Bao gồm cả `current_streak` thay đổi vào diff list.
+7. Áp dụng: ghi đè `objective.md` (KI current, status), ghi đè `plan.md` body section `## Practices` (chỉ field `current_streak` cho practice nào thay đổi). Nếu có actions → cập nhật `plan.md` counters + `actions/*.md`.
+8. Append log: ngoài KI/action, ghi cả practice streak thay đổi (vd `## Thay đổi → P1.current_streak: 2 > 3`).
+9. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
+10. Đề xuất: nếu KI warning/critical → gợi ý tạo action cải thiện qua `/okr plan`. Nếu practice streak vừa reset về 0 → cảnh báo "Practice P1 đã reset streak, KI1 có thể giảm tuần tới. Cân nhắc điều chỉnh practice (giảm target_count, đổi thời gian) qua `/okr plan update`".
 
 ---
 
