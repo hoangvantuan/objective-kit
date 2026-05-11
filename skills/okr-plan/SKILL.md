@@ -116,7 +116,9 @@ Trigger phổ biến: `okr-track` mode `deep` phát hiện KR at-risk hoặc blo
 
 ### Phase 1: Hiển thị state hiện tại
 
-Đọc `plan.md` + frontmatter `actions/*.md` (**không đệ quy**, bỏ qua `actions/archive/`) + `objective.md` + `resources.md`. Hiển thị:
+**Bypass detect (M7):** Nếu mode `update` được kích hoạt qua delegate từ `okr-track` Phase 5 (inbox processing) **kèm `context.items[]` đã pre-processed** (mỗi item có `title`, `description`, `related_kr`/`related_action` đã validate, `effort` ước, `milestone` gợi ý), SKIP Phase 1 state display + Phase 2 menu, đi thẳng Phase 3 (gom item thành changes) → Phase 4 confirm với data sẵn. State display chỉ chạy khi user vào trực tiếp `/okr plan update`.
+
+Mode bình thường (state display): đọc `plan.md` + frontmatter `actions/*.md` (**không đệ quy**, bỏ qua `actions/archive/`) + `objective.md` + `resources.md`. Hiển thị:
 
 ```
 Plan hiện tại
@@ -134,22 +136,26 @@ Cảnh báo
 
 ### Phase 2: Hỏi user/nhận đề xuất từ track
 
-Nếu vào từ `okr-track`: hiển thị đề xuất track đã đưa, user chọn áp dụng cái nào.
+3 nguồn trigger:
 
-Menu nếu user vào trực tiếp:
-1. Thêm action mới
-2. Sửa action (title, due_date, status, deps, deliverable, effort, priority)
-3. Xoá action
-4. Dời deadline milestone
-5. Thêm/xoá milestone
+1. **Từ track deep delegate** (`context.changes` + `context.reason` ở payload): hiển thị đề xuất track đã đưa, user chọn áp dụng cái nào (nếu `pre_confirmed: false` hoặc không có), hoặc đi thẳng Phase 4 confirm (nếu `pre_confirmed: true`).
+2. **Từ track inbox delegate** (`context.items[]` pre-processed): gom items thành Phase 3 changes, đi thẳng Phase 4 confirm. Mỗi `action` item → 1 "Thêm action mới" với data có sẵn (title, description, related_kr, effort gợi ý, milestone gợi ý). Mỗi `blocker` đụng action → 1 "Sửa action" status=blocked + lý do. Mỗi `resource` → delegate tiếp sang `okr-init update-resource` (không xử lý ở đây).
+3. **User vào trực tiếp** (`/okr plan update`): hiển thị menu:
+   1. Thêm action mới
+   2. Sửa action (title, due_date, status, deps, deliverable, effort, priority)
+   3. Xoá action
+   4. Dời deadline milestone
+   5. Thêm/xoá milestone
 
 ### Phase 3: Thu thập thay đổi
 
 Hỏi chi tiết từng cái user chọn.
 
-### Phase 4: CONFIRM diff (BẮT BUỘC)
+### Phase 4: CONFIRM diff
 
-Nếu vào từ track delegate (có `context.reason`), HIỂN THỊ trước bảng diff:
+**Pre-confirmed flow (T4c):** Nếu payload có `context.pre_confirmed: true` (user đã confirm tại track Bước 4 với full all-changes preview), SKIP ask "Xác nhận? (y/sửa/huỷ)" và đi thẳng Phase 5 ghi file. Vẫn HIỂN THỊ block "Lý do điều chỉnh" + bảng diff để user trace, kèm 1 dòng cuối: `(Đã được confirm tại track Bước 4. Ghi file ngay.)`.
+
+Default flow (không pre_confirmed): nếu vào từ track delegate (có `context.reason`), HIỂN THỊ trước bảng diff:
 
 ```
 Lý do điều chỉnh (từ track deep)
@@ -179,6 +185,11 @@ Quy tắc reason display:
 - Nếu `context.reason` rỗng hoặc không có (user vào trực tiếp `/okr plan update`) → KHÔNG render block "Lý do điều chỉnh".
 - `source_review` luôn đi kèm reason (cùng block).
 - Reason là plain text 1-3 câu, KHÔNG markdown đặc biệt (giữ readable trong terminal).
+
+Quy tắc pre_confirmed:
+- `pre_confirmed: true` chỉ áp dụng khi track Bước 4 đã hiển thị **all-changes diff** + user reply "y" (xem `okr-track/SKILL.md` Phase 4b Bước 4-5).
+- Nếu thiếu 1 trong 2 (track Bước 4 không show full diff, hoặc payload không set `pre_confirmed`), plan vẫn chạy default flow (hỏi confirm).
+- Pre-confirmed bypass CHỈ skip ask "y/sửa/huỷ". Vẫn ghi log + báo cáo bình thường.
 
 ### Phase 5: Áp dụng
 
