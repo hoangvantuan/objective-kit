@@ -82,91 +82,16 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 
 ## Inbox Processing
 
-`okr-track` xử lý inbox items khi chạy track (sau update progress).
-
-### Quy trình
-
-1. Đọc tất cả `.okr/inbox/*.md` có `status: pending`
-2. Đối chiếu với SOT hiện tại (objective, plan, actions, resources) để gợi ý xử lý
-3. Hiển thị bảng tóm tắt + gợi ý cho user chọn
-4. Xử lý từng item: delegate hoặc tự apply
-5. Đổi status trong file inbox (không xoá file)
-
-### Status transitions
-
-```
-pending → processed   (đã xử lý: tạo action, update resource, ghi log...)
-pending → discarded   (user quyết định bỏ)
-pending → pending     (giữ inbox, chờ rõ hơn)
-```
-
-### Delegate rules
-
-| Inbox type | Track tự xử lý? | Delegate sang |
-|------------|-----------------|---------------|
-| `action` | Không | `okr-plan` mode `update` (tạo action file) |
-| `blocker` | Có (sửa action.status = blocked) | - |
-| `resource` | Không | `okr-init` mode `update-resource` |
-| `thought` → action | Không | `okr-plan` mode `update` |
-| `thought` → log | Có (append log) | - |
-| `thought` → giữ | Có (không làm gì) | - |
-
-> **Migrate dữ liệu cũ**: File inbox `type: idea` hoặc `type: note` (schema cũ) được Phase 5 tự normalize sang `type: thought` khi đổi `status: processed`. Logic xử lý không cần phân biệt 5-type cũ.
-
-### Gom delegate
-
-Nhiều inbox items cùng delegate sang 1 skill → gom thành 1 lần delegate. Ví dụ: 3 items type=action → 1 lần gọi `okr-plan update` với danh sách 3 actions mới.
-
-### Ghi log
-
-Inbox items đã xử lý ghi vào `log/YYYY-MM-DD.md`:
-```
-## Inbox processed
-- [item title] → [hành động: tạo A014, block A007, ghi log...]
-```
+> Đã chuyển sang `skills/okr/references/shared-schemas.md` section "Inbox type → Delegate mapping". Đọc tại đó (load từ orchestrator okr).
 
 ## Archive Rules
 
-### Trigger
-
-Khi `okr-track` (light hoặc deep) đánh `status: done` cho action, **trong cùng lần track, sau phase confirm**.
-
-### Flow
-
-1. Dời file `actions/AXXX-slug.md` → `actions/archive/AXXX-slug.md` (tạo thư mục `archive/` nếu chưa có).
-2. Xóa dòng action đó khỏi `## Roadmap` body trong `plan.md`.
-3. Nếu milestone trống (tất cả actions thuộc milestone đều done) → xóa heading milestone khỏi Roadmap body. Giữ milestone trong frontmatter `plan.md` (với `status: done`).
-4. Cập nhật counters frontmatter `plan.md` (`completed` +N).
-
-### Invisible by Default
-
-| Nguồn dữ liệu | Mặc định đọc | Khi nào đọc thêm |
-|----------------|-------------|-------------------|
-| `actions/*.md` | Có (chỉ active) | Luôn đọc |
-| `actions/archive/` | **Không** | User trace hoặc mode closure |
-| `log/` | **Không** | User trace theo ngày |
-| `log/reviews/` latest | Có | Luôn đọc |
-| `log/reviews/` cũ hơn | **Không** | User trace theo ngày |
-
-### Quy tắc theo skill
-
-| Skill | Actions archive | Log cũ |
-|-------|----------------|--------|
-| Orchestrator `/okr` | Không đọc | Không đọc log. Chỉ latest review |
-| `okr-track` light | Không đọc | Chỉ latest log (để so trend) |
-| `okr-track` deep | Không đọc | Chỉ latest log + latest review |
-| `okr-track` closure | **Đọc archive** (tổng kết) | **Đọc tất cả reviews** (tổng kết) |
-| `okr-track` trace | **Đọc archive** (lazy) | **Đọc log cũ** (lazy) |
-| `okr-plan` update | Không đọc, không sửa | Không đọc |
-
-### Archive file schema
-
-Giống hệt `actions/AXXX-slug.md` (cùng frontmatter + body). Archive files là **read-only**, không bị sửa sau khi archive.
+> Đã chuyển sang `skills/okr/references/shared-schemas.md` section "Archive Rules". Đọc tại đó (load từ orchestrator okr).
 
 ## Log Reading Rules
 
 - Orchestrator `/okr` Bước 1: **KHÔNG đọc `log/`**. Chỉ đọc **1 file mới nhất** trong `log/reviews/`.
-- `okr-track` Phase 1: chỉ đọc **1 file mới nhất** trong `log/` và **1 file mới nhất** trong `log/reviews/` (để so trend).
+- `okr-track` Phase 1: chỉ đọc **1 file mới nhất** trong `log/`. Mode light: **1 file mới nhất** trong `log/reviews/`. Mode deep: **tối đa 3 files mới nhất** trong `log/reviews/`.
 - Log cũ hơn: KHÔNG đọc, trừ khi user yêu cầu trace.
 - `okr-track` closure: đọc tất cả `log/reviews/` (cần tổng kết period).
 
