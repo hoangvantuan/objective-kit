@@ -16,6 +16,7 @@ Giữa lúc làm việc, user thường nảy ra ý tưởng hoặc phát hiện
 - Nhanh: tối thiểu bước xác nhận. Mục tiêu là ghi xong trong 1-2 turn.
 - Không sửa SOT: chỉ tạo file trong `inbox/`. Mọi thay đổi SOT do skill khác xử lý khi inbox được process.
 - Giữ nguyên văn gốc: dù agent tinh chỉnh title/description, phần context gốc (nguyên văn user nhập) luôn được giữ lại.
+- **Không validate `related_kr`/`related_action` ID (M5a):** capture chỉ **gợi ý** best-effort dựa trên context user nhập + đọc nhanh `.okr/objective.md`/`actions/`. Nếu gợi ý sai (ID không tồn tại, KR đã missed, action đã archive), không phải lỗi capture. Track Phase 5 Bước 3 sẽ validate lại từng ID lúc xử lý inbox + đề xuất sửa hoặc set `null`.
 - Cho phép capture khi chưa có `.okr/objective.md`: tạo `.okr/inbox/` ngay, cảnh báo user nên chạy `/okr init` khi sẵn sàng.
 
 ## Flow
@@ -76,15 +77,12 @@ Inbox: 3 items từ input của bạn
 Lưu tất cả? (y / sửa N / bỏ N / huỷ)
 ```
 
-### Phase 4: Ghi file
+### Phase 4: Ghi file + nhắc xử lý
 
 1. Tạo `.okr/inbox/` nếu chưa có.
 2. Ghi mỗi item thành 1 file: `YYYY-MM-DD-HHmm-slug.md`
 3. Hiển thị: "Đã lưu N items vào inbox. Chạy `/okr track` để xử lý inbox."
-
-### Phase 5: Gợi ý (tuỳ chọn)
-
-Nếu inbox đã có ≥5 items chưa xử lý → nhắc: "Inbox có N items. Nên xử lý sớm bằng `/okr track`."
+4. **Reminder (nếu áp dụng):** đếm tổng items pending trong `.okr/inbox/` (kể cả vừa thêm). Nếu ≥5 → in thêm 1 dòng: `⚠️ Inbox có N items pending. Xử lý sớm bằng /okr track để tránh tích luỹ.`
 
 ## Schema
 
@@ -94,6 +92,7 @@ Nếu inbox đã có ≥5 items chưa xử lý → nhắc: "Inbox có N items. N
 
 - KHÔNG sửa SOT (objective.md, plan.md, resources.md, actions/).
 - KHÔNG tự phân loại nếu mơ hồ. Hỏi user.
+- KHÔNG validate `related_kr`/`related_action` ID. Gợi ý best-effort là đủ. Track xử lý inbox sẽ validate.
 - Giữ nguyên văn gốc trong body (section "## Context gốc").
 - Batch: tách rõ từng item, confirm tất cả 1 lần.
 - File name: `YYYY-MM-DD-HHmm-slug.md`. Slug dùng tiếng Việt không dấu hoặc tiếng Anh, dấu gạch ngang.
