@@ -172,7 +172,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
   - Xóa dòng action đó khỏi `## Roadmap` body trong `plan.md`.
   - Nếu milestone trống (tất cả actions thuộc milestone đều done) → xóa heading milestone khỏi Roadmap body. Giữ milestone trong frontmatter `plan.md` (với `status: done`).
   - Cập nhật counters frontmatter `plan.md` (`completed` +N).
-  - **Re-render bảng Roadmap**: thay vì patch từng dòng (bullet 2-3 trên), đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem `references/data-format.md` section "External Sync".
+  - **Re-render bảng Roadmap**: thay vì patch từng dòng (bullet 2-3 trên), đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem `skills/okr-plan/references/data-format.md` section "Roadmap format".
 5. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
 6. Đề xuất next action: highlight việc cần làm trong 1-7 ngày tới.
 
