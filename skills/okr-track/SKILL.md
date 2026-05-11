@@ -34,8 +34,10 @@ Một skill duy nhất cho 3 use case: cập nhật progress nhanh (daily), revi
 
 Tính metrics (xem `references/metrics.md`):
 
-- Project: KR % đạt, trend so với log trước, timeline, actions tổng/done/doing/blocked/pending, tốc độ done/tuần
-- Ongoing: KI status (healthy/warning/critical), trend so với review trước
+- Project:
+  - KR % đạt, trend so với log trước, timeline, actions tổng/done/doing/blocked/pending, tốc độ done/tuần
+  - **Actions group by KR**: với mỗi KR, lọc `actions/*.md` có frontmatter `key_result: KR<N>`. Đếm theo status (done/doing/blocked/pending). Liệt kê IDs active (status ∈ {doing, blocked, pending}, ưu tiên blocked + doing trước, pending sau). Nếu >5 active actions → hiển thị 3 đầu + "(+N nữa)". Mỗi blocked action kèm lý do ngắn từ field `description` hoặc 1 dòng đầu của body.
+- Ongoing: KI status (healthy/warning/critical), trend so với review trước. Practices streak hiện tại (đọc từ `plan.md` body).
 - Inbox: số items pending
 
 ### Phase 2: Hiển thị dashboard
@@ -52,8 +54,14 @@ Period: 2026-10-01 > 2026-12-31 (60% thời gian đã dùng)
 
 Key Results
   KR1: ████░░░░░░ 40/100 (40%) > on-track
+    Actions: 3 done | 2 doing | 1 blocked | 0 pending
+    Active: A001 (doing), A003 (doing), A005 (blocked: chờ approve)
   KR2: ██░░░░░░░░ 10/50  (20%) ! at-risk (trễ 15%)
+    Actions: 1 done | 1 doing | 0 blocked | 2 pending
+    Active: A007 (doing), A009 (pending), A010 (pending)
   KR3: ██████░░░░ 3/5    (60%) > ahead
+    Actions: 0 done | 0 doing | 0 blocked | 1 pending
+    Active: A012 (pending)
 
 Actions: 12 tổng | 4 done | 3 doing | 1 blocked | 4 pending
 Tốc độ: 1.2 done/tuần (kế hoạch: 1.5)
