@@ -22,9 +22,29 @@ Mỗi action phải trả lời đủ 5 câu:
 | `s` | 1-4 giờ | Viết 1 function, 1 trang doc |
 | `m` | 1-2 ngày | 1 feature nhỏ, 1 report |
 | `l` | 3-5 ngày | 1 module, design hoàn chỉnh |
-| `xl` | > 1 tuần | Nên tách thành nhiều actions nhỏ hơn |
+| `xl` | > 1 tuần | Cảnh báo overrun cao, ưu tiên tách. Nếu giữ → BẮT BUỘC Checkpoints. |
 
-Nếu effort = `xl`, hỏi user: "Task này khá lớn. Có thể tách thành 2-3 tasks nhỏ hơn không?"
+### Quy tắc cho effort = xl
+
+Solo user thường underestimate task xl: thực tế overrun gấp 1.5-2× ước lượng ban đầu (không có review giữa kỳ → không phát hiện trượt sớm). Quy trình bắt buộc khi user định ghi `effort: xl`:
+
+1. **Hỏi tách trước**: "Task này khá lớn (>1 tuần). Có thể tách thành 2-3 tasks `m` hoặc `l` không?". Đề xuất ngay split candidate dựa trên DoD nếu thấy được.
+2. **Nếu user giữ xl** → BẮT BUỘC tạo body section `## Checkpoints` với ≥2 mục, mỗi mục:
+   - 1 dòng mô tả mốc đạt được (vd "Phase 1: Spec hoàn chỉnh")
+   - Ngày deadline cụ thể (vd "by 2026-11-15")
+   - Format: `- [ ] [Mô tả mốc] (by YYYY-MM-DD)`
+3. **Nếu user từ chối tạo Checkpoints** → action không hợp lệ. Quay lại bước 1 (yêu cầu tách).
+
+Track đọc Checkpoints khi chạy `light` / `deep`: mốc nào quá hạn mà chưa tick → cảnh báo "Action AXXX trượt checkpoint N". User có thể update tiến độ checkpoint riêng (tick checkbox) trước khi đánh action `done`.
+
+Ví dụ Checkpoints hợp lệ:
+
+```markdown
+## Checkpoints
+- [ ] Phase 1: Khảo sát user xong (by 2026-11-08)
+- [ ] Phase 2: Spec MVP draft (by 2026-11-15)
+- [ ] Phase 3: Review + finalize (by 2026-11-22)
+```
 
 ## Priority (ưu tiên)
 
