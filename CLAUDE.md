@@ -38,6 +38,8 @@ Mỗi field SOT chỉ được sửa bởi đúng 1 skill (`okr-track` mode `dee
 
 > Bảng này là **single source**. Các file `skills/okr/SKILL.md`, `skills/okr-track/references/data-format.md`, `docs/okr-system-review.md` link sang đây.
 
+> Bảng này cũng có bản runtime tại `skills/okr/references/sot-ownership.md` (load khi skill okr chạy). CLAUDE.md là bản cho developer đọc repo.
+
 ## Hai loại mục tiêu
 
 - **Project**: có deadline, đo bằng Key Results (baseline → target), đạt target rồi kết thúc.
