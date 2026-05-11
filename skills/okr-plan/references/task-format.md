@@ -21,6 +21,8 @@ effort: m
 pic: ""
 due_date: YYYY-MM-DD
 depends_on: []
+notes: ""
+external_ids: {}
 ---
 ```
 
