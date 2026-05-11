@@ -286,9 +286,40 @@ Như deep + thêm:
 
 Chạy sau khi update progress (light) hoặc sau delegate (deep). Cũng có thể chạy độc lập nếu user gọi `/okr track` chỉ để xử lý inbox.
 
-#### Bước 1: Đọc inbox
+#### Bước 1: Đọc inbox + compute staleness
 
-Đọc tất cả `.okr/inbox/*.md` có `status: pending`. Nếu không có → skip.
+Đọc tất cả `.okr/inbox/*.md` có `status: pending`. Nếu không có → skip toàn bộ Phase 5.
+
+Với mỗi item, compute `staleness_days = today - captured_at` (xem `skills/okr-capture/references/data-format.md` section "Inbox Aging"). Phân loại:
+
+- Mới (≤7 ngày): xử lý bình thường ở Bước 2.
+- Đang chờ (7 < staleness ≤ 30): xử lý bình thường, nhưng sort lên đầu trong bảng Bước 2.
+- Cũ (>30 ngày): chuyển sang Bước 1.5 xử lý riêng trước.
+
+#### Bước 1.5: Cảnh báo stale items (chỉ chạy nếu có items >30 ngày)
+
+Hiển thị block riêng TRƯỚC bảng Bước 2:
+
+```
+⚠️ Inbox cũ ≥30 ngày (3 items)
+| # | Type     | Title                        | Captured   | Staleness |
+|---|----------|------------------------------|------------|-----------|
+| 1 | thought  | Thử framework X cho frontend | 2026-04-01 | 40 ngày   |
+| 2 | action   | Viết blog post về Y          | 2026-03-25 | 47 ngày   |
+| 3 | resource | Library Z hỗ trợ chart       | 2026-03-15 | 57 ngày   |
+
+Còn relevant không? (vd: "1 giữ, 2 bỏ, 3 giữ" / all giữ / all bỏ)
+```
+
+User trả lời:
+- `<N> giữ`: giữ `status: pending` (không thay đổi). Item đi tiếp vào Bước 2 xử lý bình thường.
+- `<N> bỏ`: đổi `status: discarded` ngay (không cần qua Bước 2-3).
+- `all giữ`: giữ tất cả, đẩy hết sang Bước 2.
+- `all bỏ`: discard tất cả.
+
+KHÔNG auto-discard. User quyết định cuối.
+
+Sau Bước 1.5, đi tiếp Bước 2 với items đã filter (đã giữ + items ≤30 ngày).
 
 #### Bước 2: Hiển thị inbox + gợi ý xử lý
 
