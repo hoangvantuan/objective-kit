@@ -163,35 +163,29 @@ Lặp đến khi user `y`.
 
 ### Phase 5: Thu thập Resource (hỏi tuần tự + cross-check)
 
-**Bước 0: Solo hay team?**
+Skill phục vụ persona **solo only** (1 user, 1 objective). KHÔNG còn nhánh team. Hỏi tuần tự:
 
-Hỏi: "Chỉ bạn thực hiện hay có team?"
-
-- **Solo**: skip phần nhân sự chi tiết (Zalo, SĐT, vai trò). Thay vào đó hỏi:
-  - **Effort commitment**: Bạn dành bao nhiêu thời gian/tuần cho mục tiêu này? (vd: 10 giờ/tuần, mỗi tối 1 tiếng)
-  - Công cụ, tài liệu, ngân sách: hỏi như thường nhưng rút gọn (gợi ý, không bắt buộc).
-- **Team**: hỏi đầy đủ phần nhân sự như dưới.
-
-Hỏi tuần tự:
-1. **Nhân sự** (team): Ai tham gia? Thu thập: Họ tên, thông tin liên lạc (nick Zalo, Facebook, SĐT, địa chỉ), vai trò, trách nhiệm, ngày tham gia, khả dụng (% thời gian), và ai quản lý công cụ nào.
-2. **Công cụ**: Danh sách công cụ sẽ sử dụng, khi nào dùng, dùng để làm gì, resource liên quan (URL, account), và người quản lý.
+1. **Solo Profile**:
+   - **Capacity**: Bạn dành bao nhiêu giờ/tuần cho mục tiêu này? (vd: 10 giờ/tuần, mỗi tối 1 tiếng)
+   - **Skills liên quan**: Bạn đã có sẵn kỹ năng nào phục vụ mục tiêu này? (vd: Python, viết content, design Figma). Mục đích: agent biết tự tin đề xuất action loại nào, và cảnh báo khi action cần skill chưa có.
+2. **Công cụ**: Danh sách công cụ sẽ sử dụng, khi nào dùng, dùng để làm gì, resource liên quan (URL, account).
 3. **Tài liệu / Knowledge Base**: Các tài liệu, hệ thống lưu trữ hiện có hoặc cần thiết (Link, folder, file), status (có sẵn/cần tạo/đang thiếu).
 4. **Ngân sách** (nếu Project hoặc cần đầu tư): Có ngân sách không? Bao nhiêu?
-5. **Thiếu hụt**: Có rủi ro/thiếu hụt nào nhận biết được không?
+5. **Thiếu hụt**: Có rủi ro/thiếu hụt nào nhận biết được không? (vd: skill còn thiếu, tool chưa mua, deadline ngoài tầm kiểm soát)
 
 User skip được (`không có` / `để sau`), nhưng field skip đánh dấu `⚠️ TBD`.
 
-**Cross-check resource vs. scope (bắt buộc sau khi thu thập xong):**
+**Cross-check capacity vs. scope (bắt buộc sau khi thu thập xong):**
 
 Agent tự tính toán sơ bộ trước khi sang Phase 6:
-- Tổng available capacity = Σ (người × % khả dụng × thời gian)
-- Ước tính scope từ KR/KI đã define (Phase 3)
+- Tổng available capacity = `capacity h/tuần × số tuần đến end_date` (Project) hoặc `capacity h/tuần × 4` (Ongoing, dùng 1 tháng làm horizon đánh giá)
+- Ước tính scope từ KR/KI đã define (Phase 3): mỗi KR cần khoảng bao nhiêu giờ?
 - So sánh: capacity có đủ cho scope không?
 
 Nếu lệch rõ rệt → cảnh báo user ngay, hỏi:
-- "Scope cần khoảng X person-months, team hiện có Y. Có kế hoạch bổ sung không, hay cần thu hẹp scope?"
+- "Scope cần khoảng X giờ, capacity hiện có Y giờ. Cần thu hẹp scope, extend deadline, hay tăng capacity?"
 
-Không cần chính xác tuyệt đối. Mục tiêu là phát hiện bất hợp lý lớn (vd: 1 người làm việc của 5 người).
+Không cần chính xác tuyệt đối. Mục tiêu là phát hiện bất hợp lý lớn (vd: 10 giờ/tuần làm việc của 40 giờ/tuần).
 
 ### Phase 6: CONFIRM Resource (BẮT BUỘC, kèm đánh giá)
 
@@ -199,18 +193,18 @@ Không cần chính xác tuyệt đối. Mục tiêu là phát hiện bất hợ
 Tóm tắt Resource
 | Mục            | Giá trị                                  |
 |----------------|------------------------------------------|
-| Người          | An (PM, 100%, từ 01/10), Bình (Dev, 50%) |
+| Solo Profile   | Tuấn, 10h/tuần, skills: Python, viết     |
 | Công cụ        | Notion (Task), GitHub, Figma             |
-| Tài liệu/KB    | brief.pdf, thư mục Drive dự án           |
-| Ngân sách      | 50M VND                                  |
-| Rủi ro         | Bình kiêm 2 dự án                        |
+| Tài liệu/KB    | brief.pdf, thư mục Drive                 |
+| Ngân sách      | 5M VND                                   |
+| Rủi ro         | Skill design Figma còn yếu               |
 
 Đánh giá nhanh
-  Capacity: 1.5 FTE × 3 tháng = 4.5 person-months
-  Scope ước tính: [dựa trên KR/KI] ≈ 5 person-months
+  Capacity: 10h/tuần × 12 tuần = 120 giờ
+  Scope ước tính: [dựa trên KR/KI] ≈ 150 giờ
   Fit: ⚠️ hơi thiếu, cần buffer hoặc thu hẹp scope
   Rủi ro chính:
-  - Bình 50% available, nếu dự án kia tăng tải → bottleneck
+  - Skill Figma còn yếu, cân nhắc dùng template/outsource phần design
   - ⚠️ Ngân sách chưa rõ (TBD)
 
 Xác nhận? (y / sửa / huỷ)
@@ -266,49 +260,47 @@ Ghi đè `objective.md`. Hiển thị: "Đã update. Chạy `/okr` để check t
 
 ### Phase 1: Hiển thị state hiện tại
 
-Đọc `resources.md` + frontmatter `actions/*.md` (nếu có). Hiển thị:
+Đọc `resources.md`. Hiển thị:
 
 ```
 Resource hiện tại
-| Mục              | Số lượng | Chi tiết                          |
-|------------------|----------|-----------------------------------|
-| Người            | 3        | An (PM), Bình (Dev), Chi (Design) |
-| Công cụ          | 4        | Notion, GitHub, Figma, Slack      |
-| Tài liệu/KB      | 2        | brief.pdf, Drive folder           |
-| Ngân sách        | 50M VND  | đã chi: 12M                       |
-| Actions chưa PIC | 2        | A007, A011                        |
-| Cảnh báo         | 1        | Bình khả dụng <50%, có 5 actions  |
+| Mục            | Giá trị                                |
+|----------------|----------------------------------------|
+| Solo Profile   | Tuấn, 10h/tuần, skills: Python, viết   |
+| Công cụ        | 4 (Notion, GitHub, Figma, Slack)       |
+| Tài liệu/KB    | 2 (brief.pdf, Drive folder)            |
+| Ngân sách      | 5M VND (đã chi: 1.2M)                  |
+| Rủi ro         | 1 (Skill Figma còn yếu)                |
 ```
+
+> **Legacy migrate**: Nếu file vẫn còn section `## Nhân sự (Vai trò & Trách nhiệm)` schema cũ, agent tự convert: lấy dòng đầu (hoặc dòng có khả dụng cao nhất) thành Solo Profile, drop các cột "Liên lạc", "Người quản lý", "Khả dụng %", "Actions". Thông báo user "Đã migrate schema cũ sang Solo Profile."
 
 ### Phase 2: Hỏi user muốn update gì
 
 Menu:
-1. Thêm/sửa/xoá người
+1. Sửa Solo Profile (capacity h/tuần, skills)
 2. Thêm/sửa/xoá công cụ
 3. Thêm/sửa/xoá tài liệu / knowledge base
 4. Update ngân sách
-5. Mapping PIC vào actions
-6. Update rủi ro/thiếu hụt
-7. Re-check xung đột
+5. Update rủi ro/thiếu hụt
 
 User chọn nhiều cùng lúc được (vd "1, 4").
 
 ### Phase 3: Thu thập thay đổi
 
-Tuỳ lựa chọn user. Vd nếu chọn 4:
-- Liệt kê actions chưa PIC.
-- Đề xuất PIC dựa trên skill match + khả dụng.
-- User confirm từng cái.
+Tuỳ lựa chọn user. Vd nếu chọn 1:
+- Hỏi capacity mới: "Tuần này bạn còn dành được X h/tuần không?"
+- Hỏi có thêm skill mới sau quá trình thực thi (vd học được kỹ năng mới)?
 
 ### Phase 4: CONFIRM diff (BẮT BUỘC)
 
 ```
 Thay đổi sắp áp dụng
-| Loại          | Trước              | Sau                  |
-|---------------|--------------------|----------------------|
-| Thêm người    | -                  | Dũng (QA, 80%)       |
-| Sửa PIC       | A007: unassigned   | A007: Dũng           |
-| Sửa khả dụng  | Bình: 100%         | Bình: 50%            |
+| Loại                  | Trước              | Sau                  |
+|-----------------------|--------------------|----------------------|
+| Sửa capacity          | 10h/tuần           | 6h/tuần              |
+| Thêm skill            | Python, viết       | Python, viết, SQL    |
+| Sửa ngân sách         | 5M VND             | 8M VND               |
 
 Xác nhận? (y / sửa / huỷ)
 ```
@@ -316,11 +308,10 @@ Xác nhận? (y / sửa / huỷ)
 ### Phase 5: Áp dụng + cảnh báo
 
 1. Ghi đè `resources.md`, update `last_updated`.
-2. Update field `pic` trong frontmatter `actions/*.md` (nếu có mapping mới).
-3. Check xung đột (xem section "Phát hiện xung đột" trong `references/data-format.md`):
-   - PIC khả dụng <50% nhưng có >N actions cùng deadline → cảnh báo
-   - Action có deadline mà PIC chưa khả dụng → cảnh báo
-4. Hiển thị: "Đã update resource. Cảnh báo: [...]. Chạy `/okr` để xem tiến độ."
+2. Cảnh báo cross-check:
+   - Capacity giảm rõ rệt (vd <60% so với cũ) mà còn nhiều actions chưa done → cảnh báo "Capacity giảm, scope có thể không kịp deadline. Cân nhắc dời actions sang sau hoặc giảm scope qua `/okr plan update`."
+   - Skill mới thêm có thể unlock action TBD trước đó (vd "Skill SQL mới: action A007 trước đây skip vì thiếu skill có thể làm lại").
+3. Hiển thị: "Đã update resource. Cảnh báo: [...]. Chạy `/okr` để xem tiến độ."
 
 ---
 
