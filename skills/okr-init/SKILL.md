@@ -192,8 +192,8 @@ Skill phục vụ persona **solo only** (1 user, 1 objective). KHÔNG còn nhán
 1. **Solo Profile**:
    - **Capacity**: Bạn dành bao nhiêu giờ/tuần cho mục tiêu này? (vd: 10 giờ/tuần, mỗi tối 1 tiếng)
    - **Skills liên quan**: Bạn đã có sẵn kỹ năng nào phục vụ mục tiêu này? (vd: Python, viết content, design Figma). Mục đích: agent biết tự tin đề xuất action loại nào, và cảnh báo khi action cần skill chưa có.
-2. **Công cụ**: Danh sách công cụ sẽ sử dụng, khi nào dùng, dùng để làm gì, resource liên quan (URL, account).
-3. **Tài liệu / Knowledge Base**: Các tài liệu, hệ thống lưu trữ hiện có hoặc cần thiết (Link, folder, file), status (có sẵn/cần tạo/đang thiếu).
+2. **Công cụ**: Danh sách công cụ (6 cột: Tên, Mục đích, Khi nào dùng, Cách dùng, Resource, Ghi chú). Hỏi thêm: "Cách dùng" (có skill/MCP integration? hay quy trình thủ công?), "Ghi chú" (license, giới hạn, lưu ý). Xem schema `references/data-format.md` section "Schema 6 cột thống nhất".
+3. **Tài liệu / Knowledge Base**: Tài liệu và KB (6 cột: Tên, Mục đích, Khi nào dùng, Cách dùng, Resource, Ghi chú). Status cũ gộp vào Ghi chú. Hỏi thêm: "Khi nào dùng" (trigger cụ thể), "Cách dùng" (mở link, dùng skill, search). Xem schema `references/data-format.md` section "Schema 6 cột thống nhất".
 4. **Ngân sách** (nếu Project hoặc cần đầu tư): Có ngân sách không? Bao nhiêu?
 5. **Thiếu hụt**: Có rủi ro/thiếu hụt nào nhận biết được không? (vd: skill còn thiếu, tool chưa mua, deadline ngoài tầm kiểm soát)
 
@@ -400,6 +400,8 @@ Resource hiện tại
 ```
 
 > **Legacy migrate**: Nếu file vẫn còn section `## Nhân sự (Vai trò & Trách nhiệm)` schema cũ, agent tự convert: lấy dòng đầu (hoặc dòng có khả dụng cao nhất) thành Solo Profile, drop các cột "Liên lạc", "Người quản lý", "Khả dụng %", "Actions". Thông báo user "Đã migrate schema cũ sang Solo Profile."
+
+> **Legacy migrate 6 cột**: Nếu bảng `## Công cụ` có 4 cột (Tên công cụ, Khi nào dùng, Mục đích, Resource) → auto-migrate sang 6 cột (thêm Cách dùng + Ghi chú trống). Nếu bảng `## Tài liệu & Knowledge Base` có 4 cột (Tên/Loại, Vị trí, Mục đích, Status) → map: Tên/Loại → Tên, Vị trí → Resource, Mục đích giữ, Status → Ghi chú. Thêm Khi nào dùng + Cách dùng trống. Thông báo user "Đã migrate bảng Công cụ/KB sang schema 6 cột. Vui lòng điền Cách dùng và Ghi chú."
 
 ### Phase 2: Hỏi user muốn update gì
 
