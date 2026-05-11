@@ -13,6 +13,8 @@ Một skill duy nhất cho 3 use case: cập nhật progress nhanh (daily), revi
 - `okr-track` **xử lý inbox**: phân loại items → delegate hoặc tự apply tuỳ loại.
 - Thay đổi **cấu trúc** (KR target, action mới, dời deadline, đổi PIC) → delegate sang `okr-init` hoặc `okr-plan` mode `update-*`. Track đề xuất, init/plan áp dụng.
 
+> **Tiên quyết**: Skill `okr` (orchestrator) PHẢI load trước khi skill này chạy. Context từ orchestrator đã có sẵn (SOT ownership, shared schemas, quality gate), KHÔNG đọc lại.
+
 ## Điều kiện tiên quyết
 
 - `.okr/objective.md` tồn tại (tối thiểu).

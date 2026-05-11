@@ -7,6 +7,8 @@ description: "Sub-skill của /okr. Tạo hoặc điều chỉnh kế hoạch (p
 
 Skill quản lý 2 SOT: `plan.md` và `actions/`. Hỗ trợ tạo mới và điều chỉnh sau (khi `okr-track` deep phát hiện cần thay đổi cấu trúc).
 
+> **Tiên quyết**: Skill `okr` (orchestrator) PHẢI load trước khi skill này chạy. Context từ orchestrator đã có sẵn (SOT ownership, shared schemas, quality gate), KHÔNG đọc lại.
+
 ## Điều kiện tiên quyết
 
 - `.okr/objective.md` tồn tại. Thiếu → quay lại `/okr` để init.
@@ -14,20 +16,22 @@ Skill quản lý 2 SOT: `plan.md` và `actions/`. Hỗ trợ tạo mới và đi
 
 ## Quality Gate
 
-Áp dụng Quality Gate (đã load từ skill okr, file references/quality-gate.md). Đọc trước khi tiến hành các phase hỏi user.
+Áp dụng Quality Gate (đã có trong context từ orchestrator). Áp dụng trước khi tiến hành các phase hỏi user.
 
 Ví dụ áp dụng cho mode `new` / `update`:
+
 - "Đủ cụ thể?" → action "Nghiên cứu thêm" FAIL (output là gì? đo bằng gì?).
 - "Giả định ẩn?" → thêm 5 actions mới nhưng không nói effort tổng bao nhiêu giờ.
 - "Mâu thuẫn?" → capacity 10h/tuần nhưng gán 6 actions effort `m` (1-2 ngày mỗi cái) cùng deadline tuần sau.
 
 ## Phase 0: Detect mode
 
-| State | Mode |
-|-------|------|
-| `plan.md` chưa có | `new` |
-| Có `plan.md` + user/track nhắc thay đổi cấu trúc | `update` |
-| User chọn explicit (vd `/okr plan update`) | theo lựa chọn |
+| State                                            | Mode          |
+| ------------------------------------------------ | ------------- |
+| `plan.md` chưa có                                | `new`         |
+| Có `plan.md` + user/track nhắc thay đổi cấu trúc | `update`      |
+| User chọn explicit (vd `/okr plan update`)       | theo lựa chọn |
+
 
 ---
 
@@ -41,6 +45,7 @@ Ví dụ áp dụng cho mode `new` / `update`:
 ### Phase 2: Đề xuất phân rã (KHÔNG ghi file, có đào sâu)
 
 Với mỗi KR:
+
 1. Đề xuất 1-3 **Initiatives** (sáng kiến lớn).
 2. Mỗi Initiative → 2-5 **Actions** cụ thể.
 3. Nhóm actions thành **Milestones** theo thời gian.
@@ -51,13 +56,14 @@ Với mỗi KR:
 
 **Deepening Techniques (agent tự challenge trước khi trình user):**
 
-| Khía cạnh | Kỹ thuật | Ví dụ |
-|-----------|---------|-------|
-| **Initiative** | Hỏi "nếu chỉ được làm 1, chọn cái nào?" | Buộc user ưu tiên, tránh plan phình to |
-| **Action** | Yêu cầu mô tả output cụ thể (file, event, metric) | "Action 'Nghiên cứu thị trường': output là gì? Report? Slide? Data raw?" |
-| **Skill match** | Challenge action có skill chưa có | "Action 'Design Figma' nhưng Solo Profile chưa có skill design. Có học trước, outsource, hay đổi approach?" |
-| **Dependencies** | Vẽ critical path, hỏi user confirm | "A003 chờ A001 + A002. Nếu A002 trễ 1 tuần, plan có chịu được không?" |
-| **Timeline** | So sánh tổng effort vs. capacity | "12 actions, 12 tuần, capacity 10h/tuần = 120h. Mỗi action ước 8h = 96h. Buffer 24h. OK?" |
+| Khía cạnh        | Kỹ thuật                                          | Ví dụ                                                                                                       |
+| ---------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Initiative**   | Hỏi "nếu chỉ được làm 1, chọn cái nào?"           | Buộc user ưu tiên, tránh plan phình to                                                                      |
+| **Action**       | Yêu cầu mô tả output cụ thể (file, event, metric) | "Action 'Nghiên cứu thị trường': output là gì? Report? Slide? Data raw?"                                    |
+| **Skill match**  | Challenge action có skill chưa có                 | "Action 'Design Figma' nhưng Solo Profile chưa có skill design. Có học trước, outsource, hay đổi approach?" |
+| **Dependencies** | Vẽ critical path, hỏi user confirm                | "A003 chờ A001 + A002. Nếu A002 trễ 1 tuần, plan có chịu được không?"                                       |
+| **Timeline**     | So sánh tổng effort vs. capacity                  | "12 actions, 12 tuần, capacity 10h/tuần = 120h. Mỗi action ước 8h = 96h. Buffer 24h. OK?"                   |
+
 
 Không cần challenge tất cả. Chỉ challenge khía cạnh nào Quality Gate chưa pass.
 
@@ -94,6 +100,7 @@ Xác nhận? (y / sửa <ID>: <field>=<value> / xoá <ID> / thêm)
 ```
 
 Quy tắc đánh giá:
+
 - **Capacity fit**: tính tổng effort ước tính (giờ) vs. capacity còn lại. Tuần nào dồn việc nhất?
 - **Timeline**: xác định critical path dài nhất, còn buffer không?
 - **Rủi ro**: liệt kê field TBD, dependency ngoài, skill chưa có trong Solo Profile.
@@ -144,11 +151,11 @@ Cảnh báo
 1. **Từ track deep delegate** (`context.changes` + `context.reason` ở payload): hiển thị đề xuất track đã đưa, user chọn áp dụng cái nào (nếu `pre_confirmed: false` hoặc không có), hoặc đi thẳng Phase 4 confirm (nếu `pre_confirmed: true`).
 2. **Từ track inbox delegate** (`context.items[]` pre-processed): gom items thành Phase 3 changes, đi thẳng Phase 4 confirm. Mỗi `action` item → 1 "Thêm action mới" với data có sẵn (title, description, related_kr, effort gợi ý, milestone gợi ý). Mỗi `blocker` đụng action → 1 "Sửa action" status=blocked + lý do. Mỗi `resource` → delegate tiếp sang `okr-init update-resource` (không xử lý ở đây).
 3. **User vào trực tiếp** (`/okr plan update`): hiển thị menu:
-   1. Thêm action mới
-   2. Sửa action (title, due_date, status, deps, deliverable, effort, priority)
-   3. Xoá action
-   4. Dời deadline milestone
-   5. Thêm/xoá milestone
+  1. Thêm action mới
+  2. Sửa action (title, due_date, status, deps, deliverable, effort, priority)
+  3. Xoá action
+  4. Dời deadline milestone
+  5. Thêm/xoá milestone
 
 ### Phase 3: Thu thập thay đổi
 
@@ -185,11 +192,13 @@ Xác nhận? (y / sửa / huỷ)
 ```
 
 Quy tắc reason display:
+
 - Nếu `context.reason` rỗng hoặc không có (user vào trực tiếp `/okr plan update`) → KHÔNG render block "Lý do điều chỉnh".
 - `source_review` luôn đi kèm reason (cùng block).
 - Reason là plain text 1-3 câu, KHÔNG markdown đặc biệt (giữ readable trong terminal).
 
 Quy tắc pre_confirmed:
+
 - `pre_confirmed: true` chỉ áp dụng khi track Bước 4 đã hiển thị **all-changes diff** + user reply "y" (xem `okr-track/SKILL.md` Phase 4b Bước 4-5).
 - Nếu thiếu 1 trong 2 (track Bước 4 không show full diff, hoặc payload không set `pre_confirmed`), plan vẫn chạy default flow (hỏi confirm).
 - Pre-confirmed bypass CHỈ skip ask "y/sửa/huỷ". Vẫn ghi log + báo cáo bình thường.

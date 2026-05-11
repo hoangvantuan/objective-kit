@@ -7,6 +7,8 @@ description: "Sub-skill của /okr. Thu thập nhanh ý tưởng, ghi chú, acti
 
 Skill giúp user ghi lại bất kỳ nội dung gì nhanh nhất có thể, không cần biết nó thuộc skill nào hay mode nào. Agent phân tích, tinh chỉnh, phân loại, rồi lưu vào inbox. Việc xử lý inbox (chuyển thành action, update resource, ghi log...) là trách nhiệm của `okr-track`.
 
+> **Tiên quyết**: Skill `okr` (orchestrator) PHẢI load trước khi skill này chạy. Context từ orchestrator đã có sẵn (SOT ownership, shared schemas), KHÔNG đọc lại.
+
 ## Tại sao cần skill này?
 
 Giữa lúc làm việc, user thường nảy ra ý tưởng hoặc phát hiện vấn đề. Nếu phải vào đúng mode (`okr-plan update`, `okr-init update-resource`) mới thêm được, ma sát quá lớn → user bỏ qua → mất thông tin. Capture giải quyết vấn đề này: ghi trước, xử lý sau.
