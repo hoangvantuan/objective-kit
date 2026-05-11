@@ -331,9 +331,11 @@ Tác động sang plan + actions
 
 KHÔNG block. User vẫn có thể confirm và xử lý plan sau qua `/okr plan update`. Mục tiêu là surface tác động để user không quên.
 
-### Phase 6: CONFIRM diff (BẮT BUỘC)
+### Phase 6: CONFIRM diff
 
-Nếu vào từ track delegate (có `context.reason`), HIỂN THỊ trước bảng diff:
+**Pre-confirmed flow (T4b):** Nếu payload có `context.pre_confirmed: true` (user đã confirm tại track Bước 4 với full all-changes preview), SKIP ask "Xác nhận? (y/sửa/huỷ)" và đi thẳng Phase 7 ghi file. Vẫn HIỂN THỊ block "Lý do điều chỉnh" + bảng diff + cảnh báo SMART + tác động (Phase 5) để user trace, kèm 1 dòng cuối: `(Đã được confirm tại track Bước 4. Ghi file ngay.)`.
+
+Default flow (không pre_confirmed): nếu vào từ track delegate (có `context.reason`), HIỂN THỊ trước bảng diff:
 
 ```
 Lý do điều chỉnh (từ track deep)
@@ -342,10 +344,14 @@ Lý do điều chỉnh (từ track deep)
   Source: log/reviews/2026-12-01.md
 ```
 
-Quy tắc:
+Quy tắc reason display:
 - Reason rỗng hoặc không có → KHÔNG render block.
 - Plain text 1-3 câu, không markdown.
 - `source_review` cùng block với reason.
+
+Quy tắc pre_confirmed:
+- `pre_confirmed: true` chỉ áp dụng khi track Bước 4 đã hiển thị **all-changes diff** + user reply "y" (xem `okr-track/SKILL.md` Phase 4b Bước 4-5).
+- Pre-confirmed bypass CHỈ skip ask "y/sửa/huỷ". Vẫn hiển thị Impact Check (Phase 5) + ghi log + báo cáo bình thường.
 
 Sau đó luôn hiển thị bảng:
 
