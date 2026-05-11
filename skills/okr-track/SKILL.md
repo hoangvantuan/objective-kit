@@ -178,10 +178,12 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 1. Hiển thị KI hiện tại (tên, ngưỡng, current, status).
 2. Hỏi user update từng KI: "KI1 (Tập thể dục, hiện tại: 2, ngưỡng: ≥3). Tuần này bao nhiêu?"
 3. Tính status mới theo logic: healthy (≥ ngưỡng), warning (< ngưỡng, chênh < 20%), critical (< 80% ngưỡng). Xem `references/metrics.md`.
-4. **Update practice streak**: đọc `plan.md` body section `## Practices` (nếu có). Với mỗi practice (`### PN: <Tên>` kèm field `frequency`, `target_count`, `current_streak`, `ki_link`):
-   - Tính chu kỳ vừa qua dựa trên `frequency` (vd `weekly` = tuần vừa rồi, `daily` = hôm qua). Hỏi: "Practice **P1: Tập thể dục** (target ≥3 lần/tuần, streak hiện tại: 2). Tuần vừa rồi đạt target chưa? (y = đạt → streak +1 / n = không đạt → reset streak về 0 / skip = bỏ qua không update)".
-   - User trả lời `y` → `current_streak += 1`. `n` → `current_streak = 0`. `skip` → giữ nguyên.
-   - Nếu practice `ki_link` đã có KI tương ứng vừa update ở step 2-3, hiển thị inline để user thấy liên kết: `(P1 → KI1 healthy)`.
+4. **Update practice streak**: đọc `plan.md` body section `## Practices`.
+   - **Fallback (Minor2):** nếu `plan.md` không tồn tại HOẶC body không có heading `## Practices` HOẶC section rỗng (không có `### PN:`), in 1 dòng `(Ongoing chưa có practices. Skip step 4. Tạo practices qua /okr plan để track streak.)` rồi đi tiếp step 5. KHÔNG báo lỗi.
+   - Với mỗi practice (`### PN: <Tên>` kèm field `frequency`, `target_count`, `current_streak`, `ki_link`):
+     - Tính chu kỳ vừa qua dựa trên `frequency` (vd `weekly` = tuần vừa rồi, `daily` = hôm qua). Hỏi: "Practice **P1: Tập thể dục** (target ≥3 lần/tuần, streak hiện tại: 2). Tuần vừa rồi đạt target chưa? (y = đạt → streak +1 / n = không đạt → reset streak về 0 / skip = bỏ qua không update)".
+     - User trả lời `y` → `current_streak += 1`. `n` → `current_streak = 0`. `skip` → giữ nguyên.
+     - Nếu practice `ki_link` đã có KI tương ứng vừa update ở step 2-3, hiển thị inline để user thấy liên kết: `(P1 → KI1 healthy)`.
 5. Nếu có action files (task cải thiện KI) → hỏi update status (pending/doing/done/blocked) như Project.
 6. CONFIRM trước khi ghi (tương tự Project: ≤2 field → 1 dòng, ≥3 field → bảng). Bao gồm cả `current_streak` thay đổi vào diff list.
 7. Áp dụng: ghi đè `objective.md` (KI current, status), ghi đè `plan.md` body section `## Practices` (chỉ field `current_streak` cho practice nào thay đổi). Nếu có actions → cập nhật `plan.md` counters + `actions/*.md`.
