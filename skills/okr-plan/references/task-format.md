@@ -38,6 +38,12 @@ depends_on: []
 
 [Output đạt khi nào? Đo bằng gì? Vd: "Report cover đủ 5 đối thủ, mỗi đối thủ có ≥3 điểm so sánh"]
 
+## Checkpoints (BẮT BUỘC khi effort=xl, optional khác)
+
+- [ ] [Mốc 1: phase/phần đầu xong vào ngày YYYY-MM-DD]
+- [ ] [Mốc 2: phase/phần giữa xong vào ngày YYYY-MM-DD]
+- [ ] [Mốc 3+ (optional, xoá nếu không dùng): phase/phần cuối xong vào ngày YYYY-MM-DD]
+
 ## Ghi chú
 
 [Context bổ sung, ràng buộc, link tham khảo]
@@ -61,10 +67,10 @@ depends_on: []
 
 ## Effort values
 
-| Value | Thời gian ước lượng |
-|-------|-------------------|
-| xs | < 1 giờ |
-| s | 1-4 giờ |
-| m | 1-2 ngày |
-| l | 3-5 ngày |
-| xl | > 1 tuần |
+| Value | Thời gian ước lượng | Quy tắc đặc biệt |
+|-------|---------------------|------------------|
+| xs | < 1 giờ | - |
+| s | 1-4 giờ | - |
+| m | 1-2 ngày | - |
+| l | 3-5 ngày | - |
+| xl | > 1 tuần | **BẮT BUỘC body có `## Checkpoints` ≥2 mục, mỗi mục có ngày deadline cụ thể**. Track đọc Checkpoints để cảnh báo trượt giữa kỳ. Nếu không có Checkpoints, action không hợp lệ. |
