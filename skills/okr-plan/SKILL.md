@@ -10,15 +10,15 @@ Skill quản lý 2 SOT: `plan.md` và `actions/`. Hỗ trợ tạo mới và đi
 ## Điều kiện tiên quyết
 
 - `.okr/objective.md` tồn tại. Thiếu → quay lại `/okr` để init.
-- `.okr/resources.md` tồn tại. Thiếu → hỏi user có bổ sung trước (`/okr` → `okr-init` mode `update-resource`) hay tiếp tục với PIC trống.
+- `.okr/resources.md` tồn tại. Thiếu → hỏi user có bổ sung trước (`/okr` → `okr-init` mode `update-resource`) hay tiếp tục với Solo Profile mặc định (capacity 0h/tuần, skills rỗng — sẽ cảnh báo cross-check fit ở Phase 3 confirm).
 
 ## Quality Gate: đánh giá câu trả lời trước khi đi tiếp
 
-Mỗi khi user trả lời (chọn initiative, confirm action, assign PIC...), agent tự kiểm tra 3 câu (KHÔNG hiển thị cho user):
+Mỗi khi user trả lời (chọn initiative, confirm action, ước effort...), agent tự kiểm tra 3 câu (KHÔNG hiển thị cho user):
 
 1. **Đủ cụ thể?** Có thể chuyển thành action có deliverable đo được không? Vd: "Nghiên cứu thêm" → FAIL (output là gì? đo bằng gì?).
-2. **Giả định ẩn?** User bỏ qua constraint quan trọng không? Vd: thêm 5 actions mới nhưng không nói ai làm.
-3. **Mâu thuẫn?** Có xung đột với resource/timeline đã có không? Vd: PIC 50% available nhưng gán 6 actions cùng deadline.
+2. **Giả định ẩn?** User bỏ qua constraint quan trọng không? Vd: thêm 5 actions mới nhưng không nói effort tổng bao nhiêu giờ.
+3. **Mâu thuẫn?** Có xung đột với capacity/timeline đã có không? Vd: capacity 10h/tuần nhưng gán 6 actions effort `m` (1-2 ngày mỗi cái) cùng deadline tuần sau.
 
 **Hành vi theo kết quả:**
 
@@ -44,7 +44,7 @@ Mỗi khi user trả lời (chọn initiative, confirm action, assign PIC...), a
 ### Phase 1: Đọc context
 
 - `.okr/objective.md`: Objective + Key Results.
-- `.okr/resources.md`: PIC available + công cụ + ngân sách.
+- `.okr/resources.md`: Solo Profile (capacity h/tuần, skills) + công cụ + ngân sách.
 
 ### Phase 2: Đề xuất phân rã (KHÔNG ghi file, có đào sâu)
 
@@ -53,7 +53,7 @@ Với mỗi KR:
 2. Mỗi Initiative → 2-5 **Actions** cụ thể.
 3. Nhóm actions thành **Milestones** theo thời gian.
 4. Đề xuất dependencies (action B chờ A).
-5. Đề xuất PIC từ resources.md cho mỗi action.
+5. Mặc định mỗi action `pic: self`. Cảnh báo nếu action cần skill chưa có trong Solo Profile (đề xuất thêm action học/outsource trước).
 
 **Deepening Techniques (agent tự challenge trước khi trình user):**
 
@@ -61,9 +61,9 @@ Với mỗi KR:
 |-----------|---------|-------|
 | **Initiative** | Hỏi "nếu chỉ được làm 1, chọn cái nào?" | Buộc user ưu tiên, tránh plan phình to |
 | **Action** | Yêu cầu mô tả output cụ thể (file, event, metric) | "Action 'Nghiên cứu thị trường': output là gì? Report? Slide? Data raw?" |
-| **PIC** | Challenge khả dụng thực tế | "Bình 50% available, đang có 3 actions. Thêm action này thì Bình có kịp không?" |
+| **Skill match** | Challenge action có skill chưa có | "Action 'Design Figma' nhưng Solo Profile chưa có skill design. Có học trước, outsource, hay đổi approach?" |
 | **Dependencies** | Vẽ critical path, hỏi user confirm | "A003 chờ A001 + A002. Nếu A002 trễ 1 tuần, plan có chịu được không?" |
-| **Timeline** | So sánh tổng effort vs. available time | "12 actions, 3 tháng, 2 người = 6 person-months. Mỗi action ước 2 tuần = 6 months. Vừa khít, không buffer. OK?" |
+| **Timeline** | So sánh tổng effort vs. capacity | "12 actions, 12 tuần, capacity 10h/tuần = 120h. Mỗi action ước 8h = 96h. Buffer 24h. OK?" |
 
 Không cần challenge tất cả. Chỉ challenge khía cạnh nào Quality Gate chưa pass.
 
@@ -79,39 +79,38 @@ Tóm tắt Plan
 | M2: Build MVP | 2026-11-15  | 5         | KR1, KR2     |
 | M3: Launch    | 2026-12-15  | 4         | KR2, KR3     |
 
-Actions (12 total)
-| ID    | Title              | Milestone | PIC  | Deps     | Output            |
-|-------|--------------------|-----------|------|----------|-------------------|
-| A001  | Khảo sát user      | M1        | An   | -        | survey-report.md  |
-| A002  | Phân tích đối thủ  | M1        | Bình | -        | competitor.xlsx   |
-| A003  | Spec MVP           | M2        | An   | A001,A002| spec.md           |
+Actions (12 total, mọi action `pic: self`)
+| ID    | Title              | Milestone | Effort | Deps      | Output            |
+|-------|--------------------|-----------|--------|-----------|-------------------|
+| A001  | Khảo sát user      | M1        | m      | -         | survey-report.md  |
+| A002  | Phân tích đối thủ  | M1        | l      | -         | competitor.xlsx   |
+| A003  | Spec MVP           | M2        | l      | A001,A002 | spec.md           |
 
 Đánh giá nhanh
-  Resource fit:
-  - Tổng capacity: [X] person-months. Tổng actions: [Y]. Fit: [✅/⚠️]
-  - PIC tải nhiều nhất: [tên], [N] actions, [%] available
+  Capacity fit:
+  - Tổng effort ước tính: [X] giờ. Capacity: [10h/tuần × N tuần] = [Y] giờ. Fit: [✅/⚠️]
+  - Tuần dồn việc nhất: [tuần W], [N] actions cùng deadline.
   Timeline:
   - Critical path: [A001 → A003 → A007]. Độ dài: [X tuần]. Buffer: [Y tuần]
   Rủi ro:
-  - [vd: A005 có dependency ngoài team, chưa có backup plan]
-  - [vd: ⚠️ 3 actions chưa có PIC (TBD)]
+  - [vd: A005 dependency ngoài (chờ stakeholder), chưa có backup plan]
+  - [vd: ⚠️ 2 actions cần skill chưa có trong Solo Profile (Figma, SQL)]
 
 Xác nhận? (y / sửa <ID>: <field>=<value> / xoá <ID> / thêm)
 ```
 
 Quy tắc đánh giá:
-- **Resource fit**: tính tổng capacity vs. số actions. PIC nào gánh nhiều nhất?
+- **Capacity fit**: tính tổng effort ước tính (giờ) vs. capacity còn lại. Tuần nào dồn việc nhất?
 - **Timeline**: xác định critical path dài nhất, còn buffer không?
-- **Rủi ro**: liệt kê field TBD, dependency ngoài, bottleneck tiềm ẩn.
-- Nếu có rủi ro nghiêm trọng → đề xuất giải pháp cụ thể (thêm người, dời deadline, cắt scope).
+- **Rủi ro**: liệt kê field TBD, dependency ngoài, skill chưa có trong Solo Profile.
+- Nếu có rủi ro nghiêm trọng → đề xuất giải pháp cụ thể (cắt scope, dời deadline, học skill trước, outsource).
 
 ### Phase 4: Ghi file
 
 1. Tạo `.okr/plan.md`.
 2. Tạo thư mục `.okr/actions/`.
-3. Ghi mỗi action thành `AXXX-slug.md`.
+3. Ghi mỗi action thành `AXXX-slug.md`. Mọi action `pic: self`.
 4. Cập nhật counters trong `plan.md`.
-5. Cập nhật cột `Actions` trong `resources.md` (mapping PIC → action IDs) + `last_updated`.
 
 ### Phase 5: Hậu xử lý
 
@@ -147,11 +146,10 @@ Nếu vào từ `okr-track`: hiển thị đề xuất track đã đưa, user ch
 
 Menu nếu user vào trực tiếp:
 1. Thêm action mới
-2. Sửa action (title, PIC, due_date, status, deps, deliverable)
+2. Sửa action (title, due_date, status, deps, deliverable, effort, priority)
 3. Xoá action
 4. Dời deadline milestone
 5. Thêm/xoá milestone
-6. Đổi PIC hàng loạt
 
 ### Phase 3: Thu thập thay đổi
 
@@ -193,9 +191,8 @@ Quy tắc reason display:
 ### Phase 5: Áp dụng
 
 1. Ghi đè `plan.md` (counters, milestones).
-2. Ghi/sửa file `actions/AXXX-*.md` tương ứng. **Không** tạo hoặc sửa file trong `actions/archive/`.
-3. Sync `resources.md` (cột Actions của PIC) + `last_updated`.
-4. Đề xuất chạy `okr-track` mode `light` để confirm state mới.
+2. Ghi/sửa file `actions/AXXX-*.md` tương ứng. **Không** tạo hoặc sửa file trong `actions/archive/`. Mọi action mới `pic: self`.
+3. Đề xuất chạy `okr-track` mode `light` để confirm state mới.
 
 ---
 
@@ -211,11 +208,11 @@ Quy tắc reason display:
 - Mỗi action BẮT BUỘC có:
   - Definition of Done rõ ràng (mỗi item đo được, user tự check được)
   - Output/Deliverable cụ thể (file, số liệu, sự kiện)
-  - PIC (default `self` cho solo)
+  - `pic: self` (solo default, không thay đổi)
   - **Tiêu chí chất lượng** (output đạt khi nào? đo bằng gì?)
 - Action mơ hồ kiểu "Nghiên cứu thêm" không có output đo được → CẤM. Agent phải follow-up: "Output cụ thể là gì?"
 - Nếu user không trả lời được "output đo bằng gì" → action chưa đủ rõ, cần refine trước khi ghi.
 - Dependencies hợp lệ: ID tồn tại, không vòng tròn.
 - Mode `update` không sửa KR target. Đó là việc của `okr-init` mode `update-objective`.
 - Mode `update` không sửa action.status hay KR.current. Đó là việc của `okr-track` mode `light`.
-- Ongoing type: plan.md body chứa `## Practices` (hành động lặp lại để duy trì KI). Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI (vd: "Mua đồ tập gym", "Đặt lịch khám sức khoẻ"). Actions này vẫn tuân quy tắc action bình thường (DoD, output, PIC, effort). Milestones không bắt buộc với Ongoing.
+- Ongoing type: plan.md body chứa `## Practices` (hành động lặp lại để duy trì KI). Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI (vd: "Mua đồ tập gym", "Đặt lịch khám sức khoẻ"). Actions này vẫn tuân quy tắc action bình thường (DoD, output, effort, `pic: self`). Milestones không bắt buộc với Ongoing.
