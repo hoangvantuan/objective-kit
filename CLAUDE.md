@@ -32,6 +32,8 @@ Mỗi field SOT chỉ được sửa bởi đúng 1 skill (`okr-track` mode `dee
 | KR.current, KI.current, action.status, plan counters | `okr-track` `light`/`deep` |
 | Inbox items (tạo mới) | `okr-capture` |
 | Inbox items (xử lý: status transition) | `okr-track` |
+| Action notes, external_ids (tạo/sửa) | `okr-plan` `new`/`update` |
+| External sync (pull/push status) | `okr-track` `light`/`deep` |
 
 > Bảng này là **single source**. Các file `skills/okr/SKILL.md`, `skills/okr-track/references/data-format.md`, `docs/okr-system-review.md` link sang đây.
 
