@@ -406,6 +406,34 @@ Gợi ý xử lý dựa trên:
 
 #### Bước 3: Xử lý từng item user chọn
 
+**Step 3.0: Validate related ID (M5b).** Trước khi xử lý từng item user chọn, agent validate field `related_kr`/`related_action`/`related_tool` (do capture ghi vào, không guarantee đúng):
+
+| Field | Quy tắc validate | Hành vi nếu sai |
+|-------|------------------|-----------------|
+| `related_kr` | Phải khớp KR ID trong `objective.md` frontmatter (vd `KR1`, `KR2`). | Tìm KR có title match fuzzy với context item → đề xuất ID đúng. Nếu không tìm được → set `null`, hỏi user. |
+| `related_action` | Phải khớp action ID trong `actions/*.md` (vd `A003`). KHÔNG khớp `actions/archive/*.md` (action đã done). | Action đã archive → cảnh báo "Action X đã done/archive. Bỏ link?". Không tồn tại → set `null`, hỏi user. |
+| `related_tool` | Phải khớp tool ID hoặc tên trong `resources.md` Công cụ section. | Không tồn tại → đề xuất thêm tool qua `okr-init update-resource` hoặc set `null`. |
+
+Hiển thị cho user khi có sai sót:
+
+```
+Validate inbox related fields
+  Item #1 (action "Viết unit test cho API auth"): related_kr=KR9 → KR9 không tồn tại.
+    Đề xuất: KR2 (code coverage) hoặc null.
+  Item #3 (blocker "Server staging down"): related_action=A100 → A100 không tồn tại.
+    Đề xuất: A007 (deploy staging) match fuzzy 78%, hoặc null.
+
+Áp dụng đề xuất? (y / sửa N / null tất / huỷ)
+```
+
+User trả lời:
+- `y` → áp dụng tất cả đề xuất, ghi đè frontmatter inbox file (chỉ field `related_*`, không đổi `status`).
+- `sửa N` → user nói ID đúng cho item N.
+- `null tất` → set tất cả related sai thành `null`.
+- `huỷ` → giữ nguyên related sai, đi tiếp Bước 3 xử lý (sẽ skip mapping liên quan).
+
+Sau validate, đi tiếp xử lý từng item theo bảng:
+
 | Inbox type | Xử lý                                                                  | Ai thực hiện                                 |
 | ---------- | ---------------------------------------------------------------------- | -------------------------------------------- |
 | `action`   | Chuyển thành action file trong `actions/`, cập nhật `plan.md`          | Delegate → `okr-plan` mode `update`          |
