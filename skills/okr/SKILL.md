@@ -1,6 +1,6 @@
 ---
 name: okr
-description: "Entry point chính cho mọi tương tác OKR. LUÔN dùng skill này đầu tiên khi user nhắc đến mục tiêu, dự án, OKR, tracking, kế hoạch, tài nguyên, PIC, inbox, capture, ghi nhanh, hoặc gọi `/okr`. Skill tự đánh giá trạng thái `.okr/` hiện tại và chủ động kích hoạt skill phù hợp (init/plan/track/capture) với context user cung cấp. User KHÔNG cần biết tên skill con, chỉ làm việc với `/okr`."
+description: "Entry point chính cho mọi tương tác OKR. LUÔN dùng skill này đầu tiên khi user nhắc đến mục tiêu, dự án, OKR, tracking, kế hoạch, tài nguyên, capacity, skill, inbox, capture, ghi nhanh, hoặc gọi `/okr`. Skill tự đánh giá trạng thái `.okr/` hiện tại và chủ động kích hoạt skill phù hợp (init/plan/track/capture) với context user cung cấp. User KHÔNG cần biết tên skill con, chỉ làm việc với `/okr`."
 ---
 
 # okr: Orchestrator quản lý OKR
@@ -28,7 +28,7 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 | Field | Skill được phép sửa |
 |-------|---------------------|
 | Objective text, KR/KI target/baseline/ngưỡng, period, status | `okr-init` `update-objective` |
-| Người, tool, ngân sách, PIC, khả dụng | `okr-init` `update-resource` |
+| Solo Profile (capacity, skills), tool, ngân sách | `okr-init` `update-resource` |
 | Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update` |
 | KR.current, KI.current, action.status, plan counters | `okr-track` `light`/`deep` |
 | Inbox items (tạo mới) | `okr-capture` |
@@ -58,7 +58,7 @@ Trạng thái OKR
   Period    : [start > end hoặc "review cycle: weekly"]
   KR/KI     : X/Y đạt | Y total [hoặc N healthy / M warning / K critical]
   Actions   : a done / b doing / c blocked / d pending
-  Resource  : [đã có / thiếu PIC: tên action]
+  Resource  : [đã có (capacity Xh/tuần, N skills, M tool) / thiếu Solo Profile / thiếu capacity]
   Inbox     : N items chưa xử lý
   Log gần   : YYYY-MM-DD ([X ngày trước])
 ```
@@ -69,7 +69,7 @@ Trạng thái OKR
 |----------------|--------------|
 | `.okr/` chưa có HOẶC objective.md thiếu | `okr-init` mode `new` |
 | User nhắc objective/KR/KI/period/mục tiêu | `okr-init` mode `update-objective` |
-| User nhắc người/tài nguyên/PIC/ngân sách/tool | `okr-init` mode `update-resource` |
+| User nhắc capacity/skill/tài nguyên/ngân sách/tool | `okr-init` mode `update-resource` |
 | Có objective + resource, thiếu plan.md | `okr-plan` mode `new` |
 | Có plan.md + user nhắc thêm/sửa action, dời deadline, đổi milestone | `okr-plan` mode `update` |
 | User nhắc kế hoạch/lộ trình/milestone (mới) | `okr-plan` mode `new` |
@@ -80,7 +80,7 @@ Trạng thái OKR
 | User nhắc trace/xem lại/history/lịch sử action/milestone/log | `okr-track` mode `trace` |
 
 Keyword routing khi user cung cấp context:
-- "tài liệu / tài nguyên / nhân sự / công cụ / PIC / ngân sách" → `okr-init` `update-resource`
+- "tài liệu / tài nguyên / capacity / skill / công cụ / ngân sách / Solo Profile" → `okr-init` `update-resource`
 - "đổi target / sửa KR / sửa KI / đổi ngưỡng / đổi deadline objective" → `okr-init` `update-objective`
 - "kế hoạch / plan / lộ trình / milestone / action mới" → `okr-plan` `new` (nếu chưa có) hoặc `update`
 - "thêm action / sửa action / dời deadline / xoá action" → `okr-plan` `update`
