@@ -23,15 +23,13 @@ Một skill duy nhất cho 3 use case: cập nhật progress nhanh (daily), revi
 
 ## Flow
 
-### Phase 1: Đọc state + tính toán
+### Phase 1: Tính toán từ context + đọc thêm
 
-Đọc song song:
+SOT data đã có từ orchestrator (objective, plan frontmatter, actions frontmatter, resources). KHÔNG đọc lại.
 
-- `.okr/objective.md` (KR/KI hiện tại)
-- `.okr/plan.md` (milestones) (nếu có)
-- frontmatter `.okr/actions/*.md` (**không đệ quy**, bỏ qua `actions/archive/`) (status, due_date, pic) (nếu có)
-- `.okr/resources.md` (PIC khả dụng) (nếu có)
-- `.okr/inbox/*.md` với status=pending (đếm + đọc frontmatter)
+Đọc thêm (orchestrator chưa load):
+
+- `.okr/inbox/*.md` với status=pending: đọc frontmatter (orchestrator chỉ đếm)
 - `.okr/log/reviews/`: mode light → chỉ 1 file mới nhất (sorted desc). Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả. Trừ mode trace: đọc raw log khi user yêu cầu cụ thể.
 - `.okr/log/`: KHÔNG đọc (reviews đã tổng hợp nội dung log).
 
