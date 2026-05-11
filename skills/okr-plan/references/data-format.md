@@ -62,6 +62,8 @@ Quy tắc sinh bảng:
 - **SOT**: Action files là SOT. Bảng là view được sinh lại mỗi lần update. Không sửa bảng trực tiếp.
 - **Ongoing type**: Ongoing có thể có action không thuộc milestone nào. Nhóm dưới heading `### Chưa phân milestone`. Nếu Ongoing không có action nào, section `## Roadmap` chỉ chứa `## Practices` (không có bảng).
 
+> Schema Roadmap cũng có bản tổng hợp tại skill okr/references/shared-schemas.md.
+
 ## actions/AXXX-slug.md
 
 ```yaml

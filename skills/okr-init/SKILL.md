@@ -16,7 +16,7 @@ Skill duy nhất quản lý 2 SOT khởi tạo: `objective.md` và `resources.md
 
 ## Quality Gate
 
-Áp dụng 3 câu kiểm tra core + bảng hành vi từ `skills/okr/references/quality-gate.md`. Đọc file đó trước khi tiến hành các phase hỏi user.
+Áp dụng Quality Gate (đã load từ skill okr, file references/quality-gate.md). Đọc trước khi tiến hành các phase hỏi user.
 
 Ví dụ áp dụng cho mode `new` / `update-objective`:
 - "Đủ cụ thể?" → "tăng doanh thu" FAIL vì chưa nói kênh nào, sản phẩm nào, bao nhiêu %.

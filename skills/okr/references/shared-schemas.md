@@ -36,7 +36,7 @@ Cột bảng (5 cột, solo mode):
 | Priority | `priority` frontmatter | critical, high, medium, low |
 | Notes | `notes` frontmatter (optional) | Không có thì cell trống |
 
-Cột Assignee (ẩn khi solo): reserved for future. Khi Solo Profile có >1 người, thêm cột Assignee giữa Task và Deadline. Nguồn: `pic` frontmatter.
+Cột Assignee (ẩn khi solo): reserved for future. Khi Solo Profile có >1 người (mở rộng tương lai), thêm cột Assignee giữa Task và Deadline. Nguồn: `pic` frontmatter. Hiện tại luôn ẩn (solo mode).
 
 Quy tắc sinh bảng:
 
