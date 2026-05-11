@@ -37,7 +37,7 @@ Nếu effort = `xl`, hỏi user: "Task này khá lớn. Có thể tách thành 2
 
 ## Verify output
 
-Bộ skill OKR mặc định **user tự verify qua DoD checklist**: mỗi tiêu chí trong `## Definition of Done` phải đo được, check được. Action xong khi mọi item DoD tick xanh. Không cần field reviewer riêng trong frontmatter.
+Bộ skill OKR mặc định **user tự verify qua DoD checklist**: mỗi tiêu chí trong `## Definition of Done` phải đo được, check được. Action xong khi mọi item DoD tick xanh. Không cần field `verifier` riêng (đã bỏ khỏi schema).
 
 Hệ quả khi viết DoD:
 - Mỗi item DoD phải verify được không cần ai khác (vd: "Test suite chạy ≥80% pass", "File xuất hiện tại path X", "Số liệu trong dashboard đạt ngưỡng Y").
