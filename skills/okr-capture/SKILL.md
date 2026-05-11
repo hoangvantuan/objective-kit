@@ -98,3 +98,4 @@ Nếu inbox đã có ≥5 items chưa xử lý → nhắc: "Inbox có N items. N
 - Batch: tách rõ từng item, confirm tất cả 1 lần.
 - File name: `YYYY-MM-DD-HHmm-slug.md`. Slug dùng tiếng Việt không dấu hoặc tiếng Anh, dấu gạch ngang.
 - Nếu `.okr/` chưa có → vẫn tạo `.okr/inbox/` + cảnh báo chạy init.
+- KHÔNG ghi `staleness_days` vào frontmatter. Capture chỉ lưu `captured_at`. Staleness được compute on-the-fly bởi `okr-track` Phase 5 (xem `references/data-format.md` section "Inbox Aging").
