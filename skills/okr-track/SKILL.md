@@ -233,11 +233,37 @@ Mỗi đề xuất gắn nhãn skill sẽ áp dụng:
 | 5 | Tăng khả dụng Bình: 50% > 80%      | Cần đẩy build    | okr-init update-resource|
 ```
 
-#### Bước 4: User chọn áp dụng cái nào
+#### Bước 4: All-changes confirm + chọn áp dụng
+
+Bước 1: User chọn cái nào áp dụng:
 
 ```
 Đồng ý đề xuất nào? (vd: 1,3,4 / không / sửa N: <new value>)
 ```
+
+Bước 2: Sau khi user chọn (vd `1,3,4`), gom thay đổi theo skill đích + render **all-changes diff** trước khi delegate. Bảng phải gom theo skill (nhóm các change cùng skill vào 1 block), để user thấy tổng quan + biết init/plan sẽ áp dụng gì:
+
+```
+All-changes preview (gom theo skill đích)
+
+→ okr-init update-objective
+  - KR2.target: 50 > 35  (lý do: market shift Q4)
+
+→ okr-plan update
+  - Thêm A013 "Tăng marketing"  (gắn KR2, effort m)
+  - M2.deadline: 2026-11-15 > 2026-11-30  (A005 chậm)
+
+→ okr-init update-resource
+  - tool: thêm Mailchimp (cho A013 email campaign)
+
+Confirm tất cả? (y / sửa N / huỷ N / huỷ tất)
+```
+
+User trả lời:
+- `y` → đi tiếp Bước 5 với `pre_confirmed: true` cho mỗi delegate payload. Init/plan nhận signal sẽ SKIP phase confirm riêng (xem `okr-init/SKILL.md` Phase 6 + `okr-plan/SKILL.md` Phase 4).
+- `sửa N` → quay lại Bước 3 sửa đề xuất số N, xong render lại all-changes preview.
+- `huỷ N` → loại N khỏi danh sách áp dụng, render lại preview.
+- `huỷ tất` → quay lại Bước 4 lựa chọn ban đầu.
 
 #### Bước 5: Delegate sang skill phù hợp
 
@@ -266,7 +292,7 @@ Field meanings:
 | `context.changes[]` | có | Danh sách thay đổi (field, from, to). 1 payload có thể chứa nhiều changes nếu cùng skill đích. |
 | `context.reason` | có | Lý do GỐC từ Bước 2 root cause. Track viết vào, init/plan đọc + hiển thị trong CONFIRM diff. |
 | `context.source_review` | có | Path file review log để init/plan trace lại. Mặc định `log/reviews/<today>.md`. |
-| `context.pre_confirmed` | optional | `true` nếu user đã confirm tại Bước 4 ở track. Skill nhận có thể skip phase confirm riêng (xem T4 ở Đợt 4). Mặc định `false`. |
+| `context.pre_confirmed` | có | `true` sau khi user reply `y` cho all-changes preview ở Bước 4 (track đã gom + show full diff trước). Skill nhận BẮT BUỘC honor: skip ask "y/sửa/huỷ" ở phase confirm riêng, đi thẳng ghi file. Vẫn hiển thị diff + reason để trace. |
 
 Ví dụ payload thực tế (KR2 giảm target do market shift):
 
