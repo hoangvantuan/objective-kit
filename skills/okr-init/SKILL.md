@@ -237,20 +237,38 @@ Menu:
 
 Tuỳ lựa chọn, hỏi chi tiết.
 
-### Phase 4: CONFIRM diff (BẮT BUỘC)
+### Phase 4: Re-validate SMART (BẮT BUỘC trước CONFIRM)
+
+Trước khi hiển thị bảng confirm, agent re-validate SMART cho mọi KR/KI có thay đổi (target, baseline, period). Tiêu chí xem `references/okr-guide.md`:
+
+- **S**pecific: KR mô tả rõ chỉ số nào, sản phẩm/kênh nào.
+- **M**easurable: có baseline + target số (Project) hoặc ngưỡng (Ongoing).
+- **A**chievable: target stretch nhưng khả thi với capacity hiện tại.
+- **R**elevant: KR/KI vẫn phục vụ Objective.
+- **T**ime-bound: có deadline (Project) hoặc review_cycle (Ongoing).
+
+Nếu KR/KI thay đổi fail tiêu chí nào → liệt kê warning trong bảng confirm. KHÔNG block, user vẫn quyết.
+
+### Phase 5: CONFIRM diff (BẮT BUỘC)
 
 ```
 Thay đổi sắp áp dụng (objective.md)
 | Field   | Trước              | Sau                |
-|---------|--------------------|--------------------| 
+|---------|--------------------|--------------------|
 | KR2     | MRR 200M           | MRR 250M           |
 | End     | 2026-12-31         | 2027-01-15         |
 | Status  | active             | active (giữ)       |
 
-Xác nhận? (y / sửa / huỷ)
+Cảnh báo SMART (KR/KI thay đổi)
+- KR2 (MRR 200M > 250M): ⚠️ Achievable? Tốc độ MRR hiện tại
+  ~10M/tháng × 4 tháng = 40M, gap target mới 50M. Hơi stretch.
+- End 2027-01-15: Time-bound OK, nhưng cross năm tài chính. Cân
+  nhắc đặt thêm milestone Q4 closure trước.
+
+Xác nhận? (y / sửa / huỷ / bỏ qua cảnh báo)
 ```
 
-### Phase 5: Ghi file
+### Phase 6: Ghi file
 
 Ghi đè `objective.md`. Hiển thị: "Đã update. Chạy `/okr` để check tác động sang plan."
 
