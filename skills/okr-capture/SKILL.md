@@ -51,7 +51,18 @@ Nếu không chắc chắn type → hỏi user. Nếu không map được KR/act
 
 ### Phase 3: Confirm (nhanh)
 
-**Single item:**
+**Single item skip confirm**: Khi input chỉ 1 item đơn giản + type rõ ràng (action hoặc blocker), skip Phase 3 confirm. Ghi luôn + thông báo:
+
+```
+✓ Đã lưu "Viết unit test API auth" vào inbox (type: action, gợi ý KR2).
+```
+
+Giữ confirm cho:
+- Batch (≥2 items)
+- Type mơ hồ (không chắc action hay thought)
+- User muốn review (nói "xem lại trước khi lưu")
+
+**Single item (cần confirm):**
 
 ```
 Inbox item
