@@ -42,6 +42,10 @@ Tính metrics (xem `references/metrics.md`):
 
 **Project type:**
 
+Trước khi render dashboard, tính `period_overdue_days = max(0, today - end_date)`. Nếu `period_overdue_days > 0` AND `objective.status = active` → render dashboard kèm block cảnh báo period overdue ở vị trí ĐẦU TIÊN, trên cả Period progress (xem mẫu thứ 2 dưới).
+
+Dashboard chuẩn (period chưa quá hạn):
+
 ```
 Dashboard: [Tên Objective]
 Period: 2026-10-01 > 2026-12-31 (60% thời gian đã dùng)
@@ -60,6 +64,28 @@ Cần chú ý
   - A007 quá hạn 3 ngày
   - KR2 cần +8 đơn vị/tháng để kịp target
 ```
+
+Dashboard khi period đã qua (`period_overdue_days > 0` AND `status = active`):
+
+```
+⚠️ Period đã qua 12 ngày
+End date 2026-12-31, hôm nay 2027-01-12. Status objective vẫn `active`.
+
+KR chưa achieved:
+  - KR1: 80/100 (80%) — còn thiếu 20 đơn vị
+  - KR2: 35/50  (70%) — còn thiếu 15 đơn vị
+
+Đề xuất:
+  - Extend end_date qua `/okr init update-objective` nếu vẫn muốn theo đuổi target
+  - Đổi status sang `completed` (chấp nhận kết quả hiện tại) hoặc `cancelled`
+    (dừng theo đuổi) qua `/okr init update-objective`
+
+Dashboard: [Tên Objective]
+Period: 2026-10-01 > 2026-12-31 (period đã đóng, +12 ngày)
+... (phần còn lại giống dashboard chuẩn)
+```
+
+Logic chi tiết: xem `references/metrics.md` section "Period Overdue (Project type)".
 
 **Ongoing type:**
 

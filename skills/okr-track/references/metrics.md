@@ -65,6 +65,35 @@ Ongoing không dùng timeline trend. Thay vào đó, so sánh status hiện tạ
 - `stable`: không đổi
 - `declining`: có KI chuyển từ healthy → warning/critical
 
+## Period Overdue (Project type)
+
+Áp dụng chỉ cho `type: project`. Ongoing không có deadline → không cần.
+
+### Detect
+
+```
+period_overdue_days = max(0, today - end_date)
+overdue = (period_overdue_days > 0) AND (objective.status == "active")
+```
+
+Ví dụ: `end_date = 2026-12-31`, `today = 2027-01-12`, `status = active` → `overdue = true`, `period_overdue_days = 12`.
+
+### Hành vi của okr-track
+
+- Phase 2 dashboard: nếu `overdue` → render block cảnh báo ở vị trí đầu (trước Key Results), liệt kê KR chưa `achieved` + đề xuất hành động (extend end_date hoặc đổi status).
+- Không tự đổi status. Chỉ ĐỀ XUẤT, user quyết.
+- Nếu `objective.status` đã là `completed` / `cancelled` / `paused` / `archived` → KHÔNG render cảnh báo (period overdue chỉ relevant khi user vẫn theo đuổi).
+
+### Đề xuất hành động (in trong cảnh báo)
+
+| Tình huống | Đề xuất |
+|------------|---------|
+| Còn KR gần đạt (≥80%) | Extend end_date thêm vài tuần qua `okr-init update-objective`, deadline mới thực tế dựa trên tốc độ hiện tại |
+| Mọi KR < 50% | Cân nhắc `cancelled` (scope không khả thi với capacity) hoặc reset KR target qua `update-objective` |
+| Mix (1 KR đạt, 1 KR cách xa) | Chia objective: đóng phần đạt thành `completed`, tách phần còn lại thành objective mới |
+
+Đề xuất chỉ là gợi ý. Track không enforce, user tự chọn.
+
 ## Cập nhật SOT
 
 Khi track, cập nhật:
