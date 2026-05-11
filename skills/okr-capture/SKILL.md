@@ -71,7 +71,7 @@ Inbox: 3 items từ input của bạn
 |---|----------|-------------------------------|---------|
 | 1 | action   | Viết unit test cho API auth   | KR2     |
 | 2 | blocker  | Server staging down           | A007    |
-| 3 | idea     | Thử framework X cho frontend  | -       |
+| 3 | thought  | Thử framework X cho frontend  | -       |
 
 Lưu tất cả? (y / sửa N / bỏ N / huỷ)
 ```
