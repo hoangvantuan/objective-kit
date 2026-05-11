@@ -170,6 +170,48 @@ Giống hệt `actions/AXXX-slug.md` (cùng frontmatter + body). Archive files l
 - Log cũ hơn: KHÔNG đọc, trừ khi user yêu cầu trace.
 - `okr-track` closure: đọc tất cả `log/reviews/` (cần tổng kết period).
 
+## External Sync (optional)
+
+Sync 2 chiều giữa OKR action files và tool bên thứ 3 (Things 3, Notion, Jira...). Chỉ chạy nếu action có field `external_ids` (xem `skills/okr-plan/references/data-format.md`).
+
+### Pull (trước tracking, Phase 4a/4b)
+
+1. Đọc tất cả active action files có `external_ids` trong frontmatter.
+2. Với mỗi tool trong `external_ids`:
+   a. Tra `resources.md` `## Công cụ` → tìm cột "Cách dùng" để biết integration method (`skill: <name>`, `mcp: <name>`).
+   b. Gọi skill/MCP tương ứng → lấy status task bên ngoài.
+3. So sánh status:
+   - Khác biệt → hiển thị: "Tool X: A001 = completed, OKR: A001 = doing. Đồng bộ? (y/n)"
+   - User confirm → update action status trong OKR (progress field, track tự xử lý).
+4. Tool không có skill/MCP hoặc cột "Cách dùng" rỗng → skip, log cảnh báo.
+
+### Push (sau tracking, Phase 4a/4b)
+
+1. Với mỗi action vừa thay đổi status + có `external_ids`:
+   a. Tra integration method từ `resources.md`.
+   b. Gọi skill/MCP → push status mới lên tool ngoài.
+2. Báo kết quả: "Đã sync A001 → Things 3 (completed), A002 → Notion (doing)"
+3. Push thất bại → log lỗi, không retry tự động.
+
+### Mapping status
+
+| OKR Status | Hướng map chung |
+|------------|----------------|
+| pending | Tool-specific "todo" / "not started" |
+| doing | Tool-specific "in progress" |
+| done | Tool-specific "completed" / "done" |
+| blocked | Tool-specific "on hold" / "blocked" (nếu tool hỗ trợ) |
+
+Mapping cụ thể theo từng tool nằm trong config của skill/MCP tương ứng. OKR system không hardcode.
+
+### Nguyên tắc sync
+
+- Pull: mọi thay đổi từ tool ngoài cần user confirm trước khi ghi vào OKR.
+- Push: tự động sau confirm tracking (không hỏi thêm).
+- Tool không có integration → skip, không lỗi.
+- Sync là optional step, không block tracking flow nếu thất bại.
+- Archive: action đã archive không sync nữa (read-only).
+
 ## Trace Flow
 
 Mode `trace` dùng nguyên tắc **lazy loading**: đọc dần, không đọc hết.
