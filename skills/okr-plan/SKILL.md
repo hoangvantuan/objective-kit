@@ -16,7 +16,7 @@ Skill quản lý 2 SOT: `plan.md` và `actions/`. Hỗ trợ tạo mới và đi
 
 Mỗi khi user trả lời (chọn initiative, confirm action, assign PIC...), agent tự kiểm tra 3 câu (KHÔNG hiển thị cho user):
 
-1. **Đủ cụ thể?** Có thể chuyển thành action có deliverable đo được không? Vd: "Nghiên cứu thêm" → FAIL (output là gì? ai verify?).
+1. **Đủ cụ thể?** Có thể chuyển thành action có deliverable đo được không? Vd: "Nghiên cứu thêm" → FAIL (output là gì? đo bằng gì?).
 2. **Giả định ẩn?** User bỏ qua constraint quan trọng không? Vd: thêm 5 actions mới nhưng không nói ai làm.
 3. **Mâu thuẫn?** Có xung đột với resource/timeline đã có không? Vd: PIC 50% available nhưng gán 6 actions cùng deadline.
 
