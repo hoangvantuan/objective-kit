@@ -159,6 +159,17 @@ Hỏi chi tiết từng cái user chọn.
 
 ### Phase 4: CONFIRM diff (BẮT BUỘC)
 
+Nếu vào từ track delegate (có `context.reason`), HIỂN THỊ trước bảng diff:
+
+```
+Lý do điều chỉnh (từ track deep)
+  Market shift Q4 (root cause Bước 2): tăng trưởng ngành chậm 30%,
+  cần thêm marketing để đẩy KR2.
+  Source: log/reviews/2026-12-01.md
+```
+
+Sau đó luôn hiển thị bảng diff:
+
 ```
 Thay đổi sắp áp dụng (plan.md + actions/)
 | Loại        | Trước              | Sau                       |
@@ -166,14 +177,18 @@ Thay đổi sắp áp dụng (plan.md + actions/)
 | Thêm action | -                  | A013 "Marketing campaign" |
 | Sửa A005    | due_date 2026-11-10| due_date 2026-11-20       |
 | Sửa M2      | deadline 2026-11-15| deadline 2026-11-25       |
-| Đổi PIC A007| An                 | Dũng                      |
 
 Tác động
-- A013 mới → resources.md cập nhật cột Actions của Marketing
+- A013 mới → 1 action mới gắn KR2
 - Dời M2 → 2 actions con tự dời theo? (y/giữ nguyên)
 
 Xác nhận? (y / sửa / huỷ)
 ```
+
+Quy tắc reason display:
+- Nếu `context.reason` rỗng hoặc không có (user vào trực tiếp `/okr plan update`) → KHÔNG render block "Lý do điều chỉnh".
+- `source_review` luôn đi kèm reason (cùng block).
+- Reason là plain text 1-3 câu, KHÔNG markdown đặc biệt (giữ readable trong terminal).
 
 ### Phase 5: Áp dụng
 
