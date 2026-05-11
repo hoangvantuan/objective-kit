@@ -35,16 +35,14 @@ Nếu effort = `xl`, hỏi user: "Task này khá lớn. Có thể tách thành 2
 | `medium` | Quan trọng nhưng không chặn ai | Viết docs, test coverage |
 | `low` | Nice-to-have, làm khi rảnh | Refactor code cũ |
 
-## Verifier (ai verify output)
+## Verify output
 
-Mỗi action cần rõ ai kiểm tra kết quả. Tránh tình trạng "tự làm tự đánh giá".
+Bộ skill OKR mặc định **user tự verify qua DoD checklist**: mỗi tiêu chí trong `## Definition of Done` phải đo được, check được. Action xong khi mọi item DoD tick xanh. Không cần field `verifier` riêng (đã bỏ khỏi schema).
 
-| Cách verify | Khi nào dùng | Ví dụ |
-|------------|-------------|-------|
-| **Người cụ thể** | Có team, output cần review | "An (PM) review report" |
-| **User tự verify** | Solo project, output đo được | "Chạy test suite, ≥80% pass" |
-| **Metric tự động** | Có hệ thống đo | "GA4 tracking confirm DAU ≥ target" |
-| **Checklist DoD** | Output rõ ràng, check từng tiêu chí | "Đánh dấu hoàn thành mọi item trong DoD" |
+Hệ quả khi viết DoD:
+- Mỗi item DoD phải verify được không cần ai khác (vd: "Test suite chạy ≥80% pass", "File xuất hiện tại path X", "Số liệu trong dashboard đạt ngưỡng Y").
+- Tránh DoD mơ hồ kiểu "Code đẹp", "Doc tốt" (không đo được).
+- Nếu output thực sự cần người khác review (rare cho solo) → ghi rõ trong `## Definition of Done` bằng item dạng "Reviewed by [tên]".
 
 ## Anti-patterns (action xấu)
 
