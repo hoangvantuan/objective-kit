@@ -12,22 +12,14 @@ Skill quản lý 2 SOT: `plan.md` và `actions/`. Hỗ trợ tạo mới và đi
 - `.okr/objective.md` tồn tại. Thiếu → quay lại `/okr` để init.
 - `.okr/resources.md` tồn tại. Thiếu → hỏi user có bổ sung trước (`/okr` → `okr-init` mode `update-resource`) hay tiếp tục với Solo Profile mặc định (capacity 0h/tuần, skills rỗng — sẽ cảnh báo cross-check fit ở Phase 3 confirm).
 
-## Quality Gate: đánh giá câu trả lời trước khi đi tiếp
+## Quality Gate
 
-Mỗi khi user trả lời (chọn initiative, confirm action, ước effort...), agent tự kiểm tra 3 câu (KHÔNG hiển thị cho user):
+Áp dụng 3 câu kiểm tra core + bảng hành vi từ `skills/okr/references/quality-gate.md`. Đọc file đó trước khi tiến hành các phase hỏi user.
 
-1. **Đủ cụ thể?** Có thể chuyển thành action có deliverable đo được không? Vd: "Nghiên cứu thêm" → FAIL (output là gì? đo bằng gì?).
-2. **Giả định ẩn?** User bỏ qua constraint quan trọng không? Vd: thêm 5 actions mới nhưng không nói effort tổng bao nhiêu giờ.
-3. **Mâu thuẫn?** Có xung đột với capacity/timeline đã có không? Vd: capacity 10h/tuần nhưng gán 6 actions effort `m` (1-2 ngày mỗi cái) cùng deadline tuần sau.
-
-**Hành vi theo kết quả:**
-
-| Kết quả | Hành vi |
-|---------|--------|
-| Cả 3 pass | Đi tiếp |
-| Bất kỳ fail | Trước follow-up, in 1 dòng `(Mình đào sâu thêm vì <lý do cụ thể>)` để user hiểu vì sao bị hỏi sâu. Vd: `(Mình đào sâu thêm vì action "Nghiên cứu thêm" chưa nói output là gì.)`. Sau đó dùng kỹ thuật phù hợp (xem Deepening Techniques). |
-| User nói "chưa biết" / "để sau" | Ghi nhận, đánh dấu `⚠️ TBD`. Phase confirm PHẢI nhắc lại |
-| User sốt ruột | Giảm độ sâu, giữ câu 1 (đủ cụ thể?). Không skip hoàn toàn |
+Ví dụ áp dụng cho mode `new` / `update`:
+- "Đủ cụ thể?" → action "Nghiên cứu thêm" FAIL (output là gì? đo bằng gì?).
+- "Giả định ẩn?" → thêm 5 actions mới nhưng không nói effort tổng bao nhiêu giờ.
+- "Mâu thuẫn?" → capacity 10h/tuần nhưng gán 6 actions effort `m` (1-2 ngày mỗi cái) cùng deadline tuần sau.
 
 ## Phase 0: Detect mode
 

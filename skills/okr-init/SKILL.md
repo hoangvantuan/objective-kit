@@ -14,23 +14,16 @@ Skill duy nhất quản lý 2 SOT khởi tạo: `objective.md` và `resources.md
 - Tận dụng context user truyền từ `/okr`. Vd: "/okr thêm Dũng vào dự án QA 80%" → vào `update-resource` ngay với context Dũng.
 - Đề xuất + lý do, để user quyết. Không tự áp đặt.
 
-## Quality Gate: đánh giá câu trả lời trước khi đi tiếp
+## Quality Gate
 
-Mỗi khi user trả lời, agent tự kiểm tra 3 câu (KHÔNG hiển thị cho user):
+Áp dụng 3 câu kiểm tra core + bảng hành vi từ `skills/okr/references/quality-gate.md`. Đọc file đó trước khi tiến hành các phase hỏi user.
 
-1. **Đủ cụ thể?** Có thể chuyển thành KR/KI đo được hoặc action có deliverable không? Vd: "tăng doanh thu" → FAIL (chưa nói kênh nào, sản phẩm nào, bao nhiêu %).
-2. **Giả định ẩn?** User bỏ qua điều kiện quan trọng nào không? Vd: "launch Q4" nhưng chưa nói team có ai.
-3. **Mâu thuẫn?** Câu trả lời có xung đột với context trước không? Vd: muốn 12 bài/tháng nhưng chỉ có 1 writer part-time.
+Ví dụ áp dụng cho mode `new` / `update-objective`:
+- "Đủ cụ thể?" → "tăng doanh thu" FAIL vì chưa nói kênh nào, sản phẩm nào, bao nhiêu %.
+- "Giả định ẩn?" → "launch Q4" nhưng chưa nói capacity có đủ không.
+- "Mâu thuẫn?" → muốn 12 bài/tháng nhưng capacity Solo Profile chỉ 8h/tuần.
 
-**Hành vi theo kết quả:**
-
-| Kết quả | Hành vi |
-|---------|--------|
-| Cả 3 pass | Đi tiếp câu hỏi kế |
-| Bất kỳ fail | Trước follow-up, in 1 dòng `(Mình đào sâu thêm vì <lý do cụ thể>)` để user hiểu vì sao bị hỏi sâu. Vd: `(Mình đào sâu thêm vì "tăng doanh thu" chưa nói kênh nào, sản phẩm nào.)`. Sau đó dùng kỹ thuật phù hợp (xem Deepening Techniques). |
-| User trả lời "chưa biết" / "để sau" | Ghi nhận, đánh dấu `⚠️ TBD`. Phase confirm PHẢI nhắc lại các field TBD |
-| User tỏ ra sốt ruột | Giảm độ sâu, chỉ giữ câu 1 (đủ cụ thể?). Không skip hoàn toàn |
-| User paste từ doc có sẵn (brief, PRD) | Tóm tắt lại bằng lời mình, hỏi "tôi hiểu đúng chưa?" thay vì nhận nguyên xi |
+Mode `update-resource` áp dụng câu 1 chính (tài nguyên có cụ thể đo được không: số giờ/tuần, skill rõ ràng, tool đã tồn tại).
 
 ## Flow
 
