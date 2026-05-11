@@ -35,7 +35,25 @@ effort: xs | s | m | l | xl
 pic: "string"
 due_date: YYYY-MM-DD
 depends_on: [A001, A002]
+notes: "string (optional, ≤50 ký tự)"
+external_ids:              # optional
+  tool_key: "external_id_string"
 ---
+```
+
+Field mới (optional):
+
+| Field | Type | Mô tả |
+|-------|------|-------|
+| `notes` | string, optional | Ghi chú ngắn hiển thị trong bảng Roadmap. Khuyến nghị ≤50 ký tự. Vd: "Cần xong trước A003", "Blocked by API access". Khác với `## Ghi chú` body (chi tiết dài). Không có thì cell trống. |
+| `external_ids` | YAML map, optional | Map tool_key → external ID string. Key lowercase, match tên tool trong resources.md (vd: `things3`, `notion`). Nhiều tool được. Dùng cho sync 2 chiều với tool bên thứ 3. |
+
+Ví dụ `external_ids`:
+
+```yaml
+external_ids:
+  things3: "ABC-123"
+  notion: "page-xyz-456"
 ```
 
 Body: `## Definition of Done` (checklist), `## Output/Deliverable`, `## Tiêu chí chất lượng`, `## Ghi chú`.
