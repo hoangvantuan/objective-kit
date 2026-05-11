@@ -48,6 +48,37 @@ Mỗi khi user trả lời, agent tự kiểm tra 3 câu (KHÔNG hiển thị ch
 
 ## Mode NEW: tạo `.okr/` từ đầu
 
+### Phase 0: Đọc inbox làm context (nếu có)
+
+Trước khi hỏi loại mục tiêu, kiểm tra `.okr/inbox/*.md`:
+
+- Nếu thư mục `.okr/inbox/` chưa có hoặc rỗng → skip Phase 0, sang Phase 1.
+- Nếu có items → đọc tất cả file (frontmatter + body), nhóm theo `type`:
+  - `action` items: gợi ý cho user đây có thể là việc cần làm cho objective sắp tạo.
+  - `resource` items: tool/tài liệu sẵn có, dùng làm input cho Phase 5 Resource.
+  - `blocker` items: rủi ro/thiếu hụt, dùng làm input cho Phase 5 mục Rủi ro.
+  - `thought` items: ý tưởng nền, có thể chuyển thành KR hoặc actions.
+
+Hiển thị block context:
+
+```
+Inbox sẵn có (5 items, captured trước khi tạo objective)
+- 2 action: "Viết blog post về X", "Setup analytics tracking"
+- 1 resource: "Library Y hỗ trợ chart"
+- 1 blocker: "Server staging không stable"
+- 1 thought: "Có thể test pricing model 2 tier?"
+
+Mình sẽ dùng các items này làm context khi đề xuất KR (Phase 3),
+actions (qua /okr plan sau), và resources (Phase 5). Sau khi
+objective tạo xong, mình sẽ hỏi map từng item vào KR phù hợp.
+Tiếp tục Phase 1? (y/sửa context/skip context)
+```
+
+User trả lời:
+- `y` → đi tiếp Phase 1, agent giữ items làm context nội bộ.
+- `sửa context` → user bổ sung/loại trừ items nào.
+- `skip context` → đi tiếp Phase 1 nhưng không dùng items (vẫn giữ inbox cho Phase 8).
+
 ### Phase 1: Loại mục tiêu
 
 Hỏi: **Project** (có deadline, đạt target rồi kết thúc) hay **Ongoing** (duy trì liên tục, không có điểm kết thúc, giống lĩnh vực cần chăm sóc).
@@ -215,7 +246,35 @@ Xác nhận? (y / sửa / huỷ)
 1. Tạo `.okr/`.
 2. Ghi `.okr/objective.md` theo schema.
 3. Ghi `.okr/resources.md` theo schema (giữ section header dù rỗng).
-4. Hiển thị: "Đã tạo. Chạy `/okr` để lập plan."
+4. Hiển thị: "Đã tạo objective + resources. Tiếp tục Phase 8 nếu có inbox sẵn, hoặc chạy `/okr` để lập plan."
+
+### Phase 8: Post-init — gợi ý map inbox vào KR (chỉ chạy nếu Phase 0 đã đọc inbox)
+
+Skip nếu Phase 0 trả về rỗng. Nếu có items:
+
+Với mỗi inbox item có `related_kr: null`, agent đề xuất KR phù hợp dựa trên KR vừa tạo + nội dung item:
+
+```
+Map inbox items vào KR (5 items pending)
+| # | Type     | Title                          | Đề xuất related_kr | Lý do                          |
+|---|----------|--------------------------------|--------------------|--------------------------------|
+| 1 | action   | Viết blog post về X            | KR1                | KR1 về content marketing       |
+| 2 | action   | Setup analytics tracking       | KR2                | KR2 cần đo conversion          |
+| 3 | resource | Library Y hỗ trợ chart         | (không cần map)    | Resource, không link KR        |
+| 4 | blocker  | Server staging không stable    | KR2                | Blocker A007 thuộc KR2         |
+| 5 | thought  | Có thể test pricing 2 tier?    | KR2                | Liên quan revenue              |
+
+Apply gợi ý? (vd: "1,2,4,5 apply / 3 skip" / all / sửa N: KR<X> / huỷ)
+```
+
+User trả lời:
+- `<N> apply`: ghi `related_kr: KR<X>` vào frontmatter inbox item.
+- `<N> skip`: giữ `related_kr: null`.
+- `all`: apply hết.
+- `sửa N: KR<X>`: override gợi ý.
+- `huỷ`: bỏ hết, không apply.
+
+Sau khi apply: hiển thị "Đã map N items. Chạy `/okr` để lập plan và xử lý inbox khi track."
 
 ---
 
