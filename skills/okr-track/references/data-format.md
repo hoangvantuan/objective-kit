@@ -82,11 +82,11 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 
 ## Inbox Processing
 
-> Đã chuyển sang `skills/okr/references/shared-schemas.md` section "Inbox type → Delegate mapping". Đọc tại đó (load từ orchestrator okr).
+> Đã chuyển sang shared-schemas.md (đã có trong context từ orchestrator okr).
 
 ## Archive Rules
 
-> Đã chuyển sang `skills/okr/references/shared-schemas.md` section "Archive Rules". Đọc tại đó (load từ orchestrator okr).
+> Đã chuyển sang shared-schemas.md (đã có trong context từ orchestrator okr).
 
 ## Log Reading Rules
 

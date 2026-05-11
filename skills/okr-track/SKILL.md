@@ -203,7 +203,8 @@ Chạy sau update progress (light) hoặc sau delegate (deep).
 **Mode inbox-only**: SOT đã có context từ orchestrator okr (preload Phase 1). Skip Phase 2 dashboard, Phase 3 detect, Phase 4 progress. Đi thẳng Phase 5.
 
 Flow:
-1. Đọc inbox pending + compute staleness (on-the-fly, xem Inbox Aging tại skill okr/references/shared-schemas.md)
+
+1. Đọc inbox pending + compute staleness (on-the-fly, xem Inbox Aging đã có trong context từ orchestrator)
 2. Cảnh báo stale items (>30 ngày), hỏi user giữ/bỏ
 3. Hiển thị bảng gợi ý xử lý (map vào KR/milestone/action)
 4. Validate related IDs (KR, action, tool) trước khi xử lý
@@ -211,7 +212,7 @@ Flow:
 6. Gom delegate cùng skill → 1 lần gọi
 7. Báo cáo: items đã xử lý + inbox còn lại
 
-Inbox type → Delegate mapping: xem skill okr/references/shared-schemas.md (đã load từ orchestrator).
+Inbox type → Delegate mapping: đã có trong context từ orchestrator.
 
 Chi tiết đầy đủ: `references/flow-inbox.md`
 
