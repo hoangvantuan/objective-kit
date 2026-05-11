@@ -40,7 +40,7 @@ Mỗi khi user trả lời, agent tự kiểm tra 3 câu (KHÔNG hiển thị ch
 |-------|------|
 | `.okr/` chưa có HOẶC `objective.md` thiếu | `new` |
 | Có objective.md + user nhắc tới objective/KR/KI/period | `update-objective` |
-| Có objective.md + user nhắc tới người/tool/PIC/ngân sách | `update-resource` |
+| Có objective.md + user nhắc tới capacity/skill/tool/ngân sách | `update-resource` |
 | User chọn explicit (vd "/okr init update-objective") | theo lựa chọn |
 | Mơ hồ | hỏi user: "Tạo mới (ghi đè) / Sửa mục tiêu / Sửa resource?" |
 
@@ -325,7 +325,7 @@ Xác nhận? (y / sửa / huỷ)
 - Hỏi 1 câu/lần.
 - KHÔNG ghi file trước phase confirm.
 - Mode `new`: ghi cả 2 file (objective + resources). Resource trống vẫn ghi `resources.md` rỗng có header.
-- Mode `update-*`: ghi đè SOT. Update PIC sync cả `resources.md` + frontmatter `actions/*.md`.
+- Mode `update-*`: ghi đè SOT. Solo Profile chỉ 1 user, không cần sync `pic` vào `actions/*.md` (mặc định `self`).
 - KR không SMART → chỉ rõ thiếu tiêu chí nào + gợi ý sửa.
 - KI không đo được hoặc thiếu ngưỡng → chỉ rõ + gợi ý sửa.
 - Không tạo `plan.md` hay action files. Plan thuộc `okr-plan`.
