@@ -41,11 +41,11 @@ Mode `update-resource` áp dụng câu 1 chính (tài nguyên có cụ thể đo
 
 ## Mode NEW: tạo `.okr/` từ đầu
 
-### Phase 0: Đọc inbox làm context (nếu có)
+### Phase 0a: Đọc inbox làm context (nếu có)
 
 Trước khi hỏi loại mục tiêu, kiểm tra `.okr/inbox/*.md`:
 
-- Nếu thư mục `.okr/inbox/` chưa có hoặc rỗng → skip Phase 0, sang Phase 1.
+- Nếu thư mục `.okr/inbox/` chưa có hoặc rỗng → skip Phase 0a, sang Phase 1.
 - Nếu có items → đọc tất cả file (frontmatter + body), nhóm theo `type`:
   - `action` items: gợi ý cho user đây có thể là việc cần làm cho objective sắp tạo.
   - `resource` items: tool/tài liệu sẵn có, dùng làm input cho Phase 5 Resource.
@@ -241,7 +241,7 @@ Xác nhận? (y / sửa / huỷ)
 3. Ghi `.okr/resources.md` theo schema (giữ section header dù rỗng).
 4. Hiển thị: "Đã tạo objective + resources. Tiếp tục Phase 8 nếu có inbox sẵn, hoặc chạy `/okr` để lập plan."
 
-### Phase 8: Post-init — gợi ý map inbox vào KR (chỉ chạy nếu Phase 0 đã đọc inbox)
+### Phase 8: Post-init — gợi ý map inbox vào KR (chỉ chạy nếu Phase 0a đã đọc inbox)
 
 Skip nếu Phase 0 trả về rỗng. Nếu có items:
 
