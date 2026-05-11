@@ -26,11 +26,26 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 
 ## Phân vai SOT
 
-Bảng canonical ở `CLAUDE.md` section "Phân vai SOT". Tóm tắt: mỗi field SOT chỉ được sửa bởi 1 skill. `okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, KHÔNG tự sửa, delegate sang `okr-init`/`okr-plan` mode `update-*` để apply.
+Mỗi field SOT chỉ được sửa bởi đúng 1 skill. `okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, KHÔNG tự sửa, delegate sang `okr-init`/`okr-plan` mode `update-*` để apply.
+
+| Field                                                             | Skill được phép sửa           |
+| ----------------------------------------------------------------- | ----------------------------- |
+| Objective text, KR/KI target/baseline/ngưỡng, period, status      | `okr-init` `update-objective` |
+| Solo Profile (capacity, skills), tool, ngân sách                  | `okr-init` `update-resource`  |
+| Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update`           |
+| KR.current, KI.current, action.status, plan counters              | `okr-track` `light`/`deep`    |
+| Inbox items (tạo mới)                                             | `okr-capture`                 |
+| Inbox items (xử lý: status transition)                            | `okr-track`                   |
+| Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`     |
+| External sync (pull/push status)                                  | `okr-track` `light`/`deep`    |
+
+> Chi tiết: `references/sot-ownership.md` (load cùng skill này).
 
 ## Flow xử lý
 
 ### Bước 1: Đọc trạng thái `.okr/`
+
+**Preload SOT data**: Orchestrator đọc sẵn frontmatter + body thiết yếu của 3 file SOT dưới đây. Context này available cho mọi skill con khi được kích hoạt, skill con KHÔNG cần đọc lại.
 
 Đọc song song nếu file tồn tại:
 
@@ -56,6 +71,16 @@ Trạng thái OKR
   Log gần   : YYYY-MM-DD ([X ngày trước])
 ```
 
+**Gợi ý tiếp theo** (1 dòng, render sau block status):
+
+| Tín hiệu (ưu tiên từ trên xuống) | Gợi ý |
+|-----------------------------------|-------|
+| Action quá hạn | "Có N action quá hạn. Update status hoặc dời deadline qua track/plan update." |
+| KR at-risk | "KR<N> at-risk. Chạy deep review để phân tích." |
+| Inbox ≥5 items | "Inbox có N items. Xử lý qua track hoặc inbox-only." |
+| Mọi action done | "Tất cả action done. Chạy closure để chốt." |
+| Default | "Chạy track light để cập nhật tiến độ." |
+
 ### Bước 3: Suy luận next action
 
 Bảng routing dưới đây gộp 2 nguồn tín hiệu: (a) **State** = trạng thái `.okr/` đọc được ở Bước 1, (b) **Keyword** = từ khoá user nói khi gọi `/okr`. Đọc theo thứ tự State trước, Keyword sau. Nếu State + Keyword chỉ về cùng skill → đi thẳng. Nếu mâu thuẫn → ưu tiên Keyword (user đang nói rõ ý) và xác nhận lại ở Bước 4.
@@ -72,10 +97,9 @@ Bảng routing dưới đây gộp 2 nguồn tín hiệu: (a) **State** = trạn
 | State: đủ SOT + actions còn mở + keyword tiến độ/cập nhật/xong/blocked                             | `okr-track`   | `light`            |
 | Keyword: "review / tổng kết / lookback / đánh giá sâu"                                             | `okr-track`   | `deep`             |
 | State: mọi action `done`                                                                           | `okr-track`   | `closure`          |
-| Keyword: "thêm nhanh / ghi lại / note / capture / nhớ cái này / inbox"                             | `okr-capture` | n/a                |
+| Keyword: "thêm nhanh / ghi lại / note / capture / nhớ cái này / inbox / add"                       | `okr-capture` | n/a                |
 | Keyword: "trace / xem lại / history / lịch sử / xem action cũ / xem log cũ"                        | `okr-track`   | `trace`            |
 | Keyword: "inbox / xử lý inbox" (skip update progress)                                              | `okr-track`   | `inbox-only`       |
-
 
 ### Bước 4: Xác nhận với user (1 câu)
 
