@@ -27,7 +27,7 @@ Mỗi khi user trả lời, agent tự kiểm tra 3 câu (KHÔNG hiển thị ch
 | Kết quả | Hành vi |
 |---------|--------|
 | Cả 3 pass | Đi tiếp câu hỏi kế |
-| Bất kỳ fail | Follow-up ngay, dùng kỹ thuật phù hợp (xem Deepening Techniques) |
+| Bất kỳ fail | Trước follow-up, in 1 dòng `(Mình đào sâu thêm vì <lý do cụ thể>)` để user hiểu vì sao bị hỏi sâu. Vd: `(Mình đào sâu thêm vì "tăng doanh thu" chưa nói kênh nào, sản phẩm nào.)`. Sau đó dùng kỹ thuật phù hợp (xem Deepening Techniques). |
 | User trả lời "chưa biết" / "để sau" | Ghi nhận, đánh dấu `⚠️ TBD`. Phase confirm PHẢI nhắc lại các field TBD |
 | User tỏ ra sốt ruột | Giảm độ sâu, chỉ giữ câu 1 (đủ cụ thể?). Không skip hoàn toàn |
 | User paste từ doc có sẵn (brief, PRD) | Tóm tắt lại bằng lời mình, hỏi "tôi hiểu đúng chưa?" thay vì nhận nguyên xi |
