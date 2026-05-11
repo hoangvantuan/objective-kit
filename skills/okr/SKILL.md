@@ -65,30 +65,23 @@ Trạng thái OKR
 
 ### Bước 3: Suy luận next action
 
-| State / Intent | Skill + Mode |
-|----------------|--------------|
-| `.okr/` chưa có HOẶC objective.md thiếu | `okr-init` mode `new` |
-| User nhắc objective/KR/KI/period/mục tiêu | `okr-init` mode `update-objective` |
-| User nhắc capacity/skill/tài nguyên/ngân sách/tool | `okr-init` mode `update-resource` |
-| Có objective + resource, thiếu plan.md | `okr-plan` mode `new` |
-| Có plan.md + user nhắc thêm/sửa action, dời deadline, đổi milestone | `okr-plan` mode `update` |
-| User nhắc kế hoạch/lộ trình/milestone (mới) | `okr-plan` mode `new` |
-| Đủ SOT + actions còn mở + user nhắc tiến độ/cập nhật/xong/blocked | `okr-track` mode `light` |
-| Đủ SOT + user nhắc review/tổng kết/lookback/đánh giá sâu | `okr-track` mode `deep` |
-| Mọi action `done` | `okr-track` mode `closure` |
-| User nhắc thêm nhanh/ghi lại/capture/inbox/note | `okr-capture` |
-| User nhắc trace/xem lại/history/lịch sử action/milestone/log | `okr-track` mode `trace` |
+Bảng routing dưới đây gộp 2 nguồn tín hiệu: (a) **State** = trạng thái `.okr/` đọc được ở Bước 1, (b) **Keyword** = từ khoá user nói khi gọi `/okr`. Đọc theo thứ tự State trước, Keyword sau. Nếu State + Keyword chỉ về cùng skill → đi thẳng. Nếu mâu thuẫn → ưu tiên Keyword (user đang nói rõ ý) và xác nhận lại ở Bước 4.
 
-Keyword routing khi user cung cấp context:
-- "tài liệu / tài nguyên / capacity / skill / công cụ / ngân sách / Solo Profile" → `okr-init` `update-resource`
-- "đổi target / sửa KR / sửa KI / đổi ngưỡng / đổi deadline objective" → `okr-init` `update-objective`
-- "kế hoạch / plan / lộ trình / milestone / action mới" → `okr-plan` `new` (nếu chưa có) hoặc `update`
-- "thêm action / sửa action / dời deadline / xoá action" → `okr-plan` `update`
-- "khởi tạo / mục tiêu mới / dự án mới" → `okr-init` `new`
-- "tiến độ / cập nhật / xong rồi / blocked" → `okr-track` `light`
-- "review / tổng kết / lookback / đánh giá" → `okr-track` `deep`
-- "thêm nhanh / ghi lại / note / capture / nhớ cái này / inbox" → `okr-capture`
-- "trace / xem lại / history / lịch sử / xem action cũ / xem log cũ" → `okr-track` `trace`
+| Trigger (State hoặc Keyword) | Skill | Mode |
+|------------------------------|-------|------|
+| State: `.okr/` chưa có HOẶC `objective.md` thiếu | `okr-init` | `new` |
+| Keyword: "khởi tạo / mục tiêu mới / dự án mới" | `okr-init` | `new` |
+| Keyword: "đổi target / sửa KR / sửa KI / đổi ngưỡng / đổi deadline objective / objective / period" | `okr-init` | `update-objective` |
+| Keyword: "tài liệu / tài nguyên / capacity / skill / công cụ / ngân sách / Solo Profile" | `okr-init` | `update-resource` |
+| State: có objective + resource, thiếu `plan.md` | `okr-plan` | `new` |
+| Keyword: "kế hoạch / plan / lộ trình / milestone mới" (chưa có `plan.md`) | `okr-plan` | `new` |
+| Keyword: "thêm action / sửa action / dời deadline / xoá action / sửa milestone" | `okr-plan` | `update` |
+| State: đủ SOT + actions còn mở + keyword tiến độ/cập nhật/xong/blocked | `okr-track` | `light` |
+| Keyword: "review / tổng kết / lookback / đánh giá sâu" | `okr-track` | `deep` |
+| State: mọi action `done` | `okr-track` | `closure` |
+| Keyword: "thêm nhanh / ghi lại / note / capture / nhớ cái này / inbox" | `okr-capture` | n/a |
+| Keyword: "trace / xem lại / history / lịch sử / xem action cũ / xem log cũ" | `okr-track` | `trace` |
+| Keyword: "inbox / xử lý inbox" (skip update progress) | `okr-track` | `inbox-only` |
 
 ### Bước 4: Xác nhận với user (1 câu)
 
