@@ -62,7 +62,7 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 | `objective` text, `quarter`, `start_date`, `end_date` | `okr-init` `update-objective` |
 | KR target, KR baseline, thêm/xoá KR | `okr-init` `update-objective` |
 | `objective.md` frontmatter `status` (active/paused/completed/cancelled) | `okr-init` `update-objective` |
-| Resource: người, tool, ngân sách, PIC, khả dụng | `okr-init` `update-resource` |
+| Resource: Solo Profile (capacity, skills), tool, ngân sách | `okr-init` `update-resource` |
 | Action: title, description, due_date, depends_on, deliverable | `okr-plan` `update` |
 | Thêm/xoá action | `okr-plan` `update` |
 | Milestone deadline, thêm/xoá milestone | `okr-plan` `update` |
