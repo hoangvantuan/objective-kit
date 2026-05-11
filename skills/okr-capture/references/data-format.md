@@ -59,17 +59,7 @@ Sau khi xử lý: đổi status thành `processed`. File giữ nguyên trong inb
 
 ## Inbox Aging
 
-Trường `staleness_days = today - captured_at` được compute **on-the-fly** khi đọc, KHÔNG lưu vào frontmatter. Lý do: captured_at là dữ liệu gốc, staleness phụ thuộc thời điểm đọc → tính lại mỗi lần đọc tránh stale-of-stale.
-
-Ngưỡng:
-
-| Phạm vi | Nghĩa | Hành vi của okr-track |
-|---------|-------|------------------------|
-| `staleness_days ≤ 7` | Mới | Hiển thị bình thường, không cảnh báo |
-| `7 < staleness_days ≤ 30` | Đang chờ xử lý | Hiển thị bình thường, sort lên đầu nếu nhiều items |
-| `staleness_days > 30` | Cũ | Phase 5 cảnh báo "Inbox cũ ≥30 ngày: [list]. Còn relevant không? (giữ/bỏ)". Không auto-discard. |
-
-Phạm vi áp dụng: chỉ items có `status: pending`. Items đã `processed` / `discarded` không đếm.
+Inbox Aging canonical: xem skill `okr/references/shared-schemas.md` section "Inbox Aging" (load từ orchestrator).
 
 ## Quy tắc
 

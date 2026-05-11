@@ -163,18 +163,9 @@ Hỏi chi tiết từng cái user chọn.
 
 ### Phase 4: CONFIRM diff
 
-**Pre-confirmed flow (T4c):** Nếu payload có `context.pre_confirmed: true` (user đã confirm tại track Bước 4 với full all-changes preview), SKIP ask "Xác nhận? (y/sửa/huỷ)" và đi thẳng Phase 5 ghi file. Vẫn HIỂN THỊ block "Lý do điều chỉnh" + bảng diff để user trace, kèm 1 dòng cuối: `(Đã được confirm tại track Bước 4. Ghi file ngay.)`.
+Delegate protocol (pre-confirmed flow + reason display): xem skill `okr/references/delegate-protocol.md`.
 
-Default flow (không pre_confirmed): nếu vào từ track delegate (có `context.reason`), HIỂN THỊ trước bảng diff:
-
-```
-Lý do điều chỉnh (từ track deep)
-  Market shift Q4 (root cause Bước 2): tăng trưởng ngành chậm 30%,
-  cần thêm marketing để đẩy KR2.
-  Source: log/reviews/2026-12-01.md
-```
-
-Sau đó luôn hiển thị bảng diff:
+Luôn hiển thị bảng diff:
 
 ```
 Thay đổi sắp áp dụng (plan.md + actions/)
@@ -190,18 +181,6 @@ Tác động
 
 Xác nhận? (y / sửa / huỷ)
 ```
-
-Quy tắc reason display:
-
-- Nếu `context.reason` rỗng hoặc không có (user vào trực tiếp `/okr plan update`) → KHÔNG render block "Lý do điều chỉnh".
-- `source_review` luôn đi kèm reason (cùng block).
-- Reason là plain text 1-3 câu, KHÔNG markdown đặc biệt (giữ readable trong terminal).
-
-Quy tắc pre_confirmed:
-
-- `pre_confirmed: true` chỉ áp dụng khi track Bước 4 đã hiển thị **all-changes diff** + user reply "y" (xem `okr-track/SKILL.md` Phase 4b Bước 4-5).
-- Nếu thiếu 1 trong 2 (track Bước 4 không show full diff, hoặc payload không set `pre_confirmed`), plan vẫn chạy default flow (hỏi confirm).
-- Pre-confirmed bypass CHỈ skip ask "y/sửa/huỷ". Vẫn ghi log + báo cáo bình thường.
 
 ### Phase 5: Áp dụng
 
