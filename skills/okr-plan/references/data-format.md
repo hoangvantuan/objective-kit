@@ -18,7 +18,49 @@ milestones:
 ---
 ```
 
-Body: `## Roadmap` với các heading milestone, mỗi milestone liệt kê actions.
+Body: `## Roadmap` với bảng action per-milestone. Bảng auto-generated từ action files, là view (không sửa trực tiếp). SOT là action files.
+
+### Roadmap format
+
+Mỗi milestone heading chứa bảng action bên dưới:
+
+````markdown
+## Roadmap
+
+### M1: Research (target: 2026-05-20)
+
+| ID | Task | Deadline | Priority | Notes |
+|----|------|----------|----------|-------|
+| [A001](actions/A001-research-market.md) | Nghiên cứu thị trường | 2026-05-15 | high | Cần xong trước A003 |
+| [A002](actions/A002-competitor-analysis.md) | Phân tích đối thủ | 2026-05-18 | medium | |
+
+### M2: Development (target: 2026-06-15)
+
+| ID | Task | Deadline | Priority | Notes |
+|----|------|----------|----------|-------|
+| [A003](actions/A003-build-mvp.md) | Xây MVP | 2026-06-01 | critical | Depends: A001 |
+| [A004](actions/A004-testing.md) | Viết test | 2026-06-10 | high | |
+````
+
+Cột bảng (5 cột, solo mode):
+
+| Cột | Nguồn dữ liệu | Ghi chú |
+|-----|---------------|---------|
+| ID | `id` frontmatter, link tới file action | Relative link: `actions/AXXX-slug.md` |
+| Task | `title` frontmatter | Hiển thị nguyên văn |
+| Deadline | `due_date` frontmatter | Format YYYY-MM-DD |
+| Priority | `priority` frontmatter | critical, high, medium, low |
+| Notes | `notes` frontmatter (optional) | Không có thì cell trống |
+
+Cột Assignee (ẩn khi solo): Khi Solo Profile có >1 người (mở rộng tương lai), thêm cột Assignee giữa Task và Deadline. Nguồn: `pic` frontmatter.
+
+Quy tắc sinh bảng:
+
+- **Ai render**: `okr-plan` (khi tạo/update action) và `okr-track` (khi update status/archive).
+- **Sắp xếp**: Trong mỗi milestone, sắp theo Priority (critical > high > medium > low), rồi Deadline (sớm trước).
+- **Lọc**: Chỉ hiển thị action chưa done. Action done đã archive, không xuất hiện trong bảng.
+- **SOT**: Action files là SOT. Bảng là view được sinh lại mỗi lần update. Không sửa bảng trực tiếp.
+- **Ongoing type**: Ongoing có thể có action không thuộc milestone nào. Nhóm dưới heading `### Chưa phân milestone`. Nếu Ongoing không có action nào, section `## Roadmap` chỉ chứa `## Practices` (không có bảng).
 
 ## actions/AXXX-slug.md
 
