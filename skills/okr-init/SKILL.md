@@ -281,6 +281,22 @@ KHÔNG block. User vẫn có thể confirm và xử lý plan sau qua `/okr plan 
 
 ### Phase 6: CONFIRM diff (BẮT BUỘC)
 
+Nếu vào từ track delegate (có `context.reason`), HIỂN THỊ trước bảng diff:
+
+```
+Lý do điều chỉnh (từ track deep)
+  Market shift Q4 (root cause Bước 2): tăng trưởng ngành chậm 30%,
+  target 50 không khả thi.
+  Source: log/reviews/2026-12-01.md
+```
+
+Quy tắc:
+- Reason rỗng hoặc không có → KHÔNG render block.
+- Plain text 1-3 câu, không markdown.
+- `source_review` cùng block với reason.
+
+Sau đó luôn hiển thị bảng:
+
 ```
 Thay đổi sắp áp dụng (objective.md)
 | Field   | Trước              | Sau                |
