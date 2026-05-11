@@ -188,19 +188,18 @@ Xác nhận? (y / sửa / huỷ)
 
 - `references/data-format.md`: schema `plan.md` + frontmatter `actions/*.md`.
 - `references/task-format.md`: template body action file.
-- `references/action-guide.md`: hướng dẫn viết action chất lượng (5 tiêu chí bắt buộc, effort, priority, verifier, anti-patterns). Đọc trước khi tạo/review actions.
+- `references/action-guide.md`: hướng dẫn viết action chất lượng (5 tiêu chí bắt buộc, effort, priority, DoD-based verify, anti-patterns). Đọc trước khi tạo/review actions.
 
 ## Quy tắc
 
 - KHÔNG ghi file trước phase confirm.
 - Mỗi action BẮT BUỘC có:
-  - Definition of Done rõ ràng
+  - Definition of Done rõ ràng (mỗi item đo được, user tự check được)
   - Output/Deliverable cụ thể (file, số liệu, sự kiện)
-  - PIC (hoặc `unassigned` nếu resource thiếu)
-  - **Ai verify output?** (người hoặc cơ chế kiểm tra kết quả)
+  - PIC (default `self` cho solo)
   - **Tiêu chí chất lượng** (output đạt khi nào? đo bằng gì?)
-- Action mơ hồ kiểu "Nghiên cứu thêm" không có output đo được → CẤM. Agent phải follow-up: "Output cụ thể là gì? Ai đọc/dùng output này?"
-- Nếu user không trả lời được "ai verify" hoặc "output đo bằng gì" → action chưa đủ rõ, cần refine trước khi ghi.
+- Action mơ hồ kiểu "Nghiên cứu thêm" không có output đo được → CẤM. Agent phải follow-up: "Output cụ thể là gì?"
+- Nếu user không trả lời được "output đo bằng gì" → action chưa đủ rõ, cần refine trước khi ghi.
 - Dependencies hợp lệ: ID tồn tại, không vòng tròn.
 - Mode `update` không sửa KR target. Đó là việc của `okr-init` mode `update-objective`.
 - Mode `update` không sửa action.status hay KR.current. Đó là việc của `okr-track` mode `light`.
