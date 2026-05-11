@@ -103,11 +103,13 @@ pending → pending     (giữ inbox, chờ rõ hơn)
 | Inbox type | Track tự xử lý? | Delegate sang |
 |------------|-----------------|---------------|
 | `action` | Không | `okr-plan` mode `update` (tạo action file) |
-| `idea` → action | Không | `okr-plan` mode `update` |
-| `idea` → giữ | Có (không làm gì) | - |
 | `blocker` | Có (sửa action.status = blocked) | - |
 | `resource` | Không | `okr-init` mode `update-resource` |
-| `note` | Có (append log) | - |
+| `thought` → action | Không | `okr-plan` mode `update` |
+| `thought` → log | Có (append log) | - |
+| `thought` → giữ | Có (không làm gì) | - |
+
+> **Migrate dữ liệu cũ**: File inbox `type: idea` hoặc `type: note` (schema cũ) được Phase 5 tự normalize sang `type: thought` khi đổi `status: processed`. Logic xử lý không cần phân biệt 5-type cũ.
 
 ### Gom delegate
 

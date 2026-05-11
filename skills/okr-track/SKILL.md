@@ -251,7 +251,7 @@ Inbox: 3 items chưa xử lý
 | # | Type     | Title                         | Captured  | Gợi ý xử lý                    |
 |---|----------|-------------------------------|-----------|----------------------------------|
 | 1 | action   | Viết unit test cho API auth   | 05-09     | → Tạo A014, gán M2, PIC: Bình   |
-| 2 | idea     | Thử framework X cho frontend  | 05-08     | → Giữ inbox (chưa rõ scope)     |
+| 2 | thought  | Thử framework X cho frontend  | 05-08     | → Giữ inbox (chưa rõ scope)     |
 | 3 | blocker  | Server staging down           | 05-09     | → Block A007, ghi log            |
 
 Xử lý items nào? (1,3 / all / skip / bỏ N)
@@ -259,28 +259,28 @@ Xử lý items nào? (1,3 / all / skip / bỏ N)
 
 Gợi ý xử lý dựa trên:
 
-- `action`: map vào KR/milestone nào, PIC ai có capacity, deadline nào hợp lý
-- `idea`: đủ rõ để thành action chưa? Nếu chưa → giữ inbox
+- `action`: map vào KR/milestone nào, capacity còn lại bao nhiêu, deadline nào hợp lý
 - `blocker`: action nào bị ảnh hưởng?
-- `resource`: resources.md cần thêm gì?
-- `note`: ghi vào log ngày nào?
+- `resource`: resources.md cần thêm gì (Công cụ / Tài liệu)?
+- `thought`: đủ rõ để thành action chưa? Nếu rõ → tạo action; nếu chưa rõ → giữ inbox; nếu chỉ là ghi chú → append log ngày
 
 #### Bước 3: Xử lý từng item user chọn
 
-| Inbox type | Xử lý                                                         | Ai thực hiện                                 |
-| ---------- | ------------------------------------------------------------- | -------------------------------------------- |
-| `action`   | Chuyển thành action file trong `actions/`, cập nhật `plan.md` | Delegate → `okr-plan` mode `update`          |
-| `idea`     | User chọn: giữ inbox / chuyển thành action / bỏ               | Tuỳ lựa chọn                                 |
-| `blocker`  | Đánh dấu action liên quan = `blocked` + ghi lý do             | `okr-track` tự xử lý (progress field)        |
-| `resource` | Thêm người/tool/doc vào resources.md                          | Delegate → `okr-init` mode `update-resource` |
-| `note`     | Append vào `log/YYYY-MM-DD.md`                                | `okr-track` tự xử lý                         |
+| Inbox type | Xử lý                                                                  | Ai thực hiện                                 |
+| ---------- | ---------------------------------------------------------------------- | -------------------------------------------- |
+| `action`   | Chuyển thành action file trong `actions/`, cập nhật `plan.md`          | Delegate → `okr-plan` mode `update`          |
+| `blocker`  | Đánh dấu action liên quan = `blocked` + ghi lý do                      | `okr-track` tự xử lý (progress field)        |
+| `resource` | Thêm tool/tài liệu vào resources.md                                    | Delegate → `okr-init` mode `update-resource` |
+| `thought`  | User chọn: giữ inbox / chuyển thành action / append log ngày / bỏ      | Tuỳ lựa chọn (`okr-track` append log nếu chọn) |
+
+> **Migrate dữ liệu cũ**: Nếu file inbox có `type: idea` hoặc `type: note` (schema cũ), `okr-track` Phase 5 tự đổi sang `type: thought` khi xử lý xong (cùng lúc set `status: processed`). Không cần user thao tác thêm.
 
 
 Với mỗi item xử lý xong → đổi `status: processed` trong file inbox.
 
 User chọn "bỏ N" → đổi `status: discarded`.
 
-Giữ inbox (idea chưa rõ) → giữ `status: pending`, không làm gì.
+Giữ inbox (thought chưa rõ) → giữ `status: pending`, không làm gì.
 
 #### Bước 4: Gom delegate
 
