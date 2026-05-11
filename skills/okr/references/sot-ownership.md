@@ -13,4 +13,4 @@ Mỗi field SOT chỉ được sửa bởi đúng 1 skill. `okr-track` mode `dee
 | Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`     |
 | External sync (pull/push status)                                  | `okr-track` `light`/`deep`    |
 
-> Bảng này là bản runtime (load cùng skill okr). Bản developer đọc repo ở `CLAUDE.md` section "Phân vai SOT".
+> Bảng này là bản canonical. Load cùng skill okr khi chạy.

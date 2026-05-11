@@ -57,7 +57,7 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 
 ### Structure fields (track CHỈ đề xuất, delegate để apply)
 
-> Bảng canonical ở `CLAUDE.md` section "Phân vai SOT". Bảng dưới là **chi tiết hoá theo field cụ thể** trong `objective.md` / `plan.md` / `resources.md`, dùng để track lookup khi delegate.
+> Bảng canonical ở `okr/references/sot-ownership.md`. Bảng dưới là **chi tiết hoá theo field cụ thể** trong `objective.md` / `plan.md` / `resources.md`, dùng để track lookup khi delegate.
 
 | Field | Skill áp dụng |
 |-------|---------------|

@@ -50,8 +50,8 @@ Ví dụ (lĩnh vực "Sức khoẻ thể chất"):
 
 Status logic:
 - `healthy`: current ≥ ngưỡng
-- `warning`: current < ngưỡng nhưng chưa quá 20%
-- `critical`: current < 80% ngưỡng
+- `warning`: 80% × ngưỡng ≤ current < ngưỡng
+- `critical`: current < 80% × ngưỡng
 
 ## Phân biệt Project vs Ongoing
 

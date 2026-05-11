@@ -36,8 +36,8 @@ KI không tính % tiến độ. KI đánh giá trạng thái so với ngưỡng 
 
 Status logic:
 - `healthy`: current ≥ ngưỡng tối thiểu
-- `warning`: current < ngưỡng nhưng chênh lệch < 20%
-- `critical`: current < 80% ngưỡng tối thiểu
+- `warning`: 80% × ngưỡng tối thiểu ≤ current < ngưỡng tối thiểu
+- `critical`: current < 80% × ngưỡng tối thiểu
 
 Ví dụ: KI "Tập thể dục ≥3 lần/tuần"
 - Current = 3 → healthy

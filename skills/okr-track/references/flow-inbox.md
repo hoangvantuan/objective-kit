@@ -92,15 +92,7 @@ User trả lời:
 
 Sau validate, đi tiếp xử lý từng item theo bảng:
 
-| Inbox type | Xử lý                                                             | Ai thực hiện                                   |
-| ---------- | ----------------------------------------------------------------- | ---------------------------------------------- |
-| `action`   | Chuyển thành action file trong `actions/`, cập nhật `plan.md`     | Delegate → `okr-plan` mode `update`            |
-| `blocker`  | Đánh dấu action liên quan = `blocked` + ghi lý do                 | `okr-track` tự xử lý (progress field)          |
-| `resource` | Thêm tool/tài liệu vào resources.md                               | Delegate → `okr-init` mode `update-resource`   |
-| `thought`  | User chọn: giữ inbox / chuyển thành action / append log ngày / bỏ | Tuỳ lựa chọn (`okr-track` append log nếu chọn) |
-
-
-> **Migrate dữ liệu cũ**: Nếu file inbox có `type: idea` hoặc `type: note` (schema cũ), `okr-track` Phase 5 tự đổi sang `type: thought` khi xử lý xong (cùng lúc set `status: processed`). Không cần user thao tác thêm.
+Xử lý từng item theo bảng "Inbox type → Delegate mapping" (xem `okr/references/shared-schemas.md`). Migrate dữ liệu cũ (`idea`/`note` → `thought`) cũng theo quy tắc ở shared-schemas.
 
 
 Với mỗi item xử lý xong → đổi `status: processed` trong file inbox.

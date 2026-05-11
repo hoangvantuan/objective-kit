@@ -36,8 +36,8 @@ Mỗi đề xuất gắn nhãn skill sẽ áp dụng:
 | 1 | Giảm KR2 target: 50 > 35           | Market shift     | okr-init update-objective |
 | 2 | Thêm action A013 "Tăng marketing"  | Thiếu đẩy KR2    | okr-plan update        |
 | 3 | Dời M2: 2026-11-15 > 2026-11-30    | A005 chậm        | okr-plan update        |
-| 4 | Đổi PIC A007: An > Dũng            | An quá tải       | okr-init update-resource|
-| 5 | Tăng khả dụng Bình: 50% > 80%      | Cần đẩy build    | okr-init update-resource|
+| 4 | Tăng capacity: 15h > 20h/tuần       | Scope tăng       | okr-init update-resource|
+| 5 | Thêm tool Mailchimp cho A013         | Cần email blast   | okr-init update-resource|
 ```
 
 ## Bước 4: All-changes confirm + chọn áp dụng
@@ -45,10 +45,10 @@ Mỗi đề xuất gắn nhãn skill sẽ áp dụng:
 Bước 1: User chọn cái nào áp dụng:
 
 ```
-Đồng ý đề xuất nào? (vd: 1,3,4 / không / sửa N: <new value>)
+Đồng ý đề xuất nào? (vd: 1,3,5 / không / sửa N: <new value>)
 ```
 
-Bước 2: Sau khi user chọn (vd `1,3,4`), gom thay đổi theo skill đích + render **all-changes diff** trước khi delegate. Bảng phải gom theo skill (nhóm các change cùng skill vào 1 block), để user thấy tổng quan + biết init/plan sẽ áp dụng gì:
+Bước 2: Sau khi user chọn (vd `1,3,5`), gom thay đổi theo skill đích + render **all-changes diff** trước khi delegate. Bảng phải gom theo skill (nhóm các change cùng skill vào 1 block), để user thấy tổng quan + biết init/plan sẽ áp dụng gì:
 
 ```
 All-changes preview (gom theo skill đích)

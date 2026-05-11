@@ -46,6 +46,26 @@ Quy tắc sinh bảng:
 - **SOT**: Action files là SOT. Bảng là view được sinh lại mỗi lần update. Không sửa bảng trực tiếp.
 - **Ongoing type**: Ongoing có thể có action không thuộc milestone nào. Nhóm dưới heading `### Chưa phân milestone`. Nếu Ongoing không có action nào, section `## Roadmap` chỉ chứa `## Practices` (không có bảng).
 
+Ví dụ Ongoing Roadmap (có actions):
+
+````markdown
+## Practices
+
+### P1: Tập thể dục
+- frequency: weekly
+- target_count: 3
+- current_streak: 5
+- ki_link: KI1
+
+## Roadmap
+
+### Chưa phân milestone
+
+| ID | Task | Deadline | Priority | Notes |
+|----|------|----------|----------|-------|
+| [A001](actions/A001-mua-do-tap.md) | Mua đồ tập gym | 2026-05-20 | medium | Cải thiện KI1 |
+````
+
 ---
 
 ## Inbox Aging
