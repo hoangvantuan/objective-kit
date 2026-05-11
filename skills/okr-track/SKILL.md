@@ -110,14 +110,24 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 **Project type:**
 
 1. Hỏi user có thay đổi: KR current, action status (pending/doing/done/blocked), blocker mới.
-2. CONFIRM trước khi ghi:
-  ```
-   Thay đổi sắp ghi
-   - KR1.current: 40 > 50
-   - A003.status: doing > done
-   - A005.status: doing > blocked, lý do: chờ approve
-   Xác nhận? (y/sửa/huỷ)
-  ```
+2. CONFIRM trước khi ghi (đếm số field thay đổi rồi chọn UI):
+   - **Nếu ≤2 field thay đổi** → confirm 1 dòng (giảm friction quick check-in):
+     ```
+     KR1: 40>50, A003 done. y/n/sửa?
+     ```
+     hoặc:
+     ```
+     A005 blocked (chờ approve). y/n/sửa?
+     ```
+   - **Nếu ≥3 field thay đổi** → confirm bảng đầy đủ:
+     ```
+     Thay đổi sắp ghi
+     - KR1.current: 40 > 50
+     - A003.status: doing > done
+     - A005.status: doing > blocked, lý do: chờ approve
+     Xác nhận? (y/sửa/huỷ)
+     ```
+   - User trả lời `sửa` → quay lại bước 1 hỏi field nào sửa.
 3. Áp dụng:
   - Ghi đè progress: `objective.md` (KR.current, KR status), `plan.md` (counters), `actions/*.md` (frontmatter status).
   - Append log: `.okr/log/YYYY-MM-DD.md`. File ngày đã có → append section mới.
@@ -135,7 +145,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 2. Hỏi user update từng KI: "KI1 (Tập thể dục, hiện tại: 2, ngưỡng: ≥3). Tuần này bao nhiêu?"
 3. Tính status mới theo logic: healthy (≥ ngưỡng), warning (< ngưỡng, chênh < 20%), critical (< 80% ngưỡng). Xem `references/metrics.md`.
 4. Nếu có action files (task cải thiện KI) → hỏi update status (pending/doing/done/blocked) như Project.
-5. CONFIRM trước khi ghi (tương tự Project).
+5. CONFIRM trước khi ghi (tương tự Project: ≤2 field → 1 dòng, ≥3 field → bảng).
 6. Áp dụng: ghi đè `objective.md` (KI current, status). Nếu có actions → cập nhật `plan.md` counters + `actions/*.md`.
 7. Append log.
 8. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
