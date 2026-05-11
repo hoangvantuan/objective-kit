@@ -34,10 +34,11 @@ Agent phân tích input và phân loại mỗi ý thành 1 item với type:
 | Type | Khi nào | Ví dụ |
 |------|---------|-------|
 | `action` | Việc cần làm cụ thể, có output rõ | "Viết unit test cho API auth" |
-| `idea` | Ý tưởng chưa rõ, cần suy nghĩ thêm | "Có thể dùng framework X cho frontend?" |
 | `blocker` | Vấn đề đang chặn tiến độ | "Server staging bị down, không deploy được" |
-| `resource` | Tài nguyên mới phát hiện (người, tool, doc) | "Tìm được thư viện Y hỗ trợ chart, miễn phí" |
-| `note` | Ghi chú tự do, context bổ sung | "Khách hàng muốn demo trước 15/6" |
+| `resource` | Tài nguyên mới phát hiện (tool, doc) | "Tìm được thư viện Y hỗ trợ chart, miễn phí" |
+| `thought` | Ý tưởng, ghi chú, context bổ sung (chưa thành action rõ) | "Có thể dùng framework X cho frontend?", "Khách hàng muốn demo trước 15/6" |
+
+> **Lưu ý dữ liệu cũ**: Schema trước đây có 5 type với `idea` + `note` riêng biệt. Đã gộp thành `thought` để giảm friction phân loại. Nếu gặp inbox file cũ với `type: idea` hoặc `type: note`, coi như `type: thought` khi xử lý.
 
 **Tinh chỉnh cho mỗi item:**
 - Title: viết lại ngắn gọn, rõ ràng (≤15 từ)
