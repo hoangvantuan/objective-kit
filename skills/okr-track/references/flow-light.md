@@ -4,6 +4,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 
 **Project type:**
 
+0. **Sync pull** (nếu có action với `external_ids`): chạy External Sync pull flow (xem `references/data-format.md` section "External Sync"). Diff status hiển thị trước bảng hỏi update. User confirm sync → merge vào danh sách thay đổi step 1. Không có `external_ids` → skip.
 1. Hỏi user có thay đổi: KR current, action status (pending/doing/done/blocked), blocker mới.
 2. CONFIRM trước khi ghi (đếm số field thay đổi rồi chọn UI):
    - **Nếu ≤2 field thay đổi** → confirm 1 dòng (giảm friction quick check-in):
@@ -26,11 +27,13 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 3. Áp dụng:
   - Ghi đè progress: `objective.md` (KR.current, KR status), `plan.md` (counters), `actions/*.md` (frontmatter status).
   - Append log: `.okr/log/YYYY-MM-DD.md`. File ngày đã có → append section mới.
+3b. **Sync push** (nếu có action vừa thay đổi status + có `external_ids`): push status mới lên tool ngoài theo External Sync push flow. Báo kết quả.
 4. **Archive actions done** (nếu có action chuyển sang `done` trong lần này):
   - Dời file `actions/AXXX-slug.md` → `actions/archive/AXXX-slug.md` (tạo thư mục `archive/` nếu chưa có).
   - Xóa dòng action đó khỏi `## Roadmap` body trong `plan.md`.
   - Nếu milestone trống (tất cả actions thuộc milestone đều done) → xóa heading milestone khỏi Roadmap body. Giữ milestone trong frontmatter `plan.md` (với `status: done`).
   - Cập nhật counters frontmatter `plan.md` (`completed` +N).
+  - **Re-render bảng Roadmap**: đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem skill `okr/references/shared-schemas.md` section "Roadmap format".
 5. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
 6. Đề xuất next action: highlight việc cần làm trong 1-7 ngày tới.
 

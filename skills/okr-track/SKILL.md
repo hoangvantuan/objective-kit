@@ -30,7 +30,8 @@ Một skill duy nhất cho 3 use case: cập nhật progress nhanh (daily), revi
 - frontmatter `.okr/actions/*.md` (**không đệ quy**, bỏ qua `actions/archive/`) (status, due_date, pic) (nếu có)
 - `.okr/resources.md` (PIC khả dụng) (nếu có)
 - `.okr/inbox/*.md` với status=pending (đếm + đọc frontmatter)
-- **Chỉ 1 file mới nhất** trong `.okr/log/reviews/` (nếu có, để so trend)
+- `.okr/log/reviews/`: mode light → chỉ 1 file mới nhất (sorted desc). Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả. Trừ mode trace: đọc raw log khi user yêu cầu cụ thể.
+- `.okr/log/`: KHÔNG đọc (reviews đã tổng hợp nội dung log).
 
 Tính metrics (xem `references/metrics.md`):
 
@@ -143,385 +144,91 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 
 **Project type:**
 
-0. **Sync pull** (nếu có action với `external_ids`): chạy External Sync pull flow (xem `references/data-format.md` section "External Sync"). Diff status hiển thị trước bảng hỏi update. User confirm sync → merge vào danh sách thay đổi step 1. Không có `external_ids` → skip, không hiển thị gì.
-1. Hỏi user có thay đổi: KR current, action status (pending/doing/done/blocked), blocker mới.
-2. CONFIRM trước khi ghi (đếm số field thay đổi rồi chọn UI):
-   - **Nếu ≤2 field thay đổi** → confirm 1 dòng (giảm friction quick check-in):
-     ```
-     KR1: 40>50, A003 done. (y/sửa/huỷ)
-     ```
-     hoặc:
-     ```
-     A005 blocked (chờ approve). (y/sửa/huỷ)
-     ```
-   - **Nếu ≥3 field thay đổi** → confirm bảng đầy đủ:
-     ```
-     Thay đổi sắp ghi
-     - KR1.current: 40 > 50
-     - A003.status: doing > done
-     - A005.status: doing > blocked, lý do: chờ approve
-     Xác nhận? (y/sửa/huỷ)
-     ```
-   - Cả 2 nhánh: user trả lời `sửa` → hỏi field nào cần sửa, sửa xong CONFIRM lại. `huỷ` → bỏ toàn bộ thay đổi, kết thúc light mode.
-3. Áp dụng:
-  - Ghi đè progress: `objective.md` (KR.current, KR status), `plan.md` (counters), `actions/*.md` (frontmatter status).
-  - Append log: `.okr/log/YYYY-MM-DD.md`. File ngày đã có → append section mới.
-3b. **Sync push** (nếu có action vừa thay đổi status + có `external_ids`): push status mới lên tool ngoài theo External Sync push flow. Báo kết quả.
-4. **Archive actions done** (nếu có action chuyển sang `done` trong lần này):
-  - Dời file `actions/AXXX-slug.md` → `actions/archive/AXXX-slug.md` (tạo thư mục `archive/` nếu chưa có).
-  - Xóa dòng action đó khỏi `## Roadmap` body trong `plan.md`.
-  - Nếu milestone trống (tất cả actions thuộc milestone đều done) → xóa heading milestone khỏi Roadmap body. Giữ milestone trong frontmatter `plan.md` (với `status: done`).
-  - Cập nhật counters frontmatter `plan.md` (`completed` +N).
-  - **Re-render bảng Roadmap**: thay vì patch từng dòng (bullet 2-3 trên), đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem `skills/okr-plan/references/data-format.md` section "Roadmap format".
-5. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
-6. Đề xuất next action: highlight việc cần làm trong 1-7 ngày tới.
+1. Sync pull external (nếu action có `external_ids`)
+2. Hỏi user update: KR current, action status, blocker mới
+3. CONFIRM: ≤2 field → 1 dòng compact, ≥3 field → bảng đầy đủ
+4. Ghi SOT (objective, plan counters, action status) + append log
+5. Sync push + archive actions done + re-render Roadmap
+6. Xử lý inbox (Phase 5) nếu có items pending
+7. Đề xuất next action (1-7 ngày tới)
 
 **Ongoing type:**
+1. Hỏi update KI current + practice streak (plan.md `## Practices`)
+2. Hỏi update action status (nếu có action files)
+3. CONFIRM + ghi SOT + log (kèm streak thay đổi)
+4. Xử lý inbox + đề xuất cải thiện KI nếu warning/critical
 
-1. Hiển thị KI hiện tại (tên, ngưỡng, current, status).
-2. Hỏi user update từng KI: "KI1 (Tập thể dục, hiện tại: 2, ngưỡng: ≥3). Tuần này bao nhiêu?"
-3. Tính status mới theo logic: healthy (≥ ngưỡng), warning (< ngưỡng, chênh < 20%), critical (< 80% ngưỡng). Xem `references/metrics.md`.
-4. **Update practice streak**: đọc `plan.md` body section `## Practices`.
-   - **Fallback (Minor2):** nếu `plan.md` không tồn tại HOẶC body không có heading `## Practices` HOẶC section rỗng (không có `### PN:`), in 1 dòng `(Ongoing chưa có practices. Skip step 4. Tạo practices qua /okr plan để track streak.)` rồi đi tiếp step 5. KHÔNG báo lỗi.
-   - Với mỗi practice (`### PN: <Tên>` kèm field `frequency`, `target_count`, `current_streak`, `ki_link`):
-     - Tính chu kỳ vừa qua dựa trên `frequency` (vd `weekly` = tuần vừa rồi, `daily` = hôm qua). Hỏi: "Practice **P1: Tập thể dục** (target ≥3 lần/tuần, streak hiện tại: 2). Tuần vừa rồi đạt target chưa? (y = đạt → streak +1 / n = không đạt → reset streak về 0 / skip = bỏ qua không update)".
-     - User trả lời `y` → `current_streak += 1`. `n` → `current_streak = 0`. `skip` → giữ nguyên.
-     - Nếu practice `ki_link` đã có KI tương ứng vừa update ở step 2-3, hiển thị inline để user thấy liên kết: `(P1 → KI1 healthy)`.
-5. Nếu có action files (task cải thiện KI) → hỏi update status (pending/doing/done/blocked) như Project.
-6. CONFIRM trước khi ghi (tương tự Project: ≤2 field → 1 dòng, ≥3 field → bảng). Bao gồm cả `current_streak` thay đổi vào diff list.
-7. Áp dụng: ghi đè `objective.md` (KI current, status), ghi đè `plan.md` body section `## Practices` (chỉ field `current_streak` cho practice nào thay đổi). Nếu có actions → cập nhật `plan.md` counters + `actions/*.md`.
-8. Append log: ngoài KI/action, ghi cả practice streak thay đổi (vd `## Thay đổi → P1.current_streak: 2 > 3`).
-9. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
-10. Đề xuất: nếu KI warning/critical → gợi ý tạo action cải thiện qua `/okr plan`. Nếu practice streak vừa reset về 0 → cảnh báo "Practice P1 đã reset streak, KI1 có thể giảm tuần tới. Cân nhắc điều chỉnh practice (giảm target_count, đổi thời gian) qua `/okr plan update`".
+Chi tiết đầy đủ: `references/flow-light.md`
 
 ---
 
-### Phase 4b: Mode DEEP (review sâu + delegate điều chỉnh cấu trúc)
+### Phase 4b: Mode DEEP (review sâu + delegate)
 
-Phạm vi: phân tích root cause + ĐỀ XUẤT điều chỉnh. KHÔNG tự sửa cấu trúc. Việc apply đẩy sang `okr-init` hoặc `okr-plan`.
+Phạm vi: phân tích root cause + ĐỀ XUẤT điều chỉnh. KHÔNG tự sửa cấu trúc.
 
-#### Bước 1: Update progress nếu cần
+1. Update progress nếu cần (giống light, kèm sync + archive)
+2. Phân tích root cause (hỏi "tại sao?" ≥3 lần mỗi vấn đề)
+3. Đề xuất điều chỉnh cấu trúc (bảng kèm skill đích: okr-init/okr-plan)
+4. All-changes confirm: gom theo skill đích, user chọn áp dụng
+5. Delegate sang skill phù hợp (kèm payload: changes, reason, pre_confirmed)
+6. Xử lý inbox (Phase 5)
+7. Ghi log review vào `log/reviews/YYYY-MM-DD.md`
+8. Đề xuất next action
 
-Hỏi user có update progress nào trước phân tích (giống light). Nếu có → áp dụng + log + **archive actions done** như light (Phase 4a bước 4).
-Bao gồm cả sync pull/push như light (step 0 + step 3b ở Phase 4a). Re-render bảng Roadmap sau archive (như Phase 4a step 4).
-
-#### Bước 2: Phân tích root cause
-
-Cho mỗi vấn đề (KR at-risk, KI critical/warning, blocker, quá hạn):
-
-- Hỏi "tại sao?" tối thiểu 3 lần.
-- Phân biệt nhân (gốc) vs duyên (điều kiện).
-- Tách triệu chứng vs nguyên nhân.
-
-Hiển thị:
-
-```
-Phân tích
-## Đạt tốt
-  - KR3 vượt kế hoạch vì [lý do]
-## Cần cải thiện
-  - KR2 trễ 15%: root cause là [...] (không phải triệu chứng [...])
-  - A005 blocked 5 ngày: nguyên nhân là dependency [...]
-```
-
-#### Bước 3: Đề xuất điều chỉnh cấu trúc (kèm phân loại delegate)
-
-Mỗi đề xuất gắn nhãn skill sẽ áp dụng:
-
-```
-Đề xuất điều chỉnh
-| # | Đề xuất                            | Lý do            | Áp dụng qua            |
-|---|------------------------------------|------------------|------------------------|
-| 1 | Giảm KR2 target: 50 > 35           | Market shift     | okr-init update-objective |
-| 2 | Thêm action A013 "Tăng marketing"  | Thiếu đẩy KR2    | okr-plan update        |
-| 3 | Dời M2: 2026-11-15 > 2026-11-30    | A005 chậm        | okr-plan update        |
-| 4 | Đổi PIC A007: An > Dũng            | An quá tải       | okr-init update-resource|
-| 5 | Tăng khả dụng Bình: 50% > 80%      | Cần đẩy build    | okr-init update-resource|
-```
-
-#### Bước 4: All-changes confirm + chọn áp dụng
-
-Bước 1: User chọn cái nào áp dụng:
-
-```
-Đồng ý đề xuất nào? (vd: 1,3,4 / không / sửa N: <new value>)
-```
-
-Bước 2: Sau khi user chọn (vd `1,3,4`), gom thay đổi theo skill đích + render **all-changes diff** trước khi delegate. Bảng phải gom theo skill (nhóm các change cùng skill vào 1 block), để user thấy tổng quan + biết init/plan sẽ áp dụng gì:
-
-```
-All-changes preview (gom theo skill đích)
-
-→ okr-init update-objective
-  - KR2.target: 50 > 35  (lý do: market shift Q4)
-
-→ okr-plan update
-  - Thêm A013 "Tăng marketing"  (gắn KR2, effort m)
-  - M2.deadline: 2026-11-15 > 2026-11-30  (A005 chậm)
-
-→ okr-init update-resource
-  - tool: thêm Mailchimp (cho A013 email campaign)
-
-Confirm tất cả? (y / sửa N / huỷ N / huỷ tất)
-```
-
-User trả lời:
-- `y` → đi tiếp Bước 5 với `pre_confirmed: true` cho mỗi delegate payload. Init/plan nhận signal sẽ SKIP phase confirm riêng (xem `okr-init/SKILL.md` Phase 6 + `okr-plan/SKILL.md` Phase 4).
-- `sửa N` → quay lại Bước 3 sửa đề xuất số N, xong render lại all-changes preview.
-- `huỷ N` → loại N khỏi danh sách áp dụng, render lại preview.
-- `huỷ tất` → quay lại Bước 4 lựa chọn ban đầu.
-
-#### Bước 5: Delegate sang skill phù hợp
-
-Gom đề xuất user đồng ý theo skill target. Mỗi delegate KÈM payload format:
-
-```yaml
-delegate_to: okr-init update-objective | okr-init update-resource | okr-plan update
-context:
-  changes:
-    - field: <vd: KR2.target | A005.due_date | tool.X>
-      from: <giá trị cũ>
-      to: <giá trị mới>
-    - field: ...
-      from: ...
-      to: ...
-  reason: "<1-2 câu giải thích vì sao điều chỉnh, lấy từ Bước 2 root cause>"
-  source_review: log/reviews/YYYY-MM-DD.md
-  pre_confirmed: true
-```
-
-Field meanings:
-
-| Field | Bắt buộc | Mô tả |
-|-------|----------|-------|
-| `delegate_to` | có | Skill + mode đích. 1 trong 3 giá trị. |
-| `context.changes[]` | có | Danh sách thay đổi (field, from, to). 1 payload có thể chứa nhiều changes nếu cùng skill đích. |
-| `context.reason` | có | Lý do GỐC từ Bước 2 root cause. Track viết vào, init/plan đọc + hiển thị trong CONFIRM diff. |
-| `context.source_review` | có | Path file review log để init/plan trace lại. Mặc định `log/reviews/<today>.md`. |
-| `context.pre_confirmed` | có | `true` sau khi user reply `y` cho all-changes preview ở Bước 4 (track đã gom + show full diff trước). Skill nhận BẮT BUỘC honor: skip ask "y/sửa/huỷ" ở phase confirm riêng, đi thẳng ghi file. Vẫn hiển thị diff + reason để trace. |
-
-Ví dụ payload thực tế (KR2 giảm target do market shift):
-
-```yaml
-delegate_to: okr-init update-objective
-context:
-  changes:
-    - field: KR2.target
-      from: 50
-      to: 35
-  reason: "Market shift Q4 (từ root cause Bước 2): tăng trưởng ngành chậm 30%, target 50 không khả thi."
-  source_review: log/reviews/2026-12-01.md
-  pre_confirmed: true
-```
-
-Skill được delegate sẽ tự chạy phase confirm + ghi file (theo flow của riêng nó). CONFIRM phase BẮT BUỘC hiển thị `reason` cùng diff (xem `skills/okr-init/SKILL.md` Phase 6 update-objective + `skills/okr-plan/SKILL.md` Phase 4 update). Track CHỈ truyền context, KHÔNG tự ghi SOT objective/plan.
-
-#### Bước 6: Xử lý inbox (nếu có items pending)
-
-Chạy Inbox Processing Flow (xem Phase 5).
-
-#### Bước 7: Ghi log review
-
-Sau khi tất cả delegate + inbox processing hoàn tất, append `.okr/log/reviews/YYYY-MM-DD.md`:
-
-- Tổng kết KR/KI
-- Phân tích root cause
-- Đề xuất + cái nào đã apply (kèm skill nào áp dụng)
-- Inbox items đã xử lý
-
-Đồng thời append `log/YYYY-MM-DD.md` link sang file review.
-
-#### Bước 8: Đề xuất next action
+Chi tiết đầy đủ: `references/flow-deep.md`
 
 ---
 
 ### Phase 4c: Mode CLOSURE (mọi action done)
 
-Đọc mở rộng: **đọc cả `actions/archive/**` (tổng kết toàn bộ actions đã hoàn thành) + **đọc tất cả `log/reviews/**` (tổng kết toàn period).
+Đọc mở rộng: `actions/archive/**` + tất cả `log/reviews/**` (tổng kết toàn period).
 
 Như deep + thêm:
+1. Tổng kết toàn period (KR đạt vs target, % thời gian, lessons learned)
+2. Hỏi user: completed hay tạo follow-up project?
+3. Delegate `okr-init update-objective` đổi status nếu user đồng ý
+4. Xử lý inbox còn lại
+5. Ghi log review closure (kèm section `## Lessons`)
 
-1. Tính tổng kết toàn period: KR đạt vs target, % thời gian, lessons learned.
-2. Hỏi user: chuyển status objective → `completed`, hay tạo follow-up project?
-3. Nếu user đồng ý → delegate sang `okr-init` mode `update-objective` để đổi `status: completed`.
-4. Xử lý inbox còn lại (nếu có).
-5. Ghi log review closure (kèm section `## Lessons`).
+Chi tiết đầy đủ: `references/flow-closure.md`
 
 ---
 
 ### Phase 5: Inbox Processing Flow
 
-Chạy sau khi update progress (light) hoặc sau delegate (deep). Cũng có thể chạy độc lập nếu user gọi `/okr track` chỉ để xử lý inbox.
+Chạy sau update progress (light) hoặc sau delegate (deep).
 
-#### Bước 1: Đọc inbox + compute staleness
+**Mode inbox-only**: SOT đã có context từ orchestrator okr (preload Phase 1). Skip Phase 2 dashboard, Phase 3 detect, Phase 4 progress. Đi thẳng Phase 5.
 
-Đọc tất cả `.okr/inbox/*.md` có `status: pending`. Nếu không có → skip toàn bộ Phase 5.
+Flow:
+1. Đọc inbox pending + compute staleness (on-the-fly, xem Inbox Aging tại skill okr/references/shared-schemas.md)
+2. Cảnh báo stale items (>30 ngày), hỏi user giữ/bỏ
+3. Hiển thị bảng gợi ý xử lý (map vào KR/milestone/action)
+4. Validate related IDs (KR, action, tool) trước khi xử lý
+5. Xử lý từng item theo type: delegate hoặc tự apply
+6. Gom delegate cùng skill → 1 lần gọi
+7. Báo cáo: items đã xử lý + inbox còn lại
 
-Với mỗi item, compute `staleness_days = today - captured_at` (xem `skills/okr-capture/references/data-format.md` section "Inbox Aging"). Phân loại:
+Inbox type → Delegate mapping: xem skill okr/references/shared-schemas.md (đã load từ orchestrator).
 
-- Mới (≤7 ngày): xử lý bình thường ở Bước 2.
-- Đang chờ (7 < staleness ≤ 30): xử lý bình thường, nhưng sort lên đầu trong bảng Bước 2.
-- Cũ (>30 ngày): chuyển sang Bước 1.5 xử lý riêng trước.
-
-#### Bước 1.5: Cảnh báo stale items (chỉ chạy nếu có items >30 ngày)
-
-Hiển thị block riêng TRƯỚC bảng Bước 2:
-
-```
-⚠️ Inbox cũ ≥30 ngày (3 items)
-| # | Type     | Title                        | Captured   | Staleness |
-|---|----------|------------------------------|------------|-----------|
-| 1 | thought  | Thử framework X cho frontend | 2026-04-01 | 40 ngày   |
-| 2 | action   | Viết blog post về Y          | 2026-03-25 | 47 ngày   |
-| 3 | resource | Library Z hỗ trợ chart       | 2026-03-15 | 57 ngày   |
-
-Còn relevant không? (vd: "1 giữ, 2 bỏ, 3 giữ" / all giữ / all bỏ)
-```
-
-User trả lời:
-- `<N> giữ`: giữ `status: pending` (không thay đổi). Item đi tiếp vào Bước 2 xử lý bình thường.
-- `<N> bỏ`: đổi `status: discarded` ngay (không cần qua Bước 2-3).
-- `all giữ`: giữ tất cả, đẩy hết sang Bước 2.
-- `all bỏ`: discard tất cả.
-
-KHÔNG auto-discard. User quyết định cuối.
-
-Sau Bước 1.5, đi tiếp Bước 2 với items đã filter (đã giữ + items ≤30 ngày).
-
-#### Bước 2: Hiển thị inbox + gợi ý xử lý
-
-Agent đọc context từng item, đối chiếu với SOT hiện tại (objective, plan, actions, resources), rồi gợi ý cách xử lý:
-
-```
-Inbox: 3 items chưa xử lý
-| # | Type     | Title                         | Captured  | Gợi ý xử lý                    |
-|---|----------|-------------------------------|-----------|----------------------------------|
-| 1 | action   | Viết unit test cho API auth   | 05-09     | → Tạo A014, gán M2, due 05-15   |
-| 2 | thought  | Thử framework X cho frontend  | 05-08     | → Giữ inbox (chưa rõ scope)     |
-| 3 | blocker  | Server staging down           | 05-09     | → Block A007, ghi log            |
-
-Xử lý items nào? (1,3 / all / skip / bỏ N)
-```
-
-Gợi ý xử lý dựa trên:
-
-- `action`: map vào KR/milestone nào, capacity còn lại bao nhiêu, deadline nào hợp lý
-- `blocker`: action nào bị ảnh hưởng?
-- `resource`: resources.md cần thêm gì (Công cụ / Tài liệu)?
-- `thought`: đủ rõ để thành action chưa? Nếu rõ → tạo action; nếu chưa rõ → giữ inbox; nếu chỉ là ghi chú → append log ngày
-
-#### Bước 3: Xử lý từng item user chọn
-
-**Step 3.0: Validate related ID (M5b).** Trước khi xử lý từng item user chọn, agent validate field `related_kr`/`related_action`/`related_tool` (do capture ghi vào, không guarantee đúng):
-
-| Field | Quy tắc validate | Hành vi nếu sai |
-|-------|------------------|-----------------|
-| `related_kr` | Phải khớp KR ID trong `objective.md` frontmatter (vd `KR1`, `KR2`). | Tìm KR có title match fuzzy với context item → đề xuất ID đúng. Nếu không tìm được → set `null`, hỏi user. |
-| `related_action` | Phải khớp action ID trong `actions/*.md` (vd `A003`). KHÔNG khớp `actions/archive/*.md` (action đã done). | Action đã archive → cảnh báo "Action X đã done/archive. Bỏ link?". Không tồn tại → set `null`, hỏi user. |
-| `related_tool` | Phải khớp tool ID hoặc tên trong `resources.md` Công cụ section. | Không tồn tại → đề xuất thêm tool qua `okr-init update-resource` hoặc set `null`. |
-
-Hiển thị cho user khi có sai sót:
-
-```
-Validate inbox related fields
-  Item #1 (action "Viết unit test cho API auth"): related_kr=KR9 → KR9 không tồn tại.
-    Đề xuất: KR2 (code coverage) hoặc null.
-  Item #3 (blocker "Server staging down"): related_action=A100 → A100 không tồn tại.
-    Đề xuất: A007 (deploy staging) match fuzzy 78%, hoặc null.
-
-Áp dụng đề xuất? (y / sửa N / null tất / huỷ)
-```
-
-User trả lời:
-- `y` → áp dụng tất cả đề xuất, ghi đè frontmatter inbox file (chỉ field `related_*`, không đổi `status`).
-- `sửa N` → user nói ID đúng cho item N.
-- `null tất` → set tất cả related sai thành `null`.
-- `huỷ` → giữ nguyên related sai, đi tiếp Bước 3 xử lý (sẽ skip mapping liên quan).
-
-Sau validate, đi tiếp xử lý từng item theo bảng:
-
-| Inbox type | Xử lý                                                                  | Ai thực hiện                                 |
-| ---------- | ---------------------------------------------------------------------- | -------------------------------------------- |
-| `action`   | Chuyển thành action file trong `actions/`, cập nhật `plan.md`          | Delegate → `okr-plan` mode `update`          |
-| `blocker`  | Đánh dấu action liên quan = `blocked` + ghi lý do                      | `okr-track` tự xử lý (progress field)        |
-| `resource` | Thêm tool/tài liệu vào resources.md                                    | Delegate → `okr-init` mode `update-resource` |
-| `thought`  | User chọn: giữ inbox / chuyển thành action / append log ngày / bỏ      | Tuỳ lựa chọn (`okr-track` append log nếu chọn) |
-
-> **Migrate dữ liệu cũ**: Nếu file inbox có `type: idea` hoặc `type: note` (schema cũ), `okr-track` Phase 5 tự đổi sang `type: thought` khi xử lý xong (cùng lúc set `status: processed`). Không cần user thao tác thêm.
-
-
-Với mỗi item xử lý xong → đổi `status: processed` trong file inbox.
-
-User chọn "bỏ N" → đổi `status: discarded`.
-
-Giữ inbox (thought chưa rõ) → giữ `status: pending`, không làm gì.
-
-#### Bước 4: Gom delegate
-
-Nếu nhiều items cùng delegate sang 1 skill (vd: 3 actions mới cùng sang `okr-plan update`) → gom thành 1 lần delegate. Skill được delegate sẽ tự chạy phase confirm + ghi file.
-
-#### Bước 5: Báo cáo
-
-```
-Inbox đã xử lý: 2/3 items
-  - #1 → A014 (tạo mới, gán M2)
-  - #3 → A007 blocked (ghi log)
-  - #2 → giữ inbox (chờ rõ hơn)
-Inbox còn lại: 1 item pending
-```
+Chi tiết đầy đủ: `references/flow-inbox.md`
 
 ---
 
 ## Trace Flow (mode `trace`)
 
-Chạy khi user gọi `/okr trace <ID>`, `/okr history`, hoặc nhắc đến "xem lại", "lịch sử". **Không** update progress. **Không** đọc file active bình thường.
+Lazy loading: frontmatter trước, body khi user drill-down. Không update progress.
 
-**Nguyên tắc lazy loading**: Đọc dần, không đọc hết. Frontmatter trước, body khi user yêu cầu.
+4 kiểu trace:
 
-### Trace 1 action cụ thể
+| Kiểu | Trigger | Đọc gì |
+|------|---------|--------|
+| Action cụ thể | "trace A003" | `actions/archive/A003-*.md` |
+| Milestone | "trace M1" | `plan.md` + `actions/archive/` theo milestone |
+| Theo thời gian | "actions done tháng 4" | `actions/archive/` theo `due_date` |
+| Log | "xem log tuần trước" | `log/` hoặc `log/reviews/` theo ngày |
 
-Trigger: "trace A003", "xem lại A003"
-
-1. Tìm file `actions/archive/A003-*.md`
-2. Đọc frontmatter → hiển thị tóm tắt (id, title, milestone, status, pic, due_date, effort)
-3. User muốn xem chi tiết → đọc body (DoD, Output, Tiêu chí chất lượng)
-
-```
-Archive: A003
-  Title     : Spec MVP
-  Milestone : M1: Research
-  PIC       : An
-  Due date  : 2026-10-20
-  Effort    : m
-  Status    : done
-
-Xem chi tiết? (y/n)
-```
-
-### Trace milestone
-
-Trigger: "trace M1", "xem lại milestone Research"
-
-1. Đọc frontmatter `plan.md` → lấy info milestone done (name, target_date, status)
-2. Lọc `actions/archive/*.md` có `milestone: "M1: Research"` (chỉ frontmatter)
-3. Hiển thị bảng tóm tắt: ID, Title, PIC, Due date, Effort
-4. User chọn action nào cần xem → đọc body file đó
-
-### Trace theo thời gian
-
-Trigger: "xem lại actions tuần trước", "actions done tháng 4"
-
-1. Lọc `actions/archive/*.md` theo `due_date` trong frontmatter
-2. Hiển thị danh sách phù hợp (chỉ frontmatter)
-3. User drill-down khi cần
-
-### Trace log
-
-Trigger: "xem log tuần trước", "log tháng 4", "review lần trước"
-
-1. Lọc `log/*.md` hoặc `log/reviews/*.md` theo filename (chứa ngày)
-2. Hiển thị danh sách ngày có log
-3. User chọn ngày → đọc nội dung file đó
+Chi tiết đầy đủ: `references/flow-trace.md`
 
 ---
 
