@@ -19,7 +19,6 @@ status: pending
 priority: high
 effort: m
 pic: ""
-verifier: ""
 due_date: YYYY-MM-DD
 depends_on: []
 ---
