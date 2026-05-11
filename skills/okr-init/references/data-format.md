@@ -60,44 +60,33 @@ last_updated: YYYY-MM-DD
 ```
 
 Body sections (giữ section header dù rỗng):
-- `## Nhân sự (Vai trò & Trách nhiệm)` (bảng: Họ Tên, Liên lạc (Zalo/FB/SĐT/Địa chỉ), Vai trò & Trách nhiệm, Ngày tham gia, Khả dụng %, Actions)
-- `## Công cụ` (bảng: Tên công cụ, Khi nào dùng, Mục đích, Resource (URL/Account), Người quản lý)
+- `## Solo Profile` (bảng 1 dòng: Tên, Capacity (giờ/tuần), Skills)
+- `## Công cụ` (bảng: Tên công cụ, Khi nào dùng, Mục đích, Resource (URL/Account))
 - `## Tài liệu & Knowledge Base` (bảng: Tên/Loại, Vị trí (Link/Folder/File), Mục đích, Status)
 - `## Ngân sách` (bảng: Khoản mục, Dự kiến, Thực tế, Ghi chú)
 - `## Thiếu hụt & Rủi ro` (danh sách bullet)
 
-Tại thời điểm `mode: new`, cột `Actions` trong section "Nhân sự" để trống (plan chưa có). Mode `update-resource` sẽ map sau khi `okr-plan` tạo actions.
+Skill OKR phục vụ persona **solo only** (1 user, 1 objective). Mọi action mặc định `pic: self`. Section `## Solo Profile` chứa duy nhất 1 dòng (chính user). KHÔNG còn các field "Liên lạc", "Vai trò", "Khả dụng %", "Actions" (bảng mapping PIC → action ID): đã bỏ vì không cần với solo. Mode `update-resource` chỉ sửa Solo Profile (capacity, skills) hoặc Công cụ/Tài liệu/Ngân sách.
 
-## Tham chiếu actions/
+> **Lưu ý dữ liệu cũ**: Nếu gặp `resources.md` từ schema cũ có section `## Nhân sự (Vai trò & Trách nhiệm)` hoặc cột "Người quản lý" / "Liên lạc", coi là legacy. Mode `update-resource` lần đầu sẽ migrate: tự lấy dòng đầu tiên (hoặc dòng có khả dụng cao nhất) làm Solo Profile, bỏ các cột không còn schema.
 
-Khi assign PIC trong mode `update-resource`, sửa frontmatter `.okr/actions/AXXX-*.md`:
+## Phát hiện xung đột (solo)
 
-```yaml
----
-id: AXXX
-pic: "Tên người"
----
-```
-
-Sync 2 chiều: `resources.md` (cột Actions của người đó) và frontmatter `pic` của action.
-
-## Phát hiện xung đột
-
-Áp dụng khi update resource hoặc khi `okr-plan` gọi vào để map PIC:
+Áp dụng khi `okr-init update-resource` hoàn tất, hoặc khi `okr-plan` đọc resources để check fit:
 
 | Tín hiệu | Cảnh báo |
 |----------|----------|
-| Cùng PIC có ≥3 actions cùng deadline (±2 ngày) | Quá tải, đề xuất tách task hoặc dời |
-| PIC khả dụng <50% có >5 actions trong period | Capacity không đủ, đề xuất thêm người |
-| Action có deadline trước ngày PIC sẵn sàng | Bất khả thi, đề xuất dời deadline |
-| Action không có PIC mà deadline <7 ngày | Cần assign gấp |
+| Tổng giờ ước tính của actions chưa done > capacity còn lại đến end_date | Quá tải, đề xuất giảm scope hoặc dời deadline |
+| ≥3 actions cùng deadline (±2 ngày) | Tuần đó dồn việc, đề xuất tách deadline |
+| Action cần skill chưa có trong Solo Profile | Đề xuất thêm action học/outsource trước |
 | Tool/tài liệu status `missing` mà có action phụ thuộc | Block, đề xuất bổ sung trước |
+| Capacity giảm rõ rệt (vd <60% so với cũ) mà còn nhiều actions chưa done | Cảnh báo scope rủi ro, đề xuất xem lại plan |
 
-Mỗi cảnh báo phải kèm đề xuất giải pháp cụ thể: dời deadline, tách task, thêm người, hoặc giảm scope.
+Mỗi cảnh báo phải kèm đề xuất giải pháp cụ thể: dời deadline, tách task, học/outsource skill, hoặc giảm scope.
 
 ## Quy tắc chung
 
 - SOT: ghi đè khi cập nhật, không append. Lịch sử thay đổi đi vào log của `okr-track`.
 - Section trống vẫn giữ header để mode `update-*` có chỗ chèn.
 - Mọi sửa đổi `resources.md` phải cập nhật `last_updated`.
-- Update PIC PHẢI sync cả `resources.md` lẫn frontmatter `actions/*.md`.
+- Field `pic` trong frontmatter `actions/*.md` mặc định `self`. Không cần sync 2 chiều với `resources.md` (Solo Profile chỉ 1 user).
