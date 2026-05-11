@@ -53,7 +53,7 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 - Frontmatter milestones[].status (pending/in-progress/done)
 
 `.okr/actions/AXXX-*.md`:
-- Frontmatter `status`: `pending` | `doing` | `done` | `blocked`
+- Frontmatter `status`: `pending` | `doing` | `done` | `blocked` (cũng được sửa bởi `okr-plan` `update`)
 
 ### Structure fields (track CHỈ đề xuất, delegate để apply)
 
@@ -91,9 +91,9 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 ## Log Reading Rules
 
 - Orchestrator `/okr` Bước 1: **KHÔNG đọc `log/`**. Chỉ đọc **1 file mới nhất** trong `log/reviews/`.
-- `okr-track` Phase 1: chỉ đọc **1 file mới nhất** trong `log/`. Mode light: **1 file mới nhất** trong `log/reviews/`. Mode deep: **tối đa 3 files mới nhất** trong `log/reviews/`.
+- `okr-track` Phase 1 `log/`: mode light → 1 file mới nhất. Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả.
+- `okr-track` Phase 1 `log/reviews/`: mode light → 1 file mới nhất. Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả.
 - Log cũ hơn: KHÔNG đọc, trừ khi user yêu cầu trace.
-- `okr-track` closure: đọc tất cả `log/reviews/` (cần tổng kết period).
 
 ## External Sync (optional)
 

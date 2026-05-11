@@ -11,7 +11,9 @@ Menu:
 1. Sửa Objective text / WHY
 2. Sửa period (start/end) hoặc review_cycle
 3. Thêm/sửa/xoá KR (Project) hoặc KI (Ongoing)
-4. Đổi status (active/paused/completed/cancelled/archived)
+4. Đổi status:
+   - Project: active / paused / completed / cancelled
+   - Ongoing: active / paused / archived
 
 ### Phase 3: Thu thập thay đổi
 
@@ -43,7 +45,9 @@ Quét `.okr/plan.md` (frontmatter milestones + body Practices nếu Ongoing) và
 | Xoá KR                       | Liệt kê actions có `key_result: KR<N>`. Đề xuất reassign sang KR khác hoặc xoá.                                                     |
 | Đổi `objective` text / WHY   | Note "Cân nhắc review lại practices và actions xem có còn align không".                                                             |
 | Đổi `review_cycle` (Ongoing) | Note "Track sẽ chuyển sang chu kỳ mới từ lần check-in tới".                                                                         |
-| Đổi `status`                 | Nếu chuyển sang `completed/cancelled/archived` → liệt kê actions chưa done + đề xuất archive cùng.                                  |
+| Đổi `status` → `completed/cancelled/archived` | Liệt kê actions chưa done + đề xuất archive cùng.                                  |
+| Đổi `status` → `paused`      | Liệt kê actions status=doing (N actions). Đề xuất: giữ doing (resume sau) hay chuyển pending. Track sẽ không gợi ý update progress khi paused. Inbox vẫn capture được. |
+| Đổi `status` → `active` (resume từ paused) | Recompute timeline: `remaining_days = end_date - today`. Nếu remaining < 0 → đề xuất extend deadline. Nếu dương → hiển thị capacity fit mới (effort còn lại vs remaining capacity). |
 
 
 Hiển thị block tác động:

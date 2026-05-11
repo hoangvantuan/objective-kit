@@ -24,7 +24,7 @@ Tiêu chí SMART:
 - **R**elevant: Liên quan trực tiếp đến Objective
 - **T**ime-bound: Có deadline rõ
 
-Số lượng: 3-5 KR mỗi Objective. Ít hơn 3 thì thiếu góc nhìn. Nhiều hơn 5 thì mất focus.
+Số lượng: 2-4 KR mỗi Objective. Solo user 2-4 đủ cover mà không mất focus. (OKR team thường dùng 3-5, nhưng 1 người quản lý ít KR hơn.)
 
 Ví dụ:
 - KR1: Xuất bản 12 bài deep-dive (baseline: 0, target: 12)

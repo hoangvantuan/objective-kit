@@ -15,9 +15,7 @@ Resource hiện tại
 | Rủi ro         | 1 (Skill Figma còn yếu)                |
 ```
 
-> **Legacy migrate**: Nếu file vẫn còn section `## Nhân sự (Vai trò & Trách nhiệm)` schema cũ, agent tự convert: lấy dòng đầu (hoặc dòng có khả dụng cao nhất) thành Solo Profile, drop các cột "Liên lạc", "Người quản lý", "Khả dụng %", "Actions". Thông báo user "Đã migrate schema cũ sang Solo Profile."
-
-> **Legacy migrate 6 cột**: Nếu bảng `## Công cụ` có 4 cột (Tên công cụ, Khi nào dùng, Mục đích, Resource) → auto-migrate sang 6 cột (thêm Cách dùng + Ghi chú trống). Nếu bảng `## Tài liệu & Knowledge Base` có 4 cột (Tên/Loại, Vị trí, Mục đích, Status) → map: Tên/Loại → Tên, Vị trí → Resource, Mục đích giữ, Status → Ghi chú. Thêm Khi nào dùng + Cách dùng trống. Thông báo user "Đã migrate bảng Công cụ/KB sang schema 6 cột. Vui lòng điền Cách dùng và Ghi chú."
+> **Legacy migrate**: Nếu gặp schema cũ (Nhân sự, bảng 4 cột Công cụ/KB), chạy migration theo `data-format.md` section "Migration schema cũ → 6 cột" và "Lưu ý dữ liệu cũ". Thông báo user kết quả migrate.
 
 ### Phase 2: Hỏi user muốn update gì
 

@@ -31,7 +31,7 @@ Roadmap format canonical: xem skill `okr/references/shared-schemas.md` section "
 id: AXXX
 title: "string"
 description: "string"
-key_result: KR1
+key_result: KR1  # Ongoing: ghi KI ID (vd KI1)
 milestone: "string"
 status: pending | doing | done | blocked
 priority: critical | high | medium | low
@@ -71,7 +71,7 @@ type: project | ongoing
 objective: "string"
 ```
 
-Nếu type=ongoing, plan.md body chứa `## Practices` (hành động lặp lại để duy trì KI). Schema xem section "## Practices schema" bên dưới. Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI cụ thể (vd: "Mua đồ tập gym"). Actions tuân quy tắc bình thường. Milestones không bắt buộc với Ongoing.
+Nếu type=ongoing, plan.md body chứa `## Practices` (schema xem section "## Practices schema" bên dưới). Ongoing + actions: xem `action-guide.md` section "Ongoing type".
 
 ## Practices schema (chỉ Ongoing)
 
@@ -103,7 +103,7 @@ Field meanings:
 |-------|------|-------|
 | `frequency` | `daily` \| `weekly` \| `biweekly` \| `monthly` | Chu kỳ practice |
 | `target_count` | int | Số lần mục tiêu trong 1 chu kỳ (vd: 3 lần/tuần) |
-| `current_streak` | int | Số chu kỳ liên tiếp gần nhất đã đạt `target_count` |
+| `current_streak` | int | Số chu kỳ liên tiếp gần nhất đã đạt `target_count`. Mặc định `0` khi tạo mới. |
 | `description` | string | Mô tả ngắn cách thực hiện |
 | `ki_link` | `KI<N>` | KI mà practice này phục vụ (vd: `KI1`, `KI2`), link tới Key Indicator trong `objective.md` |
 

@@ -30,8 +30,9 @@ SOT data đã có từ orchestrator (objective, plan frontmatter, actions frontm
 Đọc thêm (orchestrator chưa load):
 
 - `.okr/inbox/*.md` với status=pending: đọc frontmatter (orchestrator chỉ đếm)
-- `.okr/log/reviews/`: mode light → chỉ 1 file mới nhất (sorted desc). Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả. Trừ mode trace: đọc raw log khi user yêu cầu cụ thể.
-- `.okr/log/`: KHÔNG đọc (reviews đã tổng hợp nội dung log).
+- `.okr/log/`: mode light → 1 file mới nhất. Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả.
+- `.okr/log/reviews/`: mode light → 1 file mới nhất. Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả.
+- Mode trace: đọc log/reviews theo yêu cầu user.
 
 Tính metrics (xem `references/metrics.md`):
 

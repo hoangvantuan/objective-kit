@@ -129,4 +129,4 @@ Mỗi cảnh báo phải kèm đề xuất giải pháp cụ thể: dời deadli
 - SOT: ghi đè khi cập nhật, không append. Lịch sử thay đổi đi vào log của `okr-track`.
 - Section trống vẫn giữ header để mode `update-*` có chỗ chèn.
 - Mọi sửa đổi `resources.md` phải cập nhật `last_updated`.
-- Field `pic` trong frontmatter `actions/*.md` mặc định `self`. Không cần sync 2 chiều với `resources.md` (Solo Profile chỉ 1 user).
+- Field `pic` trong frontmatter `actions/*.md` mặc định `self`. Có thể gán tên người khác khi delegate việc. Không cần sync 2 chiều với `resources.md`.

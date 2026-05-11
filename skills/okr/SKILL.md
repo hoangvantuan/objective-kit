@@ -26,7 +26,7 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 
 ## Phân vai SOT
 
-Mỗi field SOT chỉ được sửa bởi đúng 1 skill. `okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, delegate sang `okr-init`/`okr-plan` để apply.
+Mỗi field SOT chỉ được sửa bởi skill được chỉ định. `okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, delegate sang `okr-init`/`okr-plan` để apply. Ngoại lệ: `action.status` được cả track lẫn plan sửa.
 
 Chi tiết bảng phân vai: [sot-ownership.md](references/sot-ownership.md) (load cùng skill này).
 

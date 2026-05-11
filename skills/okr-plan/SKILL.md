@@ -32,6 +32,11 @@ Ví dụ áp dụng cho mode `new` / `update`:
 | Có `plan.md` + user/track nhắc thay đổi cấu trúc | `update`      |
 | User chọn explicit (vd `/okr plan update`)       | theo lựa chọn |
 
+**Cảnh báo ghi đè**: Nếu mode `new` nhưng `plan.md` đã tồn tại:
+1. Hiển thị: "Plan đã tồn tại (X milestones, Y actions active, Z done/archive). Mode `new` sẽ ghi đè plan + xoá action files active. Actions archived không bị ảnh hưởng."
+2. Hỏi: "(ghi đè / chuyển sang update / huỷ)"
+3. User chọn ghi đè → Phase 1 bình thường. Chuyển update → đổi mode.
+
 
 ---
 
@@ -50,7 +55,7 @@ Với mỗi KR:
 2. Mỗi Initiative → 2-5 **Actions** cụ thể.
 3. Nhóm actions thành **Milestones** theo thời gian.
 4. Đề xuất dependencies (action B chờ A).
-5. Mặc định mỗi action `pic: self`. Cảnh báo nếu action cần skill chưa có trong Solo Profile (đề xuất thêm action học/outsource trước).
+5. Mặc định mỗi action `pic: self`. Có thể gán tên người khác khi delegate việc. Cảnh báo nếu action cần skill chưa có trong Solo Profile (đề xuất thêm action học/outsource trước).
 6. Nếu action có ghi chú ngắn (dependency, blocker, context quan trọng), ghi vào field `notes` (≤50 ký tự). Không có thì để trống.
 7. Nếu action liên kết tool trong resources.md có `Cách dùng` là `skill:` hoặc `mcp:`, hỏi user có external ID để sync không. Nếu có → ghi `external_ids` frontmatter. Nếu không → bỏ qua.
 
@@ -79,7 +84,7 @@ Tóm tắt Plan
 | M2: Build MVP | 2026-11-15  | 5         | KR1, KR2     |
 | M3: Launch    | 2026-12-15  | 4         | KR2, KR3     |
 
-Actions (12 total, mọi action `pic: self`)
+Actions (12 total, pic mặc định self)
 | ID    | Title              | Milestone | Effort | Deps      | Output            | Notes         | Ext IDs      |
 |-------|--------------------|-----------|--------|-----------|-------------------|---------------|--------------|
 | A001  | Khảo sát user      | M1        | m      | -         | survey-report.md  |               |              |
@@ -110,7 +115,7 @@ Quy tắc đánh giá:
 
 1. Tạo `.okr/plan.md`.
 2. Tạo thư mục `.okr/actions/`.
-3. Ghi mỗi action thành `AXXX-slug.md`. Mọi action `pic: self`.
+3. Ghi mỗi action thành `AXXX-slug.md`. Mặc định `pic: self` (có thể gán tên khác).
 4. Cập nhật counters trong `plan.md`.
 5. **Render bảng Roadmap** trong `plan.md` body `## Roadmap`: sinh bảng per-milestone từ action files vừa tạo. Format xem `references/data-format.md` section "Roadmap format". Sắp xếp: Priority (critical > high > medium > low), rồi Deadline (sớm trước). Ongoing không có milestone → heading `### Chưa phân milestone`.
 
@@ -185,7 +190,7 @@ Xác nhận? (y / sửa / huỷ)
 ### Phase 5: Áp dụng
 
 1. Ghi đè `plan.md` (counters, milestones).
-2. Ghi/sửa file `actions/AXXX-*.md` tương ứng. **Không** tạo hoặc sửa file trong `actions/archive/`. Mọi action mới `pic: self`.
+2. Ghi/sửa file `actions/AXXX-*.md` tương ứng. **Không** tạo hoặc sửa file trong `actions/archive/`. Action mới mặc định `pic: self` (có thể gán tên khác).
 3. **Re-render bảng Roadmap** trong `plan.md` body `## Roadmap`: đọc lại tất cả `actions/*.md` (không archive), sinh lại bảng per-milestone. Format xem `references/data-format.md` section "Roadmap format".
 4. Đề xuất chạy `okr-track` mode `light` để confirm state mới.
 
@@ -203,11 +208,11 @@ Xác nhận? (y / sửa / huỷ)
 - Mỗi action BẮT BUỘC có:
   - Definition of Done rõ ràng (mỗi item đo được, user tự check được)
   - Output/Deliverable cụ thể (file, số liệu, sự kiện)
-  - `pic: self` (solo default, không thay đổi)
+  - `pic`: mặc định `self`, có thể gán tên người khác khi delegate
   - **Tiêu chí chất lượng** (output đạt khi nào? đo bằng gì?)
 - Action mơ hồ kiểu "Nghiên cứu thêm" không có output đo được → CẤM. Agent phải follow-up: "Output cụ thể là gì?"
 - Nếu user không trả lời được "output đo bằng gì" → action chưa đủ rõ, cần refine trước khi ghi.
 - Dependencies hợp lệ: ID tồn tại, không vòng tròn.
 - Mode `update` không sửa KR target. Đó là việc của `okr-init` mode `update-objective`.
-- Mode `update` không sửa action.status hay KR.current. Đó là việc của `okr-track` mode `light`.
-- Ongoing type: plan.md body chứa `## Practices` (hành động lặp lại để duy trì KI). Ngoài ra, Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI (vd: "Mua đồ tập gym", "Đặt lịch khám sức khoẻ"). Actions này vẫn tuân quy tắc action bình thường (DoD, output, effort, `pic: self`). Milestones không bắt buộc với Ongoing.
+- Mode `update` không sửa KR.current. Đó là việc của `okr-track` mode `light`. Action.status được phép sửa bởi cả `okr-plan update` lẫn `okr-track` để linh hoạt khi điều chỉnh plan.
+- Ongoing type: plan.md body chứa `## Practices` + có thể tạo action files. Chi tiết xem `references/action-guide.md` section "Ongoing type: khi nào tạo action?".

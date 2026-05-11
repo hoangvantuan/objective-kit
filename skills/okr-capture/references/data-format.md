@@ -44,18 +44,7 @@ status: pending | processed | discarded
 
 ## Xử lý inbox
 
-`okr-capture` chỉ tạo file. Xử lý inbox là trách nhiệm của `okr-track`:
-
-| Inbox type | Xử lý mặc định | Delegate |
-|------------|----------------|----------|
-| `action` | Chuyển thành action file trong `actions/` | `okr-plan` mode `update` |
-| `blocker` | Đánh dấu action liên quan = blocked | `okr-track` tự xử lý |
-| `resource` | Thêm vào resources.md (Công cụ / Tài liệu) | `okr-init` mode `update-resource` |
-| `thought` | Giữ inbox (chờ rõ hơn) hoặc append vào log ngày, hoặc chuyển thành action nếu user xác nhận | Tuỳ user / `okr-track` tự xử lý |
-
-> **Migrate dữ liệu cũ**: File inbox cũ với `type: idea` hoặc `type: note` → coi như `type: thought` khi xử lý. `okr-track` Phase 5 (inbox processing) phát hiện type cũ → tự update sang `thought` khi đổi `status: processed`.
-
-Sau khi xử lý: đổi status thành `processed`. File giữ nguyên trong inbox (lịch sử).
+`okr-capture` chỉ tạo file. Xử lý là trách nhiệm `okr-track`. Mapping chi tiết (type → delegate): xem `okr/references/shared-schemas.md` section "Inbox type → Delegate mapping".
 
 ## Inbox Aging
 

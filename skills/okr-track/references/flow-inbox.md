@@ -66,9 +66,8 @@ Gợi ý xử lý dựa trên:
 
 | Field            | Quy tắc validate                                                                                          | Hành vi nếu sai                                                                                            |
 | ---------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `related_kr`     | Phải khớp KR ID trong `objective.md` frontmatter (vd `KR1`, `KR2`).                                       | Tìm KR có title match fuzzy với context item → đề xuất ID đúng. Nếu không tìm được → set `null`, hỏi user. |
+| `related_kr`     | Phải khớp KR hoặc KI ID trong `objective.md` (vd `KR1`, `KI2`).                                           | Tìm KR/KI có title match fuzzy với context item → đề xuất ID đúng. Nếu không tìm được → set `null`, hỏi user. |
 | `related_action` | Phải khớp action ID trong `actions/*.md` (vd `A003`). KHÔNG khớp `actions/archive/*.md` (action đã done). | Action đã archive → cảnh báo "Action X đã done/archive. Bỏ link?". Không tồn tại → set `null`, hỏi user.   |
-| `related_tool`   | Phải khớp tool ID hoặc tên trong `resources.md` Công cụ section.                                          | Không tồn tại → đề xuất thêm tool qua `okr-init update-resource` hoặc set `null`.                          |
 
 
 Hiển thị cho user khi có sai sót:

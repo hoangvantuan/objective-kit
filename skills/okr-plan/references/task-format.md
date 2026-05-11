@@ -13,12 +13,12 @@ Ví dụ: `A001-thiet-ke-database.md`, `A002-viet-api-auth.md`
 id: AXXX
 title: "Tên task rõ ràng"
 description: "1-2 câu mô tả task cần làm"
-key_result: KR1
-milestone: "Tên milestone"
+key_result: KR1  # Ongoing: ghi KI ID (vd KI1)
+milestone: "Tên milestone"  # Ongoing: có thể để ""
 status: pending
 priority: high
 effort: m
-pic: ""
+pic: ""  # Mặc định "self". Có thể gán tên người khác khi delegate việc
 due_date: YYYY-MM-DD
 depends_on: []
 notes: ""
@@ -55,24 +55,9 @@ external_ids: {}
 
 - ID bắt đầu từ A001, tăng dần
 - Slug dùng tiếng Việt không dấu hoặc tiếng Anh, dấu gạch ngang
-- Mỗi task phải map vào đúng 1 Key Result
-- Mỗi task phải thuộc 1 milestone
+- Mỗi task phải map vào đúng 1 Key Result (Project) hoặc Key Indicator (Ongoing)
+- Project: mỗi task phải thuộc 1 milestone. Ongoing: milestone không bắt buộc (để trống hoặc gán tên gợi nhớ)
 
-## Priority values
+## Priority và Effort
 
-| Value | Khi nào dùng |
-|-------|-------------|
-| critical | Chặn toàn bộ dự án nếu không xong |
-| high | Cần xong sớm, ảnh hưởng nhiều task khác |
-| medium | Quan trọng nhưng không chặn ai |
-| low | Làm khi rảnh, nice-to-have |
-
-## Effort values
-
-| Value | Thời gian ước lượng | Quy tắc đặc biệt |
-|-------|---------------------|------------------|
-| xs | < 1 giờ | - |
-| s | 1-4 giờ | - |
-| m | 1-2 ngày | - |
-| l | 3-5 ngày | - |
-| xl | > 1 tuần | **BẮT BUỘC body có `## Checkpoints` ≥2 mục, mỗi mục có ngày deadline cụ thể**. Track đọc Checkpoints để cảnh báo trượt giữa kỳ. Nếu không có Checkpoints, action không hợp lệ. |
+Giá trị hợp lệ + quy tắc đặc biệt (xl Checkpoints): xem `action-guide.md`.
