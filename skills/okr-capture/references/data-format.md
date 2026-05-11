@@ -13,7 +13,7 @@ Ví dụ: `2026-05-09-1430-viet-unit-test-api.md`, `2026-05-09-1445-server-stagi
 ```yaml
 ---
 captured_at: "YYYY-MM-DDTHH:mm"
-type: action | idea | blocker | resource | note
+type: action | blocker | resource | thought
 title: "string"
 description: "string (1-2 câu)"
 related_kr: KR1 | null
@@ -49,10 +49,11 @@ status: pending | processed | discarded
 | Inbox type | Xử lý mặc định | Delegate |
 |------------|----------------|----------|
 | `action` | Chuyển thành action file trong `actions/` | `okr-plan` mode `update` |
-| `idea` | Giữ inbox (chờ rõ hơn) hoặc chuyển thành action | Tuỳ user |
 | `blocker` | Đánh dấu action liên quan = blocked | `okr-track` tự xử lý |
-| `resource` | Thêm vào resources.md | `okr-init` mode `update-resource` |
-| `note` | Append vào log ngày | `okr-track` tự xử lý |
+| `resource` | Thêm vào resources.md (Công cụ / Tài liệu) | `okr-init` mode `update-resource` |
+| `thought` | Giữ inbox (chờ rõ hơn) hoặc append vào log ngày, hoặc chuyển thành action nếu user xác nhận | Tuỳ user / `okr-track` tự xử lý |
+
+> **Migrate dữ liệu cũ**: File inbox cũ với `type: idea` hoặc `type: note` → coi như `type: thought` khi xử lý. `okr-track` Phase 5 (inbox processing) phát hiện type cũ → tự update sang `thought` khi đổi `status: processed`.
 
 Sau khi xử lý: đổi status thành `processed`. File giữ nguyên trong inbox (lịch sử).
 
