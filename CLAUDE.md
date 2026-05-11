@@ -20,6 +20,21 @@ Chi tiết routing, status dashboard, keyword mapping: xem `skills/okr/SKILL.md`
 
 Tất cả skill con được kích hoạt qua orchestrator `/okr`. Không trigger trực tiếp.
 
+## Phân vai SOT
+
+Mỗi field SOT chỉ được sửa bởi đúng 1 skill (`okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, delegate sang `okr-init`/`okr-plan` để apply).
+
+| Field | Skill được phép sửa |
+|-------|---------------------|
+| Objective text, KR/KI target/baseline/ngưỡng, period, status | `okr-init` `update-objective` |
+| Solo Profile (capacity, skills), tool, ngân sách | `okr-init` `update-resource` |
+| Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update` |
+| KR.current, KI.current, action.status, plan counters | `okr-track` `light`/`deep` |
+| Inbox items (tạo mới) | `okr-capture` |
+| Inbox items (xử lý: status transition) | `okr-track` |
+
+> Bảng này là **single source**. Các file `skills/okr/SKILL.md`, `skills/okr-track/references/data-format.md`, `docs/okr-system-review.md` link sang đây.
+
 ## Hai loại mục tiêu
 
 - **Project**: có deadline, đo bằng Key Results (baseline → target), đạt target rồi kết thúc.

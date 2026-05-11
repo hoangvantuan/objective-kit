@@ -23,18 +23,9 @@ Skill điều phối trung tâm. User mặc định luôn vào skill này. Phân
 | `okr-track` | Đánh giá state + cập nhật progress + xử lý inbox + đề xuất + delegate điều chỉnh cấu trúc | `light`, `deep`, `closure`, `inbox-only`, `trace` |
 | `okr-capture` | Thu thập nhanh ý tưởng/ghi chú → inbox | n/a |
 
-## Phân vai SOT (quan trọng)
+## Phân vai SOT
 
-| Field | Skill được phép sửa |
-|-------|---------------------|
-| Objective text, KR/KI target/baseline/ngưỡng, period, status | `okr-init` `update-objective` |
-| Solo Profile (capacity, skills), tool, ngân sách | `okr-init` `update-resource` |
-| Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update` |
-| KR.current, KI.current, action.status, plan counters | `okr-track` `light`/`deep` |
-| Inbox items (tạo mới) | `okr-capture` |
-| Inbox items (xử lý: status transition) | `okr-track` |
-
-`okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, KHÔNG tự sửa. Nó delegate sang `okr-init`/`okr-plan` mode `update-*` để apply.
+Bảng canonical ở `CLAUDE.md` section "Phân vai SOT". Tóm tắt: mỗi field SOT chỉ được sửa bởi 1 skill. `okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, KHÔNG tự sửa, delegate sang `okr-init`/`okr-plan` mode `update-*` để apply.
 
 ## Flow xử lý
 
