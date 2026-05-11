@@ -239,7 +239,7 @@ Tuỳ lựa chọn, hỏi chi tiết.
 
 ### Phase 4: Re-validate SMART (BẮT BUỘC trước CONFIRM)
 
-Trước khi hiển thị bảng confirm, agent re-validate SMART cho mọi KR/KI có thay đổi (target, baseline, period). Tiêu chí xem `references/okr-guide.md`:
+Trước khi sang Impact Check, agent re-validate SMART cho mọi KR/KI có thay đổi (target, baseline, period). Tiêu chí xem `references/okr-guide.md`:
 
 - **S**pecific: KR mô tả rõ chỉ số nào, sản phẩm/kênh nào.
 - **M**easurable: có baseline + target số (Project) hoặc ngưỡng (Ongoing).
@@ -247,9 +247,39 @@ Trước khi hiển thị bảng confirm, agent re-validate SMART cho mọi KR/K
 - **R**elevant: KR/KI vẫn phục vụ Objective.
 - **T**ime-bound: có deadline (Project) hoặc review_cycle (Ongoing).
 
-Nếu KR/KI thay đổi fail tiêu chí nào → liệt kê warning trong bảng confirm. KHÔNG block, user vẫn quyết.
+Nếu KR/KI thay đổi fail tiêu chí nào → ghi nhớ để liệt kê trong bảng confirm Phase 6. KHÔNG block, user vẫn quyết.
 
-### Phase 5: CONFIRM diff (BẮT BUỘC)
+### Phase 5: Impact Check (BẮT BUỘC trước CONFIRM)
+
+Quét `.okr/plan.md` (frontmatter milestones + body Practices nếu Ongoing) và `.okr/actions/*.md` (frontmatter; **không đệ quy** archive). Với mỗi field thay đổi trong Phase 3, xác định tác động cụ thể:
+
+| Field thay đổi | Cách quét tác động |
+|----------------|--------------------|
+| `end_date` rút ngắn | Liệt kê actions có `due_date > end_date_mới`. Liệt kê milestones có `target_date > end_date_mới`. |
+| `end_date` extend | Note "Period mở rộng N ngày, có thể thêm milestone/actions mới qua `/okr plan update`". |
+| `start_date` lùi | Liệt kê actions/milestones có ngày sớm hơn `start_date_mới`. |
+| `KR<N>.target` đổi | Liệt kê actions có `key_result: KR<N>` (count + IDs). User cần cân nhắc thêm/bỏ actions nếu target thay đổi nhiều (>20% so với cũ). |
+| `KR<N>.baseline` đổi | Cảnh báo recompute % progress. Action không bị ảnh hưởng trực tiếp. |
+| Xoá KR<N> | Liệt kê actions có `key_result: KR<N>`. Đề xuất reassign sang KR khác hoặc xoá. |
+| Đổi `objective` text / WHY | Note "Cân nhắc review lại practices và actions xem có còn align không". |
+| Đổi `review_cycle` (Ongoing) | Note "Track sẽ chuyển sang chu kỳ mới từ lần check-in tới". |
+| Đổi `status` | Nếu chuyển sang `completed/cancelled/archived` → liệt kê actions chưa done + đề xuất archive cùng. |
+
+Hiển thị block tác động:
+
+```
+Tác động sang plan + actions
+- end_date 2026-12-31 → 2026-11-30 (rút ngắn 31 ngày):
+  ⚠️ 3 actions due_date sau 2026-11-30: A007 (2026-12-15), A009 (2026-12-20), A011 (2026-12-28)
+  ⚠️ 1 milestone target_date sau: M3 (2026-12-15)
+  Đề xuất: chạy `/okr plan update` để dời actions/milestone, hoặc giảm scope.
+- KR2.target 200M → 250M (+25%):
+  3 actions thuộc KR2: A005, A006, A013. Cân nhắc thêm 1-2 actions marketing.
+```
+
+KHÔNG block. User vẫn có thể confirm và xử lý plan sau qua `/okr plan update`. Mục tiêu là surface tác động để user không quên.
+
+### Phase 6: CONFIRM diff (BẮT BUỘC)
 
 ```
 Thay đổi sắp áp dụng (objective.md)
@@ -265,12 +295,16 @@ Cảnh báo SMART (KR/KI thay đổi)
 - End 2027-01-15: Time-bound OK, nhưng cross năm tài chính. Cân
   nhắc đặt thêm milestone Q4 closure trước.
 
+Tác động sang plan + actions (từ Phase 5)
+- KR2.target 200M → 250M: 3 actions thuộc KR2. Cân nhắc thêm
+  1-2 actions marketing qua `/okr plan update` sau.
+
 Xác nhận? (y / sửa / huỷ / bỏ qua cảnh báo)
 ```
 
-### Phase 6: Ghi file
+### Phase 7: Ghi file
 
-Ghi đè `objective.md`. Hiển thị: "Đã update. Chạy `/okr` để check tác động sang plan."
+Ghi đè `objective.md`. Hiển thị: "Đã update. Chạy `/okr plan update` để áp dụng tác động sang actions/milestones (Phase 5 Impact Check đã liệt kê)."
 
 ---
 
