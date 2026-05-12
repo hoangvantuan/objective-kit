@@ -9,7 +9,7 @@ Một skill duy nhất cho 3 use case: cập nhật progress nhanh (daily), revi
 
 **Phân vai rõ ràng**:
 
-- `okr-track` ghi đè **progress fields** (KR.current, KI.current, action.status) và ghi log.
+- `okr-track` ghi đè **progress fields** (KR.current, KI.current, action.status, action body `## Output/Deliverable`) và ghi log.
 - `okr-track` **xử lý inbox**: phân loại items → delegate hoặc tự apply tuỳ loại.
 - Thay đổi **cấu trúc** (KR target, action mới, dời deadline, đổi PIC) → delegate sang `okr-init` hoặc `okr-plan` mode `update-*`. Track đề xuất, init/plan áp dụng.
 
@@ -145,12 +145,14 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 **Project type:**
 
 1. Sync pull external (nếu action có `external_ids`)
-2. Hỏi user update: KR current, action status, blocker mới
+2. Hỏi user update: KR current, action status, blocker mới, output (nếu user chủ động cung cấp)
 3. CONFIRM: ≤2 field → 1 dòng compact, ≥3 field → bảng đầy đủ
 4. Ghi SOT (objective, plan counters, action status) + append log
-5. Sync push + archive actions done + re-render Roadmap
-6. Xử lý inbox (Phase 5) nếu có items pending
-7. Đề xuất next action (1-7 ngày tới)
+5. Sync push
+6. Nhắc output cho actions vừa done (ghi đè `## Output/Deliverable`, append log)
+7. Archive actions done + re-render Roadmap
+8. Xử lý inbox (Phase 5) nếu có items pending
+9. Đề xuất next action (1-7 ngày tới)
 
 **Ongoing type:**
 1. Hỏi update KI current + practice streak (plan.md `## Practices`)
@@ -166,7 +168,7 @@ Chi tiết đầy đủ: `references/flow-light.md`
 
 Phạm vi: phân tích root cause + ĐỀ XUẤT điều chỉnh. KHÔNG tự sửa cấu trúc.
 
-1. Update progress nếu cần (giống light, kèm sync + archive)
+1. Update progress nếu cần (giống light, kèm sync + nhắc output + archive)
 2. Phân tích root cause (hỏi "tại sao?" ≥3 lần mỗi vấn đề)
 3. Đề xuất điều chỉnh cấu trúc (bảng kèm skill đích: okr-init/okr-plan)
 4. All-changes confirm: gom theo skill đích, user chọn áp dụng
@@ -252,6 +254,7 @@ Chi tiết đầy đủ: `references/flow-trace.md`
 - Mode `deep`: KHÔNG tự sửa KR target / action mới / dời deadline / đổi PIC. Delegate sang `okr-init` / `okr-plan`.
 - Phân tích root cause BẮT BUỘC ≥3 lần "tại sao", không dừng ở triệu chứng.
 - Ghi đè SOT progress fields, append log. Không ngược lại.
+- Output: ghi đè section `## Output/Deliverable` trong action body. Nhắc khi mark done, cho phép skip. Cũng chấp nhận output chủ động bất kỳ lúc nào (action đang doing hoặc done). Append output vào log entry.
 - Log ghi vào `log/YYYY-MM-DD.md`. Deep/closure append sections review, update frontmatter `type`.
 - Cuối flow LUÔN đề xuất next action cụ thể (file/người/thời điểm).
 - Ongoing type: dashboard hiển thị KI status (healthy/warning/critical) + practices adherence thay vì % target.
