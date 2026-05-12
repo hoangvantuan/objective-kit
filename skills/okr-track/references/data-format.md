@@ -1,42 +1,69 @@
-# Data Format: log/ và log/reviews/
+# Data Format: log/
 
-Skill `okr-track` ghi 2 loại log tuỳ mode (light hay deep).
+Skill `okr-track` ghi log vào `log/YYYY-MM-DD.md`. Phân biệt loại entry bằng frontmatter `type` (array).
 
-## Mode LIGHT: log/YYYY-MM-DD.md
+## Schema file log: log/YYYY-MM-DD.md
 
-```yaml
+### Frontmatter
+
+~~~yaml
 ---
 date: YYYY-MM-DD
-type: tracking
+type: [tracking]          # array, giá trị hợp lệ: tracking | review | closure
 ---
-```
+~~~
 
-Body:
-- `## Thay đổi` (danh sách thay đổi cụ thể, vd: "KR1: 40 > 50", "A003: doing > done")
-- `## Ghi chú` (free-form, blockers, observations)
+`type` là array vì cùng ngày có thể có light sáng (tracking) + deep chiều (review) → `type: [tracking, review]`.
 
-File ngày đã có → append section mới `## Thay đổi (lần N, HH:MM)`, KHÔNG ghi đè.
+### Body theo type
 
-## Mode DEEP: log/reviews/YYYY-MM-DD.md
+**tracking** (từ light hoặc deep Bước 1 update progress):
 
-```yaml
----
-date: YYYY-MM-DD
-type: review
-period: "YYYY-MM-DD to YYYY-MM-DD"
-mode: deep | closure
----
-```
+~~~markdown
+## Thay đổi
+- KR1.current: 40 > 50
+- A003.status: doing > done
 
-Body:
-- `## Tổng kết` (bảng KR: Target, Current, %, Trend)
-- `## Phân tích`
-  - `### Đạt tốt`
-  - `### Cần cải thiện` (kèm root cause, ≥3 lần "tại sao")
-- `## Đề xuất điều chỉnh` (bảng: #, đề xuất, lý do, skill áp dụng, đã apply?)
-- `## Lessons` (chỉ có ở mode `closure`)
+## Ghi chú
+- A005 vẫn blocked
+~~~
 
-Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.md` với link sang file review.
+**review** (từ deep): gồm cả `## Thay đổi` (nếu deep có update progress) + phân tích.
+
+~~~markdown
+## Thay đổi
+- KR1.current: 40 > 50
+
+## Tổng kết
+(bảng KR: Target, Current, %, Trend)
+
+## Phân tích
+### Đạt tốt
+### Cần cải thiện (root cause ≥3 lần "tại sao")
+
+## Đề xuất điều chỉnh
+(bảng: #, đề xuất, lý do, skill áp dụng, đã apply?)
+~~~
+
+**closure** (từ closure): giống review + thêm section `## Lessons`.
+
+~~~markdown
+## Thay đổi
+...
+## Tổng kết
+...
+## Phân tích
+...
+## Đề xuất điều chỉnh
+...
+## Lessons
+(chỉ closure mới có section này)
+~~~
+
+### Append rule
+
+- Cùng ngày, cùng type: append section mới `## Thay đổi (lần N, HH:MM)`.
+- Cùng ngày, khác type (light sáng + deep chiều): append deep sections vào file đã có, update frontmatter `type` thành union (vd `[tracking]` → `[tracking, review]`).
 
 ## SOT fields: PROGRESS vs STRUCTURE
 
@@ -77,7 +104,6 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 |------|--------|---------|
 | **SOT** | `.okr/objective.md`, `plan.md`, `resources.md`, `actions/` | Ghi đè |
 | **Log thường** | `.okr/log/YYYY-MM-DD.md` | Append-only |
-| **Log review** | `.okr/log/reviews/YYYY-MM-DD.md` | Append-only |
 | **Inbox** | `.okr/inbox/*.md` | Status transition (pending → processed/discarded) |
 
 ## Inbox Processing
@@ -90,10 +116,24 @@ Khi mode deep ghi review, đồng thời append tóm tắt vào `log/YYYY-MM-DD.
 
 ## Log Reading Rules
 
-- Orchestrator `/okr` Bước 1: **KHÔNG đọc `log/`**. Chỉ đọc **1 file mới nhất** trong `log/reviews/`.
-- `okr-track` Phase 1 `log/`: mode light → 1 file mới nhất. Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả.
-- `okr-track` Phase 1 `log/reviews/`: mode light → 1 file mới nhất. Mode deep → tối đa 3 files mới nhất. Mode closure → tất cả.
-- Log cũ hơn: KHÔNG đọc, trừ khi user yêu cầu trace.
+| Mode                | Đọc log                 |
+| ------------------- | ----------------------- |
+| Orchestrator `/okr` | Không đọc               |
+| Light               | Không đọc               |
+| Deep                | Adaptive (xem bên dưới) |
+| Closure             | Tất cả files            |
+| Trace               | Lazy theo yêu cầu user  |
+
+**Deep adaptive rule:**
+
+1. Scan `log/` sorted desc by filename (date).
+2. Tìm file deep gần nhất = file có `review` hoặc `closure` trong `type` array.
+3. **Nếu file mới nhất đã là deep**: đọc 3 file deep gần nhất (để nắm xu hướng).
+4. **Nếu file mới nhất là light**: đọc tất cả light từ deep cuối đến nay + 3 file deep gần nhất.
+
+Mục đích: deep luôn nắm (a) xu hướng dài hạn qua 3 review trước, (b) mọi thay đổi nhỏ kể từ review trước.
+
+**Light không đọc log**: light là quick update, không cần historical context. SOT (objective.md, plan.md, actions/) đã đủ.
 
 ## External Sync (optional)
 
@@ -148,7 +188,7 @@ Mode `trace` dùng nguyên tắc **lazy loading**: đọc dần, không đọc h
 | Action cụ thể | "trace A003" | `actions/archive/A003-*.md` frontmatter → body khi drill-down |
 | Milestone | "trace M1" | `plan.md` frontmatter + lọc `actions/archive/*.md` theo milestone (frontmatter) |
 | Theo thời gian | "actions done tháng 4" | Lọc `actions/archive/*.md` theo `due_date` (frontmatter) |
-| Log | "xem log tuần trước" | Lọc `log/*.md` hoặc `log/reviews/*.md` theo filename (ngày) |
+| Log | "xem log tuần trước" | Lọc `log/*.md` theo filename (ngày), filter theo `type` nếu user chỉ cần review |
 
 ### Quy trình chung
 
