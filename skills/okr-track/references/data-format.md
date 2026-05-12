@@ -23,6 +23,9 @@ type: [tracking]          # array, giá trị hợp lệ: tracking | review | cl
 ## Thay đổi
 - KR1.current: 40 > 50
 - A003.status: doing > done
+- A003.output:
+  - [report.md](docs/report.md)
+  - https://docs.google.com/spreadsheets/d/xxx
 
 ## Ghi chú
 - A005 vẫn blocked
@@ -81,6 +84,7 @@ type: [tracking]          # array, giá trị hợp lệ: tracking | review | cl
 
 `.okr/actions/AXXX-*.md`:
 - Frontmatter `status`: `pending` | `doing` | `done` | `blocked` (cũng được sửa bởi `okr-plan` `update`)
+- Body section `## Output/Deliverable`: ghi đè nội dung dự kiến bằng output thực tế (free-form markdown). Chỉ ghi khi user cung cấp output.
 
 ### Structure fields (track CHỈ đề xuất, delegate để apply)
 
