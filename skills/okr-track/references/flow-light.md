@@ -5,7 +5,8 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 **Project type:**
 
 1. **Sync pull** (nếu có action với `external_ids`): chạy External Sync pull flow (xem `references/data-format.md` section "External Sync"). Diff status hiển thị trước bảng hỏi update. User confirm sync → merge vào danh sách thay đổi step 1. Không có `external_ids` → skip.
-2. Hỏi user có thay đổi: KR current, action status (pending/doing/done/blocked), blocker mới.
+2. Hỏi user có thay đổi: KR current, action status (pending/doing/done/blocked), blocker mới, output (nếu user chủ động cung cấp).
+  - User cung cấp output cho action đang `doing` hoặc `done` → ghi đè section `## Output/Deliverable` trong action file. Không cần chờ mark done.
 
 1b. **Checkpoint update** (nếu có action status=doing với `effort: xl` và section `## Checkpoints`): hiển thị checklist, hỏi user tick mốc đã đạt. Mốc quá hạn chưa tick → cảnh báo "Action AXXX trượt checkpoint N".
 2. CONFIRM trước khi ghi (đếm số field thay đổi rồi chọn UI):
@@ -23,6 +24,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
   Thay đổi sắp ghi
   - KR1.current: 40 > 50
   - A003.status: doing > done
+  - A003.output: [report.md](docs/report.md), https://docs.google.com/...
   - A005.status: doing > blocked, lý do: chờ approve
   Xác nhận? (y/sửa/huỷ)
   ```
@@ -33,12 +35,22 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
   - Append log: `.okr/log/YYYY-MM-DD.md`. File ngày đã có → append section mới.
 
 3b. **Sync push** (nếu có action vừa thay đổi status + có `external_ids`): push status mới lên tool ngoài theo External Sync push flow. Báo kết quả.
-4. **Archive actions done** (nếu có action chuyển sang `done` trong lần này): chạy Archive Rules (xem `okr/references/shared-schemas.md` section "Archive Rules"). Sau đó:
+4. **Nhắc output** (nếu có action chuyển sang `done` trong lần này): với mỗi action vừa done, kiểm tra body section `## Output/Deliverable`. Nếu section vẫn là mô tả dự kiến (do okr-plan tạo), hỏi:
 
-- **Re-render bảng Roadmap**: đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem `okr/references/shared-schemas.md` section "Roadmap format".
+  ```
+  A003 done. Output là gì? (file path, link, text... hoặc "skip")
+  ```
 
-5. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
-6. Đề xuất next action: highlight việc cần làm trong 1-7 ngày tới.
+  - User cung cấp output → ghi đè section `## Output/Deliverable` trong action file bằng output thực tế (free-form markdown). Append output vào log entry (format: `A003.output:` + danh sách items).
+  - User nói "skip" → giữ nguyên section dự kiến, không ghi output vào log.
+  - Nếu section đã được ghi đè trước đó (user đã ghi output giữa chừng) → skip, không hỏi lại.
+
+5. **Archive actions done**: chạy Archive Rules (xem `okr/references/shared-schemas.md` section "Archive Rules"). Sau đó:
+
+  - **Re-render bảng Roadmap**: đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem `okr/references/shared-schemas.md` section "Roadmap format".
+
+6. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
+7. Đề xuất next action: highlight việc cần làm trong 1-7 ngày tới.
 
 **Ongoing type:**
 
