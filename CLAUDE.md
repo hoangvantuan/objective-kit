@@ -1,74 +1,111 @@
-# Objective Kit
+# CLAUDE.md
 
-Bộ skill quản lý mục tiêu theo OKR. Mỗi thư mục `.okr/` chứa đúng **1 objective**.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Entry point
+## Project là gì
 
-User chỉ làm việc với `**/okr**` (orchestrator). Skill tự đánh giá trạng thái `.okr/` và kích hoạt skill con phù hợp. Không cần nhớ tên skill con.
+Objective Kit là bộ **Claude Code skills** quản lý mục tiêu theo OKR. Repo này chứa source code của skills, KHÔNG phải project sử dụng skills.
 
-Chi tiết routing, status dashboard, keyword mapping: xem `skills/okr/SKILL.md`.
+Khi làm việc trong repo này, bạn đang **phát triển/sửa skill**, không phải chạy `/okr` để quản lý mục tiêu.
 
-## Skill con (4)
+## Cấu trúc skill
 
-| Skill         | Vai trò                   | Sub-mode                                          |
-| ------------- | ------------------------- | ------------------------------------------------- |
-| `okr-init`    | SOT objective + resource  | `new`, `update-objective`, `update-resource`      |
-| `okr-plan`    | SOT plan + actions        | `new`, `update`                                   |
-| `okr-track`   | Progress + review + inbox | `light`, `deep`, `closure`, `inbox-only`, `trace` |
-| `okr-capture` | Thu thập nhanh → inbox    | n/a                                               |
+Mỗi skill = 1 thư mục trong `skills/`, gồm:
+- `SKILL.md`: prompt chính (YAML frontmatter `name` + `description` + body hướng dẫn)
+- `references/`: tài liệu bổ sung được skill load khi cần (schema, flow chi tiết, guide)
 
+Không có code runtime (không có build, test, lint). Toàn bộ "code" là markdown prompt.
 
-Tất cả skill con được kích hoạt qua orchestrator `/okr`. Không trigger trực tiếp.
+## Kiến trúc hub-and-spoke
+
+```
+skills/okr/SKILL.md          ← Orchestrator (hub), entry point duy nhất cho user
+  ├── skills/okr-init/        ← Khởi tạo/sửa objective + resource
+  ├── skills/okr-plan/        ← Tạo/sửa plan + actions
+  ├── skills/okr-track/       ← Track progress + review + inbox processing
+  └── skills/okr-capture/     ← Thu thập nhanh ý tưởng vào inbox
+```
+
+- `okr` đọc state `.okr/`, hiển thị status, route sang skill con phù hợp.
+- Skill con KHÔNG được gọi trực tiếp (trừ khi user gõ đúng tên).
+- Shared content tập trung tại `skills/okr/references/` (SOT ownership, schemas, quality gate, delegate protocol). Skill con link sang, không duplicate.
+
+## Nguyên tắc thiết kế (phải giữ khi sửa skill)
+
+1. **Solo only**: Persona duy nhất là 1 user cá nhân, 1 objective. Không team, không multi-objective.
+2. **SOT ownership**: Mỗi field chỉ 1 skill được sửa. Bảng canonical tại `skills/okr/references/sot-ownership.md`. Bảng readable tại section dưới.
+3. **Confirm trước ghi**: `init` và `plan` bắt buộc hiển thị bảng tóm tắt, user xác nhận trước khi ghi file.
+4. **Track đề xuất, init/plan áp dụng**: `okr-track` không sửa cấu trúc (KR target, action mới, deadline), chỉ sửa progress fields. Muốn sửa cấu trúc → delegate sang init/plan.
+5. **Quality Gate internal**: 3 câu check (đủ cụ thể? giả định ẩn? mâu thuẫn?) chạy ngầm, không hiển thị cho user. Chi tiết tại `skills/okr/references/quality-gate.md`.
+6. **Tiết kiệm token**: Archive invisible by default. Log chỉ đọc mới nhất. Orchestrator preload SOT, skill con không đọc lại.
 
 ## Phân vai SOT
 
-Mỗi field SOT chỉ được sửa bởi skill được chỉ định (`okr-track` mode `deep` chỉ ĐỀ XUẤT điều chỉnh cấu trúc, delegate sang `okr-init`/`okr-plan` để apply). Ngoại lệ: `action.status` được cả track lẫn plan sửa.
+| Field                                                        | Skill được phép sửa                              |
+| ------------------------------------------------------------ | ------------------------------------------------ |
+| Objective text, KR/KI target/baseline/ngưỡng, period, status | `okr-init` `update-objective`                    |
+| Solo Profile (capacity, skills), tool, ngân sách             | `okr-init` `update-resource`                     |
+| Milestones, action structure (title, deadline, deps)         | `okr-plan` `update`                              |
+| KR.current, KI.current, plan counters                        | `okr-track` `light`/`deep`                       |
+| action.status                                                | `okr-track` `light`/`deep`, `okr-plan` `update`  |
+| Inbox items (tạo mới)                                        | `okr-capture`                                    |
+| Inbox items (xử lý: status transition)                       | `okr-track`                                      |
+| Action notes, external_ids                                   | `okr-plan` `new`/`update`                        |
+| External sync (pull/push status)                             | `okr-track` `light`/`deep`                       |
 
-| Field                                                             | Skill được phép sửa           |
-| ----------------------------------------------------------------- | ----------------------------- |
-| Objective text, KR/KI target/baseline/ngưỡng, period, status      | `okr-init` `update-objective` |
-| Solo Profile (capacity, skills), tool, ngân sách                  | `okr-init` `update-resource`  |
-| Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update`           |
-| KR.current, KI.current, plan counters                             | `okr-track` `light`/`deep`    |
-| action.status                                                     | `okr-track` `light`/`deep`, `okr-plan` `update` |
-| Inbox items (tạo mới)                                             | `okr-capture`                 |
-| Inbox items (xử lý: status transition)                            | `okr-track`                   |
-| Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`     |
-| External sync (pull/push status)                                  | `okr-track` `light`/`deep`    |
+> Bảng canonical: `skills/okr/references/sot-ownership.md`. Sửa ở đó, bảng trên đây giữ đồng bộ.
 
+## Hai loại mục tiêu (domain knowledge)
 
-> Bảng này là **single source**. Các file `skills/okr/SKILL.md`, `skills/okr-track/references/data-format.md`, `docs/okr-system-review.md` link sang đây.
+- **Project**: có deadline, đo bằng Key Results (baseline → target), kết thúc khi đạt.
+- **Ongoing**: duy trì liên tục, đo bằng Key Indicators (ngưỡng tối thiểu), không "xong".
 
-> Bảng này cũng có bản runtime tại `skills/okr/references/sot-ownership.md` (load khi skill okr chạy). CLAUDE.md là bản cho developer đọc repo.
+## Cấu trúc dữ liệu runtime (để hiểu schema)
 
-## Hai loại mục tiêu
-
-- **Project**: có deadline, đo bằng Key Results (baseline → target), đạt target rồi kết thúc.
-- **Ongoing**: duy trì liên tục (giống lĩnh vực), đo bằng Key Indicators (ngưỡng tối thiểu), không "xong".
-
-Ongoing CÓ THỂ tạo action files khi cần task cải thiện KI cụ thể.
-
-## Dữ liệu
+Skills sinh ra thư mục `.okr/` tại project của user (KHÔNG phải trong repo này):
 
 ```
 .okr/
-├── objective.md       # SOT mục tiêu + KR/KI       (okr-init)
-├── resources.md       # SOT người + tool + ngân sách (okr-init)
-├── plan.md            # SOT milestones + counters    (okr-plan)
-├── actions/           # SOT 1 file/action            (okr-plan + okr-track)
-│   └── archive/       # Actions done (read-only)      (okr-track archive)
-├── inbox/             # Capture items chờ xử lý      (okr-capture → okr-track)
-└── log/               # Append-only                  (okr-track)
-    └── reviews/       # Deep/closure reviews          (okr-track deep/closure)
+├── objective.md          # SOT mục tiêu + KR/KI
+├── resources.md          # SOT người + tool + ngân sách
+├── plan.md               # SOT milestones + counters + Roadmap table
+├── actions/              # 1 file/action (AXXX-slug.md)
+│   └── archive/          # Actions done, read-only
+├── inbox/                # Capture items chờ xử lý
+└── log/                  # Append-only, type: [tracking|review|closure]  (okr-track)
 ```
 
-Mỗi skill chứa schema chi tiết trong `references/` của riêng nó.
+Schema chi tiết nằm trong `references/data-format.md` của từng skill.
 
-## Nguyên tắc
+## Quy ước phát triển
 
-1. **1 objective / `.okr/**`: Mỗi thư mục chỉ chứa 1 mục tiêu. Muốn nhiều mục tiêu → tạo nhiều thư mục project.
-2. **Single entry point**: User chỉ gọi `/okr`.
-3. **Confirm trước khi ghi**: `init` và `plan` bắt buộc có bảng tóm tắt + xác nhận.
-4. **SOT vs Log vs Inbox**: SOT ghi đè. Log append-only. Inbox status transition.
-5. **Track đề xuất, init/plan áp dụng**: Track không sửa cấu trúc, chỉ progress fields.
-6. **Archive + Log tiết kiệm token**: Actions done tự động archive vào `actions/archive/` (read-only, invisible by default). Log chỉ đọc file mới nhất. Trace khi cần xem lại dữ liệu cũ.
+### Sửa skill
+
+1. Đọc `SKILL.md` + tất cả `references/` của skill đó trước khi sửa.
+2. Kiểm tra SOT ownership: field bạn sửa có thuộc skill này không?
+3. Shared content (`skills/okr/references/`) là canonical. Skill con chỉ link, không copy.
+4. Sửa xong kiểm tra consistency: cùng concept phải nói giống nhau ở mọi file nhắc đến nó.
+
+### Commit convention
+
+Prefix: `feat`, `fix`, `refactor`, `docs`, `style`. Scope trong ngoặc: `(okr)`, `(okr-init)`, `(okr-plan)`, `(okr-track)`, `(okr-capture)`.
+
+Ví dụ: `feat(okr-track): add period overdue warning to dashboard`
+
+### Tài liệu phát triển
+
+- `docs/okr-system-review.md`: review kiến trúc toàn hệ thống (sơ đồ, trạng thái, flow)
+- `deep-insight/`: phân tích sâu, review chất lượng skill
+- `docs/superpowers/plans/`: kế hoạch implement từng đợt cải tiến
+- `docs/superpowers/specs/`: design spec cho thay đổi lớn
+
+### Lịch sử phát triển (các đợt cải tiến)
+
+Skill được cải tiến qua nhiều đợt, mỗi đợt có plan + spec riêng trong `docs/superpowers/`:
+
+1. Đợt 1: Sync tài liệu (inconsistency giữa các skill)
+2. Đợt 2: Solo defaults (gỡ bias team-oriented)
+3. Đợt 3: Lifecycle gaps (period overdue, inbox aging, delegate reason)
+4. Đợt 4: Dọn thừa (merge routing table, tách Quality Gate, hub-and-spoke)
+5. Feedback integration (Roadmap table, external IDs, resources 6 cột)
+6. Hub-and-spoke refactor (shared content tập trung)

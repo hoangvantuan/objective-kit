@@ -43,8 +43,7 @@ Chi tiết bảng phân vai: [sot-ownership.md](references/sot-ownership.md) (lo
 - `.okr/resources.md` (frontmatter)
 - glob `.okr/actions/*.md` (chỉ frontmatter, **không đệ quy**, bỏ qua `actions/archive/`)
 - glob `.okr/inbox/*.md` có status=pending (đếm)
-- `.okr/log/`: **KHÔNG đọc**. Log thô không cần cho state assessment.
-- **Chỉ 1 file mới nhất** trong `.okr/log/reviews/` (sorted by filename desc, lấy đầu tiên). KHÔNG đọc review cũ hơn.
+- `.okr/log/`: **KHÔNG đọc**. Log không cần cho state assessment. Orchestrator không cần historical context.
 
 ### Bước 2: Hiển thị status ngắn (luôn luôn)
 
