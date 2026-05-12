@@ -1,6 +1,6 @@
 ---
 name: okr-plan
-description: "Sub-skill của /okr. Tạo hoặc điều chỉnh kế hoạch (plan.md) và actions. 2 mode: new, update. Được kích hoạt từ orchestrator /okr hoặc khi okr-track delegate thay đổi cấu trúc. KHÔNG gọi trực tiếp trừ khi user gõ /okr-plan."
+description: "Dùng khi `/okr` cần tạo hoặc sửa plan, milestones, actions, dependencies, deadline, PIC, external_ids, hoặc plan lệch objective/resources. Gọi trực tiếp chỉ khi người dùng gõ `/okr-plan`."
 ---
 
 # okr-plan: Tạo + cập nhật plan & actions

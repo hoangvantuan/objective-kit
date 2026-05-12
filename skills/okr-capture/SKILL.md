@@ -1,6 +1,6 @@
 ---
 name: okr-capture
-description: "Sub-skill của /okr. Thu thập nhanh ý tưởng, ghi chú, action tiềm năng, blocker vào inbox (.okr/inbox/). Phân tích input thô, phân loại, lưu file. Được kích hoạt từ orchestrator /okr khi user nhắc capture/ghi nhanh/inbox. KHÔNG gọi trực tiếp trừ khi user gõ /okr-capture."
+description: "Dùng khi `/okr` cần ghi nhanh ý tưởng, ghi chú, action, blocker, resource, meeting note, inbox/capture trước khi xử lý sau. Gọi trực tiếp chỉ khi người dùng gõ `/okr-capture`."
 ---
 
 # okr-capture: Thu thập nhanh → Inbox

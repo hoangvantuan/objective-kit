@@ -1,6 +1,6 @@
 ---
 name: okr
-description: "Entry point chính cho mọi tương tác OKR. LUÔN dùng skill này đầu tiên khi user nhắc đến mục tiêu, dự án, OKR, tracking, kế hoạch, tài nguyên, capacity, skill, inbox, capture, ghi nhanh, hoặc gọi `/okr`. Skill tự đánh giá trạng thái `.okr/` hiện tại và chủ động kích hoạt skill phù hợp (init/plan/track/capture) với context user cung cấp. User KHÔNG cần biết tên skill con, chỉ làm việc với `/okr`."
+description: "Dùng đầu tiên khi người dùng nhắc OKR, mục tiêu, dự án, kế hoạch, tracking, tài nguyên, capacity, skill, inbox, capture, ghi nhanh, hoặc gọi `/okr`."
 ---
 
 # okr: Orchestrator quản lý OKR

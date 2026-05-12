@@ -1,6 +1,6 @@
 ---
 name: okr-init
-description: "Sub-skill của /okr. Khởi tạo hoặc cập nhật mục tiêu OKR (objective.md) và resource (resources.md). 3 mode: new, update-objective, update-resource. Được kích hoạt từ orchestrator /okr, KHÔNG gọi trực tiếp trừ khi user gõ /okr-init."
+description: "Dùng khi `/okr` cần tạo hoặc sửa objective, KR, KI, period, deadline, resources, capacity, skill, tool, ngân sách. Gọi trực tiếp chỉ khi người dùng gõ `/okr-init`."
 ---
 
 # okr-init: Khởi tạo + cập nhật objective & resource
