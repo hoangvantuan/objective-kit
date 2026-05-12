@@ -45,6 +45,6 @@ Trigger: "xem lại actions tuần trước", "actions done tháng 4"
 
 Trigger: "xem log tuần trước", "log tháng 4", "review lần trước"
 
-1. Lọc `log/*.md` hoặc `log/reviews/*.md` theo filename (chứa ngày)
+1. Lọc `log/*.md` theo filename (chứa ngày). Filter theo frontmatter `type` nếu user chỉ muốn xem review.
 2. Hiển thị danh sách ngày có log
 3. User chọn ngày → đọc nội dung file đó

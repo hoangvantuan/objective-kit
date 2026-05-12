@@ -87,7 +87,7 @@ context:
       from: ...
       to: ...
   reason: "<1-2 câu giải thích vì sao điều chỉnh, lấy từ Bước 2 root cause>"
-  source_review: log/reviews/YYYY-MM-DD.md
+  source_review: log/YYYY-MM-DD.md
   pre_confirmed: true
 ```
 
@@ -98,7 +98,7 @@ Field meanings:
 | `delegate_to` | có | Skill + mode đích. 1 trong 3 giá trị. |
 | `context.changes[]` | có | Danh sách thay đổi (field, from, to). 1 payload có thể chứa nhiều changes nếu cùng skill đích. |
 | `context.reason` | có | Lý do GỐC từ Bước 2 root cause. Track viết vào, init/plan đọc + hiển thị trong CONFIRM diff. |
-| `context.source_review` | có | Path file review log để init/plan trace lại. Mặc định `log/reviews/<today>.md`. |
+| `context.source_review` | có | Path file review log để init/plan trace lại. Mặc định `log/<today>.md`. |
 | `context.pre_confirmed` | có | `true` sau khi user reply `y` cho all-changes preview ở Bước 4 (track đã gom + show full diff trước). Skill nhận BẮT BUỘC honor: skip ask "y/sửa/huỷ" ở phase confirm riêng, đi thẳng ghi file. Vẫn hiển thị diff + reason để trace. |
 
 Ví dụ payload thực tế (KR2 giảm target do market shift):
@@ -111,7 +111,7 @@ context:
       from: 50
       to: 35
   reason: "Market shift Q4 (từ root cause Bước 2): tăng trưởng ngành chậm 30%, target 50 không khả thi."
-  source_review: log/reviews/2026-12-01.md
+  source_review: log/2026-12-01.md
   pre_confirmed: true
 ```
 
@@ -123,13 +123,10 @@ Chạy Inbox Processing Flow (xem Phase 5).
 
 ## Bước 7: Ghi log review
 
-Sau khi tất cả delegate + inbox processing hoàn tất, append `.okr/log/reviews/YYYY-MM-DD.md`:
+Sau khi tất cả delegate + inbox processing hoàn tất, ghi vào `.okr/log/YYYY-MM-DD.md`:
 
-- Tổng kết KR/KI
-- Phân tích root cause
-- Đề xuất + cái nào đã apply (kèm skill nào áp dụng)
-- Inbox items đã xử lý
-
-Đồng thời append `log/YYYY-MM-DD.md` link sang file review.
+- Nếu file ngày đã có (từ Bước 1 update progress): append sections review, update frontmatter `type` thành union (vd `[tracking]` → `[tracking, review]`).
+- Nếu file ngày chưa có: tạo mới với `type: [review]`.
+- Nội dung review: Tổng kết KR/KI, Phân tích root cause, Đề xuất + cái nào đã apply, Inbox items đã xử lý.
 
 ## Bước 8: Đề xuất next action
