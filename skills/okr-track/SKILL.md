@@ -250,7 +250,7 @@ Chi tiết đầy đủ: `references/flow-trace.md`
 
 - Dashboard luôn hiển thị TRƯỚC khi hỏi update.
 - Mọi thay đổi qua phase confirm.
-- Mode `light`: chỉ sửa progress fields (KR.current, KI.current, action.status, plan counters). Cấm sửa cấu trúc.
+- Mode `light`: chỉ sửa progress fields (KR.current, KI.current, action.status, action body `## Output/Deliverable`, plan counters). Cấm sửa cấu trúc.
 - Mode `deep`: KHÔNG tự sửa KR target / action mới / dời deadline / đổi PIC. Delegate sang `okr-init` / `okr-plan`.
 - Phân tích root cause BẮT BUỘC ≥3 lần "tại sao", không dừng ở triệu chứng.
 - Ghi đè SOT progress fields, append log. Không ngược lại.
