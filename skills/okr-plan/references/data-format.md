@@ -10,6 +10,8 @@ total_actions: int
 completed: int
 in_progress: int
 blocked: int
+last_track_date: YYYY-MM-DD    # okr-track cập nhật mỗi lần light/deep/closure
+last_review_date: YYYY-MM-DD   # okr-track cập nhật khi deep/closure
 milestones:
   - name: "string"
     target_date: YYYY-MM-DD

@@ -9,3 +9,4 @@ Như deep + thêm:
 3. Nếu user đồng ý → delegate sang `okr-init` mode `update-objective` để đổi `status: completed`.
 4. Xử lý inbox còn lại (nếu có).
 5. Ghi log vào `log/YYYY-MM-DD.md` với `type: [closure]` (hoặc union nếu file ngày đã có). Kèm section `## Lessons`.
+6. Update `plan.md` frontmatter: `last_review_date: today`, `last_track_date: today`.

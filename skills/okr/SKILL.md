@@ -56,10 +56,33 @@ Trạng thái OKR
   Actions   : a done / b doing / c blocked / d pending
   Resource  : [đã có (capacity Xh/tuần, N skills, M tool) / thiếu Solo Profile / thiếu capacity]
   Inbox     : N items chưa xử lý
-  Log gần   : YYYY-MM-DD ([X ngày trước])
+  Track gần : YYYY-MM-DD ([X ngày trước], từ plan.last_track_date)
 ```
 
-**Gợi ý tiếp theo** (1 dòng, render sau block status):
+**Nhắc review** (1 dòng, render ngay sau block status, trước gợi ý. Dữ liệu từ `plan.md` frontmatter: `last_track_date`, `last_review_date`. Check tuần tự, first match):
+
+| Điều kiện | Thông báo |
+|-----------|-----------|
+| `plan.md` chưa có | (bỏ qua, user chưa setup plan) |
+| `last_track_date` is null | "Chưa track lần nào. Chạy track light." |
+| Project: `today > start + (end - start) / 2` AND `last_review_date` is null | "Đã qua nửa period, chưa review lần nào." |
+| Ongoing: `last_review_date` is null AND `today - last_track_date > review_cycle × 2` | "Đã track nhiều lần nhưng chưa review. Chạy deep review." |
+| Ongoing: `last_review_date` exists AND `today - last_review_date > review_cycle × 1.5` | "Quá hạn review N ngày." |
+| `today - last_track_date > 14 ngày` | "Chưa track 2 tuần. Cân nhắc chạy track." |
+
+Không match → không hiển thị.
+
+**Ưu tiên hôm nay** (1-2 work action cụ thể, render trước gợi ý system action):
+
+Chọn theo thuật toán [action-priority.md](references/action-priority.md) với `max_items=2`, `horizon_days=3`. Không có action phù hợp → bỏ qua block này.
+
+```
+Ưu tiên hôm nay
+  → A003: Xây MVP (deadline mai, chặn A004 + A005)
+  → A007: Phân tích data (quá hạn 3 ngày)
+```
+
+**Gợi ý tiếp theo** (1 dòng system action):
 
 | Tín hiệu (ưu tiên từ trên xuống) | Gợi ý |
 |-----------------------------------|-------|

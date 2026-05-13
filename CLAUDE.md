@@ -48,6 +48,7 @@ skills/okr/SKILL.md          ← Orchestrator (hub), entry point duy nhất cho 
 | Milestones, action structure (title, deadline, deps)         | `okr-plan` `update`                              |
 | Action `## Output/Deliverable` (ghi đè output thực tế)      | `okr-track` `light`/`deep`                       |
 | KR.current, KI.current, plan counters                        | `okr-track` `light`/`deep`                       |
+| plan.last_track_date, plan.last_review_date                  | `okr-track` `light`/`deep`                       |
 | action.status                                                | `okr-track` `light`/`deep`, `okr-plan` `update`  |
 | Inbox items (tạo mới)                                        | `okr-capture`                                    |
 | Inbox items (xử lý: status transition)                       | `okr-track`                                      |
