@@ -9,18 +9,20 @@ Quản lý 2 SOT: `plan.md` và `actions/`.
 
 ## Modes
 
-| Mode | Trigger | Flow chi tiết |
-|------|---------|---------------|
-| `new` | Chưa có plan.md | `references/flow-new.md` |
-| `update` | Sửa plan/action/milestone | `references/flow-update.md` |
+| Mode            | Trigger                                     | Flow chi tiết                                                |
+| --------------- | ------------------------------------------- | ------------------------------------------------------------ |
+| `new`           | Chưa có plan.md                             | `references/flow-new.md`                                     |
+| `update`        | Sửa plan/action/milestone                   | `references/flow-update.md`                                  |
 | `pre-confirmed` | Áp dụng thay đổi cấu trúc từ okr-track deep | `references/flow-update.md` + `okr-shared` delegate-protocol |
+
 
 ## SOT quyền ghi
 
-| File | Fields |
-|------|--------|
-| plan.md | Milestones, counters (khi tạo plan) |
+| File         | Fields                                                                              |
+| ------------ | ----------------------------------------------------------------------------------- |
+| plan.md      | Milestones, counters (khi tạo plan)                                                 |
 | actions/*.md | title, deadline, deps, effort, priority, DoD, quality criteria, notes, external_ids |
+
 
 > Subset của bảng canonical `../okr-shared/references/sot-ownership.md`. Sửa canonical trước, bảng này theo sau.
 
