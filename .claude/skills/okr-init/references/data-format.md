@@ -42,7 +42,7 @@ Body:
 - `## Objective` (WHY: tại sao lĩnh vực này quan trọng)
 - `## Key Indicators` (bảng: #, Chỉ số, Ngưỡng tối thiểu, Current, Status)
 
-> **Practices không nằm ở `objective.md`**. Hành động lặp lại để duy trì KI nằm ở `plan.md` body section `## Practices`. Schema xem `data-format-plan.md`.
+> **Practices không nằm ở `objective.md`**. Hành động lặp lại để duy trì KI nằm ở `plan.md` body section `## Practices`. Schema xem `../../okr-plan/references/data-format.md`.
 
 KI Status: `healthy` | `warning` | `critical`
 

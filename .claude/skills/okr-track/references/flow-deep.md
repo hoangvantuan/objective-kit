@@ -134,7 +134,7 @@ Sau khi tất cả delegate + inbox processing hoàn tất:
 
 ## Bước 8: Đề xuất next action
 
-Chọn theo thuật toán [action-priority.md](../../okr/references/action-priority.md) với `max_items=3`, `horizon_days=7`.
+Chọn theo thuật toán [action-priority.md](../../okr-shared/references/action-priority.md) với `max_items=3`, `horizon_days=7`.
 
 Khác với light: sau khi đã phân tích root cause ở Bước 2, mỗi gợi ý kèm insight từ phân tích (không chỉ lý do ngắn, mà nối với root cause đã tìm).
 

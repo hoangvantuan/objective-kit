@@ -88,7 +88,7 @@ type: [tracking]          # array, giá trị hợp lệ: tracking | review | cl
 
 ### Structure fields (track CHỈ đề xuất, delegate để apply)
 
-> Bảng canonical ở `okr/references/sot-ownership.md`. Bảng dưới là **chi tiết hoá theo field cụ thể** trong `objective.md` / `plan.md` / `resources.md`, dùng để track lookup khi delegate.
+> Bảng canonical ở `okr-shared/references/sot-ownership.md`. Bảng dưới là **chi tiết hoá theo field cụ thể** trong `objective.md` / `plan.md` / `resources.md`, dùng để track lookup khi delegate.
 
 | Field | Skill áp dụng |
 |-------|---------------|
@@ -112,11 +112,11 @@ type: [tracking]          # array, giá trị hợp lệ: tracking | review | cl
 
 ## Inbox Processing
 
-> Đã chuyển sang shared-schemas.md (đã có trong context từ orchestrator okr).
+> Đã chuyển sang schemas.md (đã có trong context từ orchestrator okr).
 
 ## Archive Rules
 
-> Đã chuyển sang shared-schemas.md (đã có trong context từ orchestrator okr).
+> Đã chuyển sang schemas.md (đã có trong context từ orchestrator okr).
 
 ## Log Reading Rules
 
@@ -141,7 +141,7 @@ Mục đích: deep luôn nắm (a) xu hướng dài hạn qua 3 review trước,
 
 ## External Sync (optional)
 
-Sync 2 chiều giữa OKR action files và tool bên thứ 3 (Things 3, Notion, Jira...). Chỉ chạy nếu action có field `external_ids` (xem `data-format-plan.md`).
+Sync 2 chiều giữa OKR action files và tool bên thứ 3 (Things 3, Notion, Jira...). Chỉ chạy nếu action có field `external_ids` (xem `../../okr-plan/references/data-format.md`).
 
 ### Pull (trước tracking, Phase 4a/4b)
 

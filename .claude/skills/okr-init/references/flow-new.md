@@ -22,8 +22,8 @@
 | State | Mode |
 |-------|------|
 | `.okr/` chưa có HOẶC `objective.md` thiếu | `new` |
-| Có objective.md + user nhắc tới objective/KR/KI/period | `update-objective` (xem `flow-init-update-objective.md`) |
-| Có objective.md + user nhắc tới capacity/skill/tool/ngân sách | `update-resource` (xem `flow-init-update-resource.md`) |
+| Có objective.md + user nhắc tới objective/KR/KI/period | `update-objective` (xem `flow-update-objective.md`) |
+| Có objective.md + user nhắc tới capacity/skill/tool/ngân sách | `update-resource` (xem `flow-update-resource.md`) |
 | User chọn explicit | theo lựa chọn |
 | Mơ hồ | hỏi user: "Tạo mới (ghi đè) / Sửa mục tiêu / Sửa resource?" |
 
@@ -111,7 +111,7 @@ Liệt kê mọi điểm cần lưu ý. Lặp đến khi user `y`.
 Solo only (1 user, 1 objective). Hỏi tuần tự:
 
 1. **Solo Profile**: Capacity (giờ/tuần), Skills liên quan
-2. **Công cụ**: 6 cột (Tên, Mục đích, Khi nào dùng, Cách dùng, Resource, Ghi chú). Schema xem `data-format-init.md`.
+2. **Công cụ**: 6 cột (Tên, Mục đích, Khi nào dùng, Cách dùng, Resource, Ghi chú). Schema xem `data-format.md`.
 3. **Tài liệu / KB**: 6 cột tương tự.
 4. **Ngân sách** (nếu Project hoặc cần đầu tư)
 5. **Thiếu hụt**: rủi ro/thiếu hụt nhận biết được
@@ -147,7 +147,7 @@ Xác nhận? (y / sửa / huỷ)
 ## Phase 7: Ghi file
 
 1. Tạo `.okr/`
-2. Ghi `.okr/objective.md` theo schema (`data-format-init.md`)
+2. Ghi `.okr/objective.md` theo schema (`data-format.md`)
 3. Ghi `.okr/resources.md` theo schema (giữ section header dù rỗng)
 
 ## Phase 8: Map inbox vào KR (chỉ nếu Phase 0a đọc inbox)
@@ -167,7 +167,7 @@ Apply gợi ý? (N apply / all / sửa N: KR<X> / huỷ)
 
 ## Schema
 
-- `data-format-init.md`: schema objective.md + resources.md
+- `data-format.md`: schema objective.md + resources.md
 - `okr-guide.md`: check SMART KR và KI guidelines
 
 ## Quy tắc

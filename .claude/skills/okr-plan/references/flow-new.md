@@ -20,7 +20,7 @@
 | State | Mode |
 |-------|------|
 | `plan.md` chưa có | `new` (file này) |
-| Có `plan.md` + user/track nhắc thay đổi cấu trúc | `update` (xem `flow-plan-update.md`) |
+| Có `plan.md` + user/track nhắc thay đổi cấu trúc | `update` (xem `flow-update.md`) |
 
 **Cảnh báo ghi đè**: Nếu mode `new` nhưng `plan.md` đã tồn tại:
 1. Hiển thị: "Plan đã tồn tại (X milestones, Y actions active, Z done/archive). Mode `new` sẽ ghi đè plan + xoá action files active."
@@ -90,9 +90,9 @@ Quy tắc đánh giá:
 
 1. Tạo `.okr/plan.md`.
 2. Tạo thư mục `.okr/actions/`.
-3. Ghi mỗi action thành `AXXX-slug.md`. Schema xem `data-format-plan.md`. Mặc định `pic: self`.
+3. Ghi mỗi action thành `AXXX-slug.md`. Schema xem `data-format.md`. Mặc định `pic: self`.
 4. Cập nhật counters trong `plan.md`.
-5. **Render bảng Roadmap** trong `plan.md` body `## Roadmap`. Format xem `shared-schemas.md` section "Roadmap format". Sắp: Priority → Deadline. Ongoing không có milestone → heading `### Chưa phân milestone`.
+5. **Render bảng Roadmap** trong `plan.md` body `## Roadmap`. Format xem `schemas.md` section "Roadmap format". Sắp: Priority → Deadline. Ongoing không có milestone → heading `### Chưa phân milestone`.
 
 ## Phase 5: Hậu xử lý
 
@@ -104,7 +104,7 @@ Ongoing plan có thể chứa `## Practices` thay vì milestones. Chi tiết xem
 
 ## Schema
 
-- `data-format-plan.md`: schema plan.md + frontmatter actions/*.md
+- `data-format.md`: schema plan.md + frontmatter actions/*.md
 - `task-format.md`: template body action file
 - `action-guide.md`: viết action chất lượng (5 tiêu chí, effort, priority, DoD, anti-patterns)
 

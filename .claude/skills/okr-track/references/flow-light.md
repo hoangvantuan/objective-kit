@@ -45,12 +45,12 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
   - User nói "skip" → giữ nguyên section dự kiến, không ghi output vào log.
   - Nếu section đã được ghi đè trước đó (user đã ghi output giữa chừng) → skip, không hỏi lại.
 
-5. **Archive actions done**: chạy Archive Rules (xem `okr/references/shared-schemas.md` section "Archive Rules"). Sau đó:
+5. **Archive actions done**: chạy Archive Rules (xem `okr-shared/references/schemas.md` section "Archive Rules"). Sau đó:
 
-  - **Re-render bảng Roadmap**: đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem `okr/references/shared-schemas.md` section "Roadmap format".
+  - **Re-render bảng Roadmap**: đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem `okr-shared/references/schemas.md` section "Roadmap format".
 
 6. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
-7. Đề xuất next action: chọn theo thuật toán [action-priority.md](../../okr/references/action-priority.md) với `max_items=3`, `horizon_days=7`. Mỗi gợi ý kèm 1 lý do ≤10 từ.
+7. Đề xuất next action: chọn theo thuật toán [action-priority.md](../../okr-shared/references/action-priority.md) với `max_items=3`, `horizon_days=7`. Mỗi gợi ý kèm 1 lý do ≤10 từ.
 
 **Ongoing type:**
 
@@ -71,4 +71,4 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 10. Đề xuất:
   - Nếu KI warning/critical → gợi ý tạo action cải thiện qua `/okr plan`.
   - Nếu practice streak vừa reset về 0 → cảnh báo "Practice P1 đã reset streak, KI1 có thể giảm tuần tới. Cân nhắc điều chỉnh practice (giảm target_count, đổi thời gian) qua `/okr plan update`".
-  - Nếu có actions đang mở → chọn theo [action-priority.md](../../okr/references/action-priority.md) (`max_items=3`, `horizon_days=7`). Hiển thị SAU gợi ý KI/practice.
+  - Nếu có actions đang mở → chọn theo [action-priority.md](../../okr-shared/references/action-priority.md) (`max_items=3`, `horizon_days=7`). Hiển thị SAU gợi ý KI/practice.

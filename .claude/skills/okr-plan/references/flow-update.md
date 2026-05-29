@@ -62,5 +62,5 @@ Xác nhận? (y / sửa / huỷ)
 
 1. Ghi đè `plan.md` (counters, milestones).
 2. Ghi/sửa `actions/AXXX-*.md`. KHÔNG tạo/sửa trong `actions/archive/`.
-3. **Re-render Roadmap** trong `plan.md` body `## Roadmap`. Format xem `shared-schemas.md`.
+3. **Re-render Roadmap** trong `plan.md` body `## Roadmap`. Format xem `schemas.md`.
 4. Đề xuất chạy `okr-track` mode light để confirm state mới.

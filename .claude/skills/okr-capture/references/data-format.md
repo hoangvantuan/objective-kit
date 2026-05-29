@@ -44,11 +44,11 @@ status: pending | processed | discarded
 
 ## Xử lý inbox
 
-`okr-capture` chỉ tạo file. Xử lý là trách nhiệm `okr-track`. Mapping chi tiết (type → delegate): xem `okr/references/shared-schemas.md` section "Inbox type → Delegate mapping".
+`okr-capture` chỉ tạo file. Xử lý là trách nhiệm `okr-track`. Mapping chi tiết (type → delegate): xem `okr-shared/references/schemas.md` section "Inbox type → Delegate mapping".
 
 ## Inbox Aging
 
-Inbox Aging canonical: xem skill `okr/references/shared-schemas.md` section "Inbox Aging" (load từ orchestrator).
+Inbox Aging canonical: xem skill `okr-shared/references/schemas.md` section "Inbox Aging" (load từ orchestrator).
 
 ## Quy tắc
 

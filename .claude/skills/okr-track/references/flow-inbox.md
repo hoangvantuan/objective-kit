@@ -91,7 +91,7 @@ User trả lời:
 
 Sau validate, đi tiếp xử lý từng item theo bảng:
 
-Xử lý từng item theo bảng "Inbox type → Delegate mapping" (xem `okr/references/shared-schemas.md`). Migrate dữ liệu cũ (`idea`/`note` → `thought`) cũng theo quy tắc ở shared-schemas.
+Xử lý từng item theo bảng "Inbox type → Delegate mapping" (xem `okr-shared/references/schemas.md`). Migrate dữ liệu cũ (`idea`/`note` → `thought`) cũng theo quy tắc ở schemas.
 
 
 Với mỗi item xử lý xong → đổi `status: processed` trong file inbox.

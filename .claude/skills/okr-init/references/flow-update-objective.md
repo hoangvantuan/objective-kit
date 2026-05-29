@@ -66,7 +66,7 @@ KHÔNG block. User vẫn có thể confirm và xử lý plan sau qua `/okr plan 
 
 ### Phase 6: CONFIRM diff
 
-Delegate protocol (pre-confirmed flow + reason display): xem skill `okr/references/delegate-protocol.md`.
+Delegate protocol (pre-confirmed flow + reason display): xem skill `okr-shared/references/delegate-protocol.md`.
 
 Luôn hiển thị bảng diff + cảnh báo:
 

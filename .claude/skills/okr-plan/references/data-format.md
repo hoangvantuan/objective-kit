@@ -24,7 +24,7 @@ Body: `## Roadmap` với bảng action per-milestone. Bảng auto-generated từ
 
 ### Roadmap format
 
-Roadmap format canonical: xem skill `okr/references/shared-schemas.md` section "Roadmap format" (load từ orchestrator).
+Roadmap format canonical: xem skill `okr-shared/references/schemas.md` section "Roadmap format" (load từ orchestrator).
 
 ## actions/AXXX-slug.md
 

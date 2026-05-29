@@ -20,7 +20,7 @@ SOT data từ orchestrator (objective, plan frontmatter, actions frontmatter, re
 
 Đọc thêm:
 - `.okr/inbox/*.md` status=pending: frontmatter
-- `.okr/log/`: light → KHÔNG đọc. Deep → adaptive rule (xem `data-format-track.md` Log Reading Rules). Closure → tất cả.
+- `.okr/log/`: light → KHÔNG đọc. Deep → adaptive rule (xem `data-format.md` Log Reading Rules). Closure → tất cả.
 - Trace: đọc `log/` theo yêu cầu user.
 
 Tính metrics (xem `metrics.md`):
@@ -123,14 +123,14 @@ Heuristic, hỏi user xác nhận:
 
 | Tín hiệu | Mode |
 |-----------|------|
-| Daily update, on-track | `light` (xem `flow-track-light.md`) |
-| Milestone deadline / KR at-risk / nhiều blocked | `deep` (xem `flow-track-deep.md`) |
+| Daily update, on-track | `light` (xem `flow-light.md`) |
+| Milestone deadline / KR at-risk / nhiều blocked | `deep` (xem `flow-deep.md`) |
 | User nói "review", "tổng kết", "đánh giá" | `deep` |
 | User nói "update", "xong rồi", "cập nhật" | `light` |
-| Mọi action done | `closure` (xem `flow-track-closure.md`) |
+| Mọi action done | `closure` (xem `flow-closure.md`) |
 | Ongoing + đến review_cycle | `deep` |
-| User nói "inbox", "xử lý inbox" | `inbox-only` (xem `flow-track-inbox.md`) |
-| User nói "trace", "xem lại", "history" | `trace` (xem `flow-track-trace.md`) |
+| User nói "inbox", "xử lý inbox" | `inbox-only` (xem `flow-inbox.md`) |
+| User nói "trace", "xem lại", "history" | `trace` (xem `flow-trace.md`) |
 
 ```
 Đề xuất mode: [light]. Inbox: [N] items. Đổi mode? (light/deep/closure)
