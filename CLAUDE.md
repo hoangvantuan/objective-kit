@@ -138,6 +138,7 @@ Không cần sửa `CLAUDE.md` của project đích. Skill description của `ok
 4. Đợt 7: Migrate sang harness (agent team + multi-skill)
 5. Đợt 8: Đóng gói harness (self-contained, loại bỏ AGENTS.example.md)
 6. Đợt 9: Skill-only - loại bỏ `.claude/agents/` + agent team, gộp 3 agent vào skill, thêm `okr-analyze`. Chạy inline 1 agent, deploy được mọi project Claude Code.
-7. Đợt 10: Layer lessons - thêm skill `okr-retro` rút bài học (2 loại: cải tiến skill / project), auto-load `.okr/lessons/index.md` mỗi phiên. Gỡ cơ chế "Tự cải tiến" + ghi CHANGELOG khỏi `okr-harness`.
+7. Đợt 10: Gom logic phân tích về `okr-shared` - dời `metrics.md` thành canonical dùng chung, okr-analyze/okr-track trỏ công thức chung thay vì chép, chống drift công thức.
+8. Đợt 11: Layer lessons - thêm skill `okr-retro` rút bài học (2 loại: cải tiến skill / project), auto-load `.okr/lessons/index.md` mỗi phiên. Gỡ cơ chế "Tự cải tiến" + ghi CHANGELOG khỏi `okr-harness`.
 
 Chi tiết thay đổi: xem `CHANGELOG.md`.
