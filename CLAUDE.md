@@ -10,7 +10,7 @@ Khi làm việc trong repo này, bạn đang **phát triển/sửa harness**, kh
 
 ## Kiến trúc
 
-7 skills, **skill-only, chạy inline bởi 1 agent**. KHÔNG dùng `.claude/agents/`, KHÔNG dùng agent team. Mỗi skill = 1 thư mục trong `.claude/skills/`, gồm `SKILL.md` + `references/` (load on-demand). Toàn bộ "code" là markdown prompt. Deploy = copy `.claude/skills/`, dùng được ở bất kỳ project Claude Code nào.
+8 skills, **skill-only, chạy inline bởi 1 agent**. KHÔNG dùng `.claude/agents/`, KHÔNG dùng agent team. Mỗi skill = 1 thư mục trong `.claude/skills/`, gồm `SKILL.md` + `references/` (load on-demand). Toàn bộ "code" là markdown prompt. Deploy = copy `.claude/skills/`, dùng được ở bất kỳ project Claude Code nào.
 
 ```
 .claude/skills/
@@ -24,6 +24,8 @@ Khi làm việc trong repo này, bạn đang **phát triển/sửa harness**, kh
 ├── okr-track/                  ← progress, review (deep), inbox, sync, closure, trace
 │   └── references/             ← data-format, flow-shared/light/deep/inbox/closure/trace
 ├── okr-capture/                ← ghi nhanh vào inbox (inline)
+│   └── references/             ← data-format
+├── okr-retro/                  ← rút bài học từ phiên, ghi .okr/lessons/ (record-only)
 │   └── references/             ← data-format
 └── okr-shared/                 ← quy tắc chung dùng cho mọi skill
     └── references/             ← schemas, sot-ownership, quality-gate, delegate-protocol, action-priority, metrics
@@ -39,6 +41,7 @@ Khi làm việc trong repo này, bạn đang **phát triển/sửa harness**, kh
 | okr-plan | Tạo/sửa plan, milestones, actions. Confirm trước ghi. |
 | okr-track | Cập nhật progress, review sâu, xử lý inbox, sync, archive, log, closure, trace. |
 | okr-capture | Ghi nhanh vào inbox (phân loại + ghi). |
+| okr-retro | Rút bài học từ phiên, ghi `.okr/lessons/`. Record-only, confirm trước ghi. |
 | okr-shared | Quy tắc chung: SOT, schemas, quality gate, delegate, priority. Không chạy độc lập. |
 
 ### Chế độ thực thi: skill-only inline
@@ -69,6 +72,7 @@ Một agent đọc state rồi đọc tiếp SKILL.md phù hợp và thực thi.
 | Inbox items (xử lý: status transition) | `okr-track` |
 | Action notes, external_ids (tạo/sửa) | `okr-plan` `new`/`update` |
 | External sync (pull/push status) | `okr-track` `light`/`deep` |
+| Bài học (`.okr/lessons/**`) | `okr-retro` |
 
 > Canonical: `.claude/skills/okr-shared/references/sot-ownership.md`. Sửa ở đó, bảng trên giữ đồng bộ.
 
@@ -89,7 +93,8 @@ Harness sinh ra `.okr/` tại **project đích** (không phải repo này):
 ├── actions/              # 1 file/action (AXXX-slug.md)
 │   └── archive/          # Actions done, read-only
 ├── inbox/                # Capture items chờ xử lý
-└── log/                  # Append-only, type: [tracking|review|closure]
+├── log/                  # Append-only, type: [tracking|review|closure]
+└── lessons/              # Bài học (okr-retro): index.md + skill/ + project/
 ```
 
 Schema chi tiết: `references/data-format.md` trong mỗi skill.
@@ -107,7 +112,7 @@ Schema chi tiết: `references/data-format.md` trong mỗi skill.
 
 Prefix: `feat`, `fix`, `refactor`, `docs`, `style`.
 
-Scope: `(okr-harness)`, `(okr-analyze)`, `(okr-init)`, `(okr-plan)`, `(okr-track)`, `(okr-capture)`, `(okr-shared)`.
+Scope: `(okr-harness)`, `(okr-analyze)`, `(okr-init)`, `(okr-plan)`, `(okr-track)`, `(okr-capture)`, `(okr-retro)`, `(okr-shared)`.
 
 Ví dụ: `feat(okr-track): add period overdue warning to dashboard`
 
@@ -121,7 +126,7 @@ Ví dụ: `feat(okr-track): add period overdue warning to dashboard`
 
 ### Deploy sang project đích
 
-Copy `.claude/skills/` (7 skills + references) vào project muốn dùng OKR. KHÔNG cần copy gì khác: không có `.claude/agents/`, không lệ thuộc agent team.
+Copy `.claude/skills/` (8 skills + references) vào project muốn dùng OKR. KHÔNG cần copy gì khác: không có `.claude/agents/`, không lệ thuộc agent team.
 
 Không cần sửa `CLAUDE.md` của project đích. Skill description của `okr-harness` tự trigger khi user nhắc OKR.
 
@@ -132,6 +137,7 @@ Không cần sửa `CLAUDE.md` của project đích. Skill description của `ok
 3. Đợt 6: Hub-and-spoke refactor (shared content tập trung)
 4. Đợt 7: Migrate sang harness (agent team + multi-skill)
 5. Đợt 8: Đóng gói harness (self-contained, loại bỏ AGENTS.example.md)
-6. Đợt 9: Skill-only — loại bỏ `.claude/agents/` + agent team, gộp 3 agent vào skill, thêm `okr-analyze`. Chạy inline 1 agent, deploy được mọi project Claude Code.
+6. Đợt 9: Skill-only - loại bỏ `.claude/agents/` + agent team, gộp 3 agent vào skill, thêm `okr-analyze`. Chạy inline 1 agent, deploy được mọi project Claude Code.
+7. Đợt 10: Layer lessons - thêm skill `okr-retro` rút bài học (2 loại: cải tiến skill / project), auto-load `.okr/lessons/index.md` mỗi phiên. Gỡ cơ chế "Tự cải tiến" + ghi CHANGELOG khỏi `okr-harness`.
 
 Chi tiết thay đổi: xem `CHANGELOG.md`.
