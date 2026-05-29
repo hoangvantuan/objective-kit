@@ -136,4 +136,4 @@ sequenceDiagram
 ```
 
 Record-only: `okr-retro` KHÔNG sửa file skill. Loại A là hàng đợi port thủ công về repo gốc. Chỉ user chủ động (hoặc đồng ý gợi ý cuối flow) mới chạy.
-</content>
+

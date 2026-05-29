@@ -130,4 +130,4 @@ Quy tắc:
 - Truyền `okr_path` tuyệt đối, không relative.
 - Mang theo context đã có giữa các bước (analysis, user confirm) để không hỏi lại.
 - Tôn trọng SOT ownership: mỗi field chỉ skill được phép mới ghi (xem `okr-shared/references/sot-ownership.md`).
-</content>
+

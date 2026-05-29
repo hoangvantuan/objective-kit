@@ -2,7 +2,7 @@
 
 Lịch sử **phát triển** OKR Harness (source code, kiến trúc, skill definitions).
 
-> Lịch sử **cải tiến** harness tại project đích: xem `.claude/CHANGELOG.md` của project đó.
+> Bài học + cải tiến rút từ phiên tại project đích: xem `.okr/lessons/` của project đó (do skill `okr-retro` ghi).
 
 | Ngày       | Thay đổi                                                                      | Đối tượng                       | Lý do                                        |
 | ---------- | ----------------------------------------------------------------------------- | ------------------------------- | -------------------------------------------- |
