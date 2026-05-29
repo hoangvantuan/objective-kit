@@ -28,7 +28,6 @@ status: active           # skill: pending | ported  ·  project: active | obsole
 date: "YYYY-MM-DD"        # ngày trích xuất
 target:                  # CHỈ khi type=skill: file/skill cần sửa (vd okr-track/flow-deep.md). type=project bỏ trống.
 area:                    # CHỈ khi type=project: mảng tri thức (vd "định nghĩa KR", "capacity"). type=skill bỏ trống.
-tags: []
 essence: "Câu lõi hành động 1 dòng. Đây là dòng đưa lên index."
 ---
 

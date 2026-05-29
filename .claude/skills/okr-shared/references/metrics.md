@@ -7,10 +7,10 @@ Logic ĐỌC dùng chung. `okr-analyze` đọc để render dashboard + phát hi
 Công thức: `% = (Current - Baseline) / (Target - Baseline) * 100`
 
 Cập nhật Current bằng 2 cách:
-1. **User tự nhập** (ưu tiên): user cung cấp giá trị mới cho KR
-2. **Tính từ actions**: đếm actions `done` thuộc KR đó / tổng actions thuộc KR
+1. **User tự nhập** (ưu tiên, dùng ở MỌI mode): user cung cấp giá trị mới cho KR.
+2. **Tính từ actions** (CHỈ `deep`/`closure`): đếm actions `done` thuộc KR đó / tổng actions thuộc KR. Cách này phải đọc cả `actions/archive/` vì action `done` đã được dời khỏi `actions/` active. Light/dashboard KHÔNG dùng cách 2 (chỉ đọc active, không thấy action done đã archive).
 
-Ưu tiên cách 1 vì KR đo outcome (kết quả), không phải output (sản lượng).
+Ưu tiên cách 1 vì KR đo outcome (kết quả), không phải output (sản lượng). Cách 2 chỉ là tham chiếu phụ khi user chưa nhập current và đang ở mode đọc lịch sử.
 
 ## KR Status auto-compute (Project type)
 
@@ -123,12 +123,19 @@ Period overdue (Project) là cảnh báo riêng, ưu tiên cao hơn nhắc revie
 
 ## Action health
 
-Tính từ frontmatter `actions/*.md` (chỉ active, không tính archive):
-
-- **Done rate**: `completed / total`.
-- **Overdue**: `due_date < today` AND status ∈ {doing, blocked, pending}. Ghi số ngày quá hạn.
-- **Blocked**: status = blocked. Liệt kê blocker reason.
+- **Done rate**: `completed / total_actions`, lấy từ **counters frontmatter `plan.md`**, KHÔNG đếm lại từ active (action `done` đã archive khỏi `actions/`, đếm active sẽ luôn ra 0).
+- **Overdue**: `due_date < today` AND status ∈ {doing, blocked, pending}. Tính từ frontmatter `actions/*.md` active. Ghi số ngày quá hạn.
+- **Blocked**: status = blocked (active). Liệt kê blocker reason.
 - **Checkpoint slip**: action `effort: xl` có body section `## Checkpoints`, mốc `- [ ]` quá hạn (`by YYYY-MM-DD < today`) mà chưa tick. Ghi rõ "Action AXXX trượt checkpoint N".
+
+## Tốc độ hoàn thành (CHỈ deep/closure)
+
+Tốc độ = số action `done` trong N tuần gần / N tuần. Cần `completed_date` của action (track ghi khi status→done; xem action schema `okr-plan/references/data-format.md`). Vì action done đã archive, chỉ tính ở mode đọc lịch sử:
+
+- **deep**: đọc `log/` (đã có dòng `status: doing > done` theo ngày) để đếm done/tuần kể từ review trước.
+- **closure**: đọc `actions/archive/` (có `completed_date`) tính tốc độ toàn period.
+
+Light/dashboard KHÔNG tính tốc độ (không đọc log/archive). Dashboard chỉ hiển thị **tổng done** từ counter `plan.md` (`completed`).
 
 ## Capacity / xung đột tài nguyên (signals)
 

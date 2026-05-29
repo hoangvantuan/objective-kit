@@ -1,6 +1,6 @@
-# Trace Flow (mode trace)
+# Trace Flow (okr-analyze mode trace)
 
-Chạy khi user gọi `/okr trace <ID>`, `/okr history`, hoặc nhắc đến "xem lại", "lịch sử". **Không** update progress. **Không** đọc file active bình thường.
+Mode read-only của `okr-analyze`. Chạy khi user gọi `/okr trace <ID>`, `/okr history`, hoặc nhắc "xem lại", "lịch sử". **Không** update progress, **không** ghi file (đúng tính chất read-only của analyze). Khác mode default/deep ở chỗ đọc dữ liệu **lịch sử** (`actions/archive/`, `log/`) thay vì state active.
 
 **Nguyên tắc lazy loading**: Đọc dần, không đọc hết. Frontmatter trước, body khi user yêu cầu.
 
@@ -16,7 +16,7 @@ Trigger: "trace A003", "xem lại A003"
 Archive: A003
   Title     : Spec MVP
   Milestone : M1: Research
-  PIC       : An
+  PIC       : self
   Due date  : 2026-10-20
   Effort    : m
   Status    : done

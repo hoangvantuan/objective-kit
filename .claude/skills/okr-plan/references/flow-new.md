@@ -33,6 +33,8 @@
 
 ## Phase 2: Đề xuất phân rã
 
+Trước khi chốt effort/deadline, đối chiếu lessons loại B đã auto-load (area liên quan, vd "capacity", "ước lượng effort"): nếu phiên trước rút ra task loại này hay overrun, điều chỉnh ước lượng (xem `okr-shared` "Áp dụng lessons").
+
 Với mỗi KR:
 
 1. Đề xuất 1-3 **Initiatives** (sáng kiến lớn).
@@ -92,7 +94,7 @@ Quy tắc đánh giá:
 2. Tạo thư mục `.okr/actions/`.
 3. Ghi mỗi action thành `AXXX-slug.md`. Schema xem `data-format.md`. Mặc định `pic: self`.
 4. Cập nhật counters trong `plan.md`.
-5. **Render bảng Roadmap** trong `plan.md` body `## Roadmap`. Format xem `schemas.md` section "Roadmap format". Sắp: Priority → Deadline. Ongoing không có milestone → heading `### Chưa phân milestone`.
+5. **Render bảng Roadmap** trong `plan.md` body `## Roadmap`. Format xem `okr-shared/references/schemas.md` section "Roadmap format". Sắp: Priority → Deadline. Ongoing không có milestone → heading `### Chưa phân milestone`.
 
 ## Phase 5: Hậu xử lý
 

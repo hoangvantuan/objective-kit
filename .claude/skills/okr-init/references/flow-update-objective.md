@@ -21,7 +21,7 @@ Tuỳ lựa chọn, hỏi chi tiết.
 
 ### Phase 4: Re-validate SMART (BẮT BUỘC trước CONFIRM)
 
-Trước khi sang Impact Check, agent re-validate SMART cho mọi KR/KI có thay đổi (target, baseline, period). Tiêu chí xem `references/okr-guide.md`:
+Trước khi sang Impact Check, agent re-validate SMART cho mọi KR/KI có thay đổi (target, baseline, period). Tiêu chí xem `okr-guide.md`:
 
 - **S**pecific: KR mô tả rõ chỉ số nào, sản phẩm/kênh nào.
 - **M**easurable: có baseline + target số (Project) hoặc ngưỡng (Ongoing).
@@ -94,3 +94,5 @@ Xác nhận? (y / sửa / huỷ / bỏ qua cảnh báo)
 ### Phase 7: Ghi file
 
 Ghi đè `objective.md`. Hiển thị: "Đã update. Chạy `/okr plan update` để áp dụng tác động sang actions/milestones (Phase 5 Impact Check đã liệt kê)."
+
+**Rà lessons (nếu đổi lớn)**: khi đổi `objective` text/WHY, hoặc xoá/đổi KR, in thêm 1 dòng: "Mục tiêu đổi nhiều, một số bài học loại B (`.okr/lessons/project`) có thể đã lỗi thời. Chạy okr-retro để rà + đánh dấu obsolete." KHÔNG tự sửa lessons (đó là việc `okr-retro`).

@@ -28,3 +28,5 @@ Chứa quy tắc và schema áp dụng cho mọi skill OKR. Không chạy độc
 ## Auto-load lessons (an toàn)
 
 Layer bài học (`okr-retro`) được `okr-harness` Phase 1 nạp sẵn `.okr/lessons/index.md` mỗi phiên. An toàn: nếu một skill chạy mà `index.md` chưa có trong context và `.okr/lessons/index.md` tồn tại, đọc nó trước khi thao tác. Chỉ đọc `index.md`, không đọc file detail (load on-demand).
+
+**Áp dụng lessons (không chỉ load cho có)**: trước khi đề xuất KR/action/điều chỉnh hoặc ghi file, đối chiếu lessons có essence liên quan việc đang làm (loại B theo `area`, loại A theo `target`). Nếu một lesson cảnh báo điều gì (vd "đừng đặt baseline KR = 0 khi chưa đo được"), bám theo. Cần detail → đọc file lesson tương ứng. Lesson là context định hướng, không phải lệnh cứng; user vẫn quyết.

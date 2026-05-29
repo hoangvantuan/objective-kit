@@ -12,13 +12,13 @@ Mô tả input/output từng skill khi orchestrator chạy inline. Đây là "h�
 | focus | Không | Lĩnh vực focus: "full" (default), "progress", "issues", "priority" |
 | max_items | Không | Số priority items (default 2 cho dashboard, 3 cho track) |
 | horizon_days | Không | Cửa sổ deadline (default 3 cho dashboard, 7 cho track) |
-| mode | Không | "default" hoặc "deep" (deep: thêm root cause + log history) |
+| mode | Không | "default", "deep" (root cause + log history), hoặc "trace" (read-only: xem lại history/archive/log, xem `okr-analyze/references/flow-trace.md`) |
 
 ### Output (markdown structured)
 
 ```markdown
 ## Dashboard
-[Layout canonical ở okr-analyze SKILL "Dashboard layout" — Project/Ongoing, nhắc review, period overdue, streak]
+[Layout canonical ở okr-analyze SKILL "Dashboard layout": Project/Ongoing, nhắc review, period overdue, streak]
 
 ## Issues (nếu có)
 [Severity] [Type]: [description]
@@ -68,7 +68,7 @@ Input/Output giống okr-init (mode: new, update, pre-confirmed). SOT: `plan.md`
 | Param | Bắt buộc | Mô tả |
 |-------|---------|-------|
 | okr_path | Có | Đường dẫn `.okr/` |
-| mode | Có | light, deep, inbox-only, closure, trace |
+| mode | Có | light, deep, inbox-only, closure |
 | analysis | Không | Output từ okr-analyze (khi track light hoặc deep) |
 
 ### Output

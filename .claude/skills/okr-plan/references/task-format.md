@@ -20,6 +20,7 @@ priority: high
 effort: m
 pic: ""  # Mặc định "self". Có thể gán tên người khác khi delegate việc
 due_date: YYYY-MM-DD
+completed_date: ""  # okr-plan để trống; okr-track set khi status→done
 depends_on: []
 notes: ""
 external_ids: {}

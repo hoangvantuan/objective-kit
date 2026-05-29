@@ -1,6 +1,6 @@
 ---
 name: okr-track
-description: "Cập nhật progress, status action, review sâu, xử lý inbox, closure, trace, external sync. Load khi cần light, deep, inbox-only, closure, trace."
+description: "Cập nhật progress, status action, review sâu, xử lý inbox, closure, external sync. Load khi cần light, deep, inbox-only, closure."
 ---
 
 # OKR Track: Track + Review + Inbox Processing
@@ -15,7 +15,6 @@ Ghi progress fields, log, archive. KHÔNG sửa cấu trúc.
 | `deep`       | Review sâu, milestone, at-risk | `references/flow-deep.md`    |
 | `inbox-only` | Xử lý inbox, skip progress     | `references/flow-inbox.md`   |
 | `closure`    | Tổng kết khi hết period        | `references/flow-closure.md` |
-| `trace`      | Xem lại history/log/archive    | `references/flow-trace.md`   |
 
 
 Shared logic (dashboard, mode detection, rules): `references/flow-shared.md`

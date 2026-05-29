@@ -13,10 +13,10 @@ Entry point quản lý mục tiêu OKR. Đọc state, route, **chạy skill inli
 
 | Skill         | Vai trò                                                       | Ghi          |
 | ------------- | ------------------------------------------------------------- | ------------ |
-| `okr-analyze` | Phân tích read-only: metrics, issues, priority, dashboard     | Không        |
+| `okr-analyze` | Phân tích read-only: metrics, issues, priority, dashboard, trace (xem lại history) | Không        |
 | `okr-init`    | Tạo/sửa objective, KR/KI, resources                           | Có           |
 | `okr-plan`    | Tạo/sửa plan, milestones, actions                             | Có           |
-| `okr-track`   | Track progress, deep review, inbox, closure, trace, sync      | Có           |
+| `okr-track`   | Track progress, deep review, inbox, closure, sync             | Có           |
 | `okr-capture` | Ghi nhanh vào inbox                                           | Có (inbox)   |
 | `okr-retro`   | Rút bài học từ phiên, ghi `.okr/lessons/` (record-only)       | Có (lessons) |
 | `okr-shared`  | Quy tắc chung: SOT, schemas, quality gate, delegate, priority | Không        |
@@ -48,6 +48,8 @@ lessons/index.md  → đọc TOÀN BỘ (bài học, auto-load mỗi phiên)
 
 Chỉ đọc frontmatter (trừ `lessons/index.md` đọc toàn bộ vì nhỏ, chứa câu lõi bài học). Không đọc body action, log, archive, hay file detail bài học (load on-demand khi cần).
 
+Lessons đã nạp → dùng làm **context định hướng** khi skill đề xuất/điều chỉnh trong phiên (đối chiếu area/target liên quan). Quy tắc áp dụng: `okr-shared` SKILL "Áp dụng lessons".
+
 ### Intent routing
 
 | State                   | User intent                            | Chạy skill (inline)                   |
@@ -63,7 +65,7 @@ Chỉ đọc frontmatter (trừ `lessons/index.md` đọc toàn bộ vì nhỏ, 
 |                         | "capture / ghi nhanh / note"           | `okr-capture`                         |
 |                         | "inbox / xử lý inbox"                  | `okr-track` inbox-only                |
 |                         | "tổng kết / closure / kết thúc"        | `okr-track` closure                   |
-|                         | "trace / history / xem lại"            | `okr-track` trace                     |
+|                         | "trace / history / xem lại"            | `okr-analyze` trace                   |
 |                         | "rút bài học / tổng kết phiên / retro" | `okr-retro`                           |
 
 
@@ -100,9 +102,13 @@ Chạy `okr-init` (mode new/update-objective/update-resource) hoặc `okr-plan` 
 
 Chạy `okr-capture`: phân loại type, ghi `inbox/YYYY-MM-DD-HHmm-slug.md`. Xem `okr-capture` SKILL.md.
 
-### Inbox / Closure / Trace
+### Inbox / Closure
 
-Chạy `okr-track` với mode tương ứng (inbox-only / closure / trace).
+Chạy `okr-track` với mode tương ứng (inbox-only / closure).
+
+### Trace
+
+Chạy `okr-analyze` mode trace (read-only: xem lại history/archive/log). Xem `okr-analyze/references/flow-trace.md`.
 
 ## Phase 3: Tổng hợp
 

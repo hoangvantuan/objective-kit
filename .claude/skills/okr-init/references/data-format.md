@@ -114,9 +114,7 @@ Skill OKR phục vụ persona **solo only** (1 user, 1 objective). Mọi action 
 
 Bảng tín hiệu xung đột capacity/tài nguyên là canonical ở `../../okr-shared/references/metrics.md` (section "Capacity / xung đột tài nguyên"): quá tải, dồn deadline, skill gap, tool missing, capacity drop.
 
-Áp dụng: `okr-init update-resource` khi hoàn tất; `okr-plan` khi check fit lúc tạo/sửa plan; `okr-analyze` khi phát hiện issue runtime.
-
-Mỗi cảnh báo phải kèm đề xuất giải pháp cụ thể: dời deadline, tách task, học/outsource skill, hoặc giảm scope.
+Áp dụng: `okr-init update-resource` khi hoàn tất; `okr-plan` khi check fit lúc tạo/sửa plan; `okr-analyze` khi phát hiện issue runtime. Mỗi cảnh báo kèm đề xuất giải pháp cụ thể (định nghĩa canonical ở `metrics.md`, không lặp ở đây).
 
 ## Quy tắc chung
 

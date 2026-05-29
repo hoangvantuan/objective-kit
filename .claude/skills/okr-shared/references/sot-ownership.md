@@ -11,6 +11,7 @@ Mỗi field SOT chỉ được sửa bởi skill được chỉ định. `okr-tr
 | KR.current, KI.current, plan counters                             | `okr-track` `light`/`deep`    |
 | plan.last_track_date, plan.last_review_date                       | `okr-track` `light`/`deep`    |
 | action.status                                                     | `okr-track` `light`/`deep`, `okr-plan` `update` |
+| action.completed_date (set khi status→done)                       | `okr-track` `light`/`deep`    |
 | Inbox items (tạo mới)                                             | `okr-capture`                 |
 | Inbox items (xử lý: status transition)                            | `okr-track`                   |
 | Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`     |

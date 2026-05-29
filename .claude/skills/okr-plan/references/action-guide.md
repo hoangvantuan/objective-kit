@@ -8,7 +8,7 @@ Mỗi action phải trả lời đủ 5 câu:
 
 | # | Câu hỏi | Field tương ứng | Ví dụ tốt | Ví dụ xấu |
 |---|---------|-----------------|-----------|-----------|
-| 1 | **Ai làm?** | `pic` | "An (Product)" | "" (trống) |
+| 1 | **Ai làm?** | `pic` | "self" (mặc định solo) | "" (trống) |
 | 2 | **Làm cái gì?** | `title` + `description` + `## Output/Deliverable` | "Viết report phân tích 5 đối thủ → file competitor-analysis.xlsx" | "Nghiên cứu thị trường" |
 | 3 | **Deadline khi nào?** | `due_date` | "2026-11-15" | "càng sớm càng tốt" |
 | 4 | **Xong trông thế nào?** | `## Definition of Done` + `## Tiêu chí chất lượng` | "Report có ≥5 đối thủ, mỗi đối thủ ≥3 chiều so sánh, data source ghi rõ" | "Done khi xong" |

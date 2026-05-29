@@ -40,6 +40,7 @@ priority: critical | high | medium | low
 effort: xs | s | m | l | xl
 pic: "string"
 due_date: YYYY-MM-DD
+completed_date: YYYY-MM-DD  # optional, okr-track set khi status→done
 depends_on: [A001, A002]
 notes: "string (optional, ≤50 ký tự)"
 external_ids:              # optional
@@ -51,6 +52,7 @@ Field mới (optional):
 
 | Field | Type | Mô tả |
 |-------|------|-------|
+| `completed_date` | date, optional | Ngày action chuyển `status: done`. `okr-plan` để trống khi tạo; `okr-track` set khi đánh done (xem Archive Rules). Dùng cho tốc độ hoàn thành (deep) + tổng kết timeline (closure). Theo action vào `archive/`. |
 | `notes` | string, optional | Ghi chú ngắn hiển thị trong bảng Roadmap. Khuyến nghị ≤50 ký tự. Vd: "Cần xong trước A003", "Blocked by API access". Khác với `## Ghi chú` body (chi tiết dài). Không có thì cell trống. |
 | `external_ids` | YAML map, optional | Map tool_key → external ID string. Key lowercase, match tên tool trong resources.md (vd: `things3`, `notion`). Nhiều tool được. Dùng cho sync 2 chiều với tool bên thứ 3. |
 
@@ -121,5 +123,5 @@ Chứa action files đã hoàn thành (`status: done`), được dời từ `act
 
 - **Schema**: giống hệt `actions/AXXX-slug.md` (cùng frontmatter + body).
 - **Read-only**: archive files KHÔNG bị sửa sau khi archive. Không ai ghi đè, không ai thêm field.
-- **Khi nào đọc**: chỉ khi `okr-track` mode `closure` (tổng kết) hoặc mode `trace` (user yêu cầu xem lại).
+- **Khi nào đọc**: chỉ khi `okr-track` mode `closure` (tổng kết) hoặc `okr-analyze` mode `trace` (user yêu cầu xem lại).
 - `okr-plan` KHÔNG đọc, KHÔNG sửa, KHÔNG tạo file trong `actions/archive/`.

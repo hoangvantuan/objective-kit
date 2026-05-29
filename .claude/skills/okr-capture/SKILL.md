@@ -14,6 +14,17 @@ Chạy inline, thao tác nhẹ: chỉ phân loại + ghi inbox.
 3. Tạo file `.okr/inbox/YYYY-MM-DD-HHmm-slug.md`
 4. Báo: "Đã ghi vào inbox. Xử lý khi track tiếp."
 
+## Tiêu chí phân loại type
+
+| Type | Khi nào | Tín hiệu nhận biết |
+|------|---------|--------------------|
+| `action` | Việc cụ thể cần làm, có thể thành task | Động từ hành động + có output ("viết", "gọi", "sửa", "mua") |
+| `blocker` | Thứ đang chặn việc khác tiến triển | "không thể", "đang chờ", "bị kẹt", "server down", "chưa có access" |
+| `resource` | Tool/tài liệu/ngân sách mới phát hiện | Tên công cụ/tài liệu/link, "dùng được X", "có thư viện Y" |
+| `thought` | Ý tưởng/ghi chú chưa rõ scope | Suy nghĩ mở, "hay là", "cân nhắc", chưa rõ thành việc gì |
+
+Không chắc → chọn `thought` (track làm rõ khi xử lý). Phân loại chỉ là gợi ý, `okr-track` verify lại lúc xử lý inbox.
+
 ## Schema
 
 Canonical đầy đủ ở `references/data-format.md`. Frontmatter (khớp canonical):

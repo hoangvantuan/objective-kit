@@ -16,13 +16,14 @@ Khi làm việc trong repo này, bạn đang **phát triển/sửa harness**, kh
 .claude/skills/
 ├── okr-harness/                ← Orchestrator: routing, chạy skill inline, tổng hợp
 │   └── references/             ← flows.md, skill-contract.md
-├── okr-analyze/                ← Phân tích read-only: metrics, issues, priority, dashboard
+├── okr-analyze/                ← Phân tích read-only: metrics, issues, priority, dashboard, trace
+│   └── references/             ← flow-trace
 ├── okr-init/                   ← objective, resource, KR/KI
 │   └── references/             ← data-format, flow-new, flow-update-*, okr-guide
 ├── okr-plan/                   ← milestones, actions, dependencies
 │   └── references/             ← data-format, action-guide, task-format, flow-*
-├── okr-track/                  ← progress, review (deep), inbox, sync, closure, trace
-│   └── references/             ← data-format, flow-shared/light/deep/inbox/closure/trace
+├── okr-track/                  ← progress, review (deep), inbox, sync, closure
+│   └── references/             ← data-format, flow-shared/light/deep/inbox/closure
 ├── okr-capture/                ← ghi nhanh vào inbox (inline)
 │   └── references/             ← data-format
 ├── okr-retro/                  ← rút bài học từ phiên, ghi .okr/lessons/ (record-only)
@@ -36,10 +37,10 @@ Khi làm việc trong repo này, bạn đang **phát triển/sửa harness**, kh
 | Skill | Vai trò |
 |-------|---------|
 | okr-harness | Entry point: đọc state, route theo intent, chạy skill phù hợp inline, tổng hợp. |
-| okr-analyze | Đọc `.okr/`, tính metrics, phát hiện issues, xếp priority, dashboard. Read-only. |
+| okr-analyze | Đọc `.okr/`, tính metrics, phát hiện issues, xếp priority, dashboard, trace (xem lại history). Read-only. |
 | okr-init | Tạo/sửa objective, resource, KR/KI. Confirm trước ghi. |
 | okr-plan | Tạo/sửa plan, milestones, actions. Confirm trước ghi. |
-| okr-track | Cập nhật progress, review sâu, xử lý inbox, sync, archive, log, closure, trace. |
+| okr-track | Cập nhật progress, review sâu, xử lý inbox, sync, archive, log, closure. |
 | okr-capture | Ghi nhanh vào inbox (phân loại + ghi). |
 | okr-retro | Rút bài học từ phiên, ghi `.okr/lessons/`. Record-only, confirm trước ghi. |
 | okr-shared | Quy tắc chung: SOT, schemas, quality gate, delegate, priority. Không chạy độc lập. |
@@ -68,6 +69,7 @@ Một agent đọc state rồi đọc tiếp SKILL.md phù hợp và thực thi.
 | KR.current, KI.current, plan counters | `okr-track` `light`/`deep` |
 | plan.last_track_date, plan.last_review_date | `okr-track` `light`/`deep` |
 | action.status | `okr-track` `light`/`deep`, `okr-plan` `update` |
+| action.completed_date (set khi done) | `okr-track` `light`/`deep` |
 | Inbox items (tạo mới) | `okr-capture` |
 | Inbox items (xử lý: status transition) | `okr-track` |
 | Action notes, external_ids (tạo/sửa) | `okr-plan` `new`/`update` |
@@ -140,5 +142,6 @@ Không cần sửa `CLAUDE.md` của project đích. Skill description của `ok
 6. Đợt 9: Skill-only - loại bỏ `.claude/agents/` + agent team, gộp 3 agent vào skill, thêm `okr-analyze`. Chạy inline 1 agent, deploy được mọi project Claude Code.
 7. Đợt 10: Gom logic phân tích về `okr-shared` - dời `metrics.md` thành canonical dùng chung, okr-analyze/okr-track trỏ công thức chung thay vì chép, chống drift công thức.
 8. Đợt 11: Layer lessons - thêm skill `okr-retro` rút bài học (2 loại: cải tiến skill / project), auto-load `.okr/lessons/index.md` mỗi phiên. Gỡ cơ chế "Tự cải tiến" + ghi CHANGELOG khỏi `okr-harness`.
+9. Đợt 12: Review drift tầng sâu (prompt-master). P0 done-count: done rate lấy từ counter `plan.md`, KR% cách 2 chỉ deep/closure, thêm "Tốc độ hoàn thành" (deep/closure). Thêm `action.completed_date`. Guard `paused` ở track. Chuyển mode `trace` từ `okr-track` sang `okr-analyze` (read-only về đúng nhà). Closure bỏ "## Lessons", gợi ý `okr-retro`. Wire "Áp dụng lessons". Bảng phân loại type cho capture. Sửa 4 tham chiếu chết + dọn em-dash.
 
 Chi tiết thay đổi: xem `CHANGELOG.md`.

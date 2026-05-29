@@ -28,7 +28,7 @@ description: "Phân tích trạng thái OKR read-only: đọc .okr/, tính metri
 | `resources.md` | Frontmatter                           | Capacity, skills, tools                                 |
 | `actions/*.md` | Frontmatter only                      | Dùng Bash `ls` rồi đọc từng file, skip body trừ khi cần |
 | `inbox/`       | Count + đọc frontmatter pending items | Compute staleness on-the-fly                            |
-| `log/`         | 3 entry gần nhất                      | Dùng `ls -t` rồi đọc 3 file đầu                         |
+| `log/`         | Ongoing: review log gần nhất (tính trend). Project default: KHÔNG đọc | Deep/closure đọc nhiều hơn (xem okr-track Log Reading Rules) |
 
 
 Nếu `.okr/` không tồn tại → trả ngay: "Chưa khởi tạo OKR. Cần chạy init."
@@ -53,7 +53,7 @@ Quét theo thứ tự nghiêm trọng:
 4. **KR at-risk/off-track**: trend tính từ metrics
 5. **Checkpoint slip**: action `effort: xl` có `## Checkpoints`, mốc quá hạn chưa tick (xem metrics.md "Action health")
 6. **Inbox aging**: items pending > 30 ngày
-7. **Capacity / xung đột tài nguyên**: dùng bảng signals ở `../okr-shared/references/metrics.md` ("Capacity / xung đột tài nguyên") — quá tải, dồn deadline, skill gap, tool missing, capacity drop
+7. **Capacity / xung đột tài nguyên**: dùng bảng signals ở `../okr-shared/references/metrics.md` ("Capacity / xung đột tài nguyên"): quá tải, dồn deadline, skill gap, tool missing, capacity drop
 
 ## Xếp priority (top N actions)
 
@@ -78,7 +78,7 @@ Cấu trúc tổng:
 
 ```
 ## Dashboard
-[Layout theo loại mục tiêu — xem "Dashboard layout" bên dưới]
+[Layout theo loại mục tiêu, xem "Dashboard layout" bên dưới]
 
 ## Issues (nếu có)
 [Severity] [Type]: [description]
@@ -95,7 +95,7 @@ Cấu trúc tổng:
 [Đề xuất, chỉ rõ skill đích + mode]
 ```
 
-### Dashboard layout — Project
+### Dashboard layout: Project
 
 - Mở đầu: 1 câu tổng quan sức khoẻ.
 - Nhắc review: 1 dòng (first match, `../okr-shared/references/metrics.md` "Nhắc review").
@@ -110,16 +110,17 @@ Period: [start] > [end] ([X]% thời gian đã dùng)
 
 Key Results
   KR1: ████░░░░░░ 40/100 (40%) > on-track
-    Actions: 3 done | 2 doing | 1 blocked | 0 pending
-    Active: A001 (doing), A003 (doing), A005 (blocked: [lý do])
+    Active: 2 doing | 1 blocked | 0 pending
+    → A001 (doing), A003 (doing), A005 (blocked: [lý do])
 
 Actions: N tổng | X done | Y doing | Z blocked | W pending
-Tốc độ: [X] done/tuần (kế hoạch: [Y])
 Inbox: [N] items chưa xử lý
 
 Cần chú ý
   - [issues: blocked, overdue, at-risk]
 ```
+
+> **Nguồn done count**: dòng tổng `X done` lấy từ counter `plan.md` (`completed`). Per-KR CHỈ hiển thị active (doing/blocked/pending) vì action done đã archive, không đếm được per KR từ active. Tốc độ done/tuần là metric của `deep`/`closure` (đọc log/archive), KHÔNG hiển thị ở dashboard light.
 
 Block period overdue (render trước phần còn lại khi overdue, chi tiết hành vi: metrics.md "Period Overdue"):
 
@@ -128,7 +129,7 @@ Block period overdue (render trước phần còn lại khi overdue, chi tiết 
 End date [date], hôm nay [date]. Status vẫn `active`.
 
 KR chưa achieved:
-  - KR1: [current]/[target] ([%]) — còn thiếu [N]
+  - KR1: [current]/[target] ([%]), còn thiếu [N]
 
 Đề xuất:
   - Extend end_date (chạy `okr-init` mode update-objective)
@@ -137,7 +138,7 @@ KR chưa achieved:
 Dashboard: [phần còn lại]
 ```
 
-### Dashboard layout — Ongoing
+### Dashboard layout: Ongoing
 
 - Mở đầu: 1 câu tổng quan.
 - Nhắc review: 1 dòng (first match, metrics.md "Nhắc review").
@@ -167,6 +168,13 @@ Khi gọi cho review deep, bổ sung:
 - Root cause mỗi issue: hỏi "tại sao?" ≥3 lần. Phân biệt nhân (gốc) vs duyên (điều kiện).
 - Tách triệu chứng vs nguyên nhân.
 - Output thêm section "Root cause" cho mỗi issue cần cải thiện.
+- **Tốc độ hoàn thành**: đếm action done/tuần kể từ review trước (đọc `log/` dòng `status: doing > done` theo ngày, hoặc `completed_date`). Xem `../okr-shared/references/metrics.md` "Tốc độ hoàn thành".
+
+## Mode trace (xem lại lịch sử, read-only)
+
+Mode đọc dữ liệu lịch sử khi user muốn "xem lại / trace / history". Vẫn read-only (analyze không bao giờ ghi). Khác default/deep: đọc `actions/archive/` + `log/` thay vì state active, theo nguyên tắc **lazy loading** (frontmatter trước, body khi user yêu cầu). 4 kiểu trace (action / milestone / theo thời gian / log) + quy trình chi tiết: xem `references/flow-trace.md`.
+
+Trigger: "trace A003", "xem lại milestone M1", "actions done tháng 4", "xem log tuần trước".
 
 ## Error handling
 

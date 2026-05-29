@@ -2,9 +2,11 @@
 
 Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 
+> **Guard paused**: nếu `objective.status == paused` → render dashboard, in `(Objective đang paused. Resume qua /okr sửa mục tiêu để track lại.)`, chỉ xử lý inbox nếu có, KHÔNG hỏi update progress. (Quy tắc chung: `flow-shared.md`.)
+
 **Project type:**
 
-1. **Sync pull** (nếu có action với `external_ids`): chạy External Sync pull flow (xem `references/data-format.md` section "External Sync"). Diff status hiển thị trước bảng hỏi update. User confirm sync → merge vào danh sách thay đổi step 1. Không có `external_ids` → skip.
+1. **Sync pull** (nếu có action với `external_ids`): chạy External Sync pull flow (xem `data-format.md` section "External Sync"). Diff status hiển thị trước bảng hỏi update. User confirm sync → merge vào danh sách thay đổi step 1. Không có `external_ids` → skip.
 2. Hỏi user có thay đổi: KR current, action status (pending/doing/done/blocked), blocker mới, output (nếu user chủ động cung cấp).
   - User cung cấp output cho action đang `doing` hoặc `done` → ghi đè section `## Output/Deliverable` trong action file. Không cần chờ mark done.
 
