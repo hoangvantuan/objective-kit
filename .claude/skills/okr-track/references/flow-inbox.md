@@ -62,7 +62,7 @@ Gợi ý xử lý dựa trên:
 
 ## Bước 3: Xử lý từng item user chọn
 
-**Step 3.0: Validate related ID (M5b).** Trước khi xử lý từng item user chọn, agent validate field `related_kr`/`related_action`/`related_tool` (do capture ghi vào, không guarantee đúng):
+**Step 3.0: Validate related ID.** Trước khi xử lý từng item user chọn, agent validate field `related_kr`/`related_action` (do capture ghi vào, không guarantee đúng):
 
 | Field            | Quy tắc validate                                                                                          | Hành vi nếu sai                                                                                            |
 | ---------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |

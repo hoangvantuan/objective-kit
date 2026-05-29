@@ -96,6 +96,31 @@ Ví dụ: `end_date = 2026-12-31`, `today = 2027-01-12`, `status = active` → `
 
 Đề xuất chỉ là gợi ý. Track không enforce, user tự chọn.
 
+## Nhắc review (dashboard, dùng chung)
+
+> Canonical duy nhất. `okr-analyze` (render dashboard), `okr-harness` (dashboard mặc định), `okr-track` flow-shared (Phase 2) đều áp quy tắc này. KHÔNG chép ngưỡng ở nơi khác.
+
+Khi render dashboard, in tối đa 1 dòng nhắc (first match theo thứ tự bảng). Phân theo loại mục tiêu:
+
+**Project:**
+
+| # | Điều kiện | Thông báo |
+|---|-----------|-----------|
+| 1 | `last_track_date` is null | "Chưa track lần nào." |
+| 2 | `today > start_date + (end_date - start_date) / 2` AND `last_review_date` is null | "Đã qua nửa period, chưa review." |
+| 3 | `today - last_track_date > 14 ngày` | "Chưa track 2 tuần." |
+
+**Ongoing:**
+
+| # | Điều kiện | Thông báo |
+|---|-----------|-----------|
+| 1 | `last_track_date` is null | "Chưa track lần nào." |
+| 2 | `last_review_date` is null AND `today - last_track_date > review_cycle × 2` | "Track nhiều lần nhưng chưa review." |
+| 3 | `today - last_review_date > review_cycle × 1.5` | "Quá hạn review N ngày." |
+| 4 | `today - last_track_date > 14 ngày` | "Chưa track 2 tuần." |
+
+Period overdue (Project) là cảnh báo riêng, ưu tiên cao hơn nhắc review: render block đầu dashboard (xem "Period Overdue" ở trên).
+
 ## Action health
 
 Tính từ frontmatter `actions/*.md` (chỉ active, không tính archive):

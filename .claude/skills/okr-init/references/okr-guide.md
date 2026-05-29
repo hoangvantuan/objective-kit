@@ -48,10 +48,7 @@ Ví dụ (lĩnh vực "Sức khoẻ thể chất"):
 - KI2: Ngủ ≥7 giờ/đêm (ngưỡng: 7, current: 5.5 → critical)
 - KI3: Khám sức khoẻ định kỳ (ngưỡng: 1 lần/6 tháng)
 
-Status logic:
-- `healthy`: current ≥ ngưỡng
-- `warning`: 80% × ngưỡng ≤ current < ngưỡng
-- `critical`: current < 80% × ngưỡng
+Công thức Status (`healthy` / `warning` / `critical`): xem canonical `../../okr-shared/references/metrics.md` ("Key Indicator Status"). KHÔNG chép lại ở đây để tránh lệch.
 
 ## Phân biệt Project vs Ongoing
 

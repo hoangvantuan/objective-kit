@@ -24,7 +24,7 @@ description: "Phân tích trạng thái OKR read-only: đọc .okr/, tính metri
 | File           | Đọc gì                                | Ghi chú                                                 |
 | -------------- | ------------------------------------- | ------------------------------------------------------- |
 | `objective.md` | Frontmatter + KR/KI bảng              | Loại mục tiêu (project/ongoing) quyết định metrics      |
-| `plan.md`      | Frontmatter + Roadmap body            | Counters: total, completed, in_progress, blocked        |
+| `plan.md`      | Frontmatter + Roadmap body + `## Practices` (Ongoing) | Counters + practices streak (render dashboard Ongoing)  |
 | `resources.md` | Frontmatter                           | Capacity, skills, tools                                 |
 | `actions/*.md` | Frontmatter only                      | Dùng Bash `ls` rồi đọc từng file, skip body trừ khi cần |
 | `inbox/`       | Count + đọc frontmatter pending items | Compute staleness on-the-fly                            |
@@ -72,24 +72,91 @@ Format mỗi gợi ý: `→ AXXX: Title (lý do ≤10 từ)`
 
 ## Output format
 
-Trả về phân tích cấu trúc:
+Trả về phân tích cấu trúc. **Dashboard layout dưới đây là canonical**: harness (dashboard mặc định) và `okr-track` (khi chạy độc lập, không qua analyze) đều render theo đây. KHÔNG định nghĩa layout song song ở nơi khác.
+
+Cấu trúc tổng:
 
 ```
 ## Dashboard
-[Objective summary 1 dòng]
-[KR/KI progress bảng: ID | Tên | Current | Target | % | Status | Trend]
-[Action summary: X done / Y total, Z blocked, W overdue]
+[Layout theo loại mục tiêu — xem "Dashboard layout" bên dưới]
 
 ## Issues (nếu có)
 [Severity] [Type]: [description]
   Evidence: [file:line hoặc giá trị]
   Recommendation: [hành động, áp dụng qua: okr-init/okr-plan/okr-track]
 
+## Root cause (chỉ mode deep)
+[Mỗi issue cần cải thiện: nhân gốc vs duyên, tách triệu chứng]
+
 ## Priority hôm nay
 → AXXX: Title (lý do ≤10 từ)
 
 ## Recommendations (nếu có issues)
 [Đề xuất, chỉ rõ skill đích + mode]
+```
+
+### Dashboard layout — Project
+
+- Mở đầu: 1 câu tổng quan sức khoẻ.
+- Nhắc review: 1 dòng (first match, `../okr-shared/references/metrics.md` "Nhắc review").
+- Period overdue (`status = active`): block cảnh báo ĐẦU dashboard (trước Key Results).
+- **Active actions per KR**: lọc `key_result: KR<N>`, liệt kê active IDs (blocked + doing trước, pending sau). >5 active → 3 đầu + "(+N nữa)".
+
+```
+Dashboard: [Tên Objective]
+[Câu tổng quan]
+[Nhắc review nếu có]
+Period: [start] > [end] ([X]% thời gian đã dùng)
+
+Key Results
+  KR1: ████░░░░░░ 40/100 (40%) > on-track
+    Actions: 3 done | 2 doing | 1 blocked | 0 pending
+    Active: A001 (doing), A003 (doing), A005 (blocked: [lý do])
+
+Actions: N tổng | X done | Y doing | Z blocked | W pending
+Tốc độ: [X] done/tuần (kế hoạch: [Y])
+Inbox: [N] items chưa xử lý
+
+Cần chú ý
+  - [issues: blocked, overdue, at-risk]
+```
+
+Block period overdue (render trước phần còn lại khi overdue, chi tiết hành vi: metrics.md "Period Overdue"):
+
+```
+⚠️ Period đã qua [N] ngày
+End date [date], hôm nay [date]. Status vẫn `active`.
+
+KR chưa achieved:
+  - KR1: [current]/[target] ([%]) — còn thiếu [N]
+
+Đề xuất:
+  - Extend end_date (chạy `okr-init` mode update-objective)
+  - Đổi status sang completed/cancelled
+
+Dashboard: [phần còn lại]
+```
+
+### Dashboard layout — Ongoing
+
+- Mở đầu: 1 câu tổng quan.
+- Nhắc review: 1 dòng (first match, metrics.md "Nhắc review").
+- **Streak**: hiển thị `current_streak` cạnh KI (từ `plan.md` `## Practices`, match `ki_link`). ≥4 tuần kèm 🔥. Mốc 7, 30, 100 tuần → ghi nhận.
+
+```
+Dashboard: [Tên Objective]
+[Câu tổng quan]
+[Nhắc review nếu có]
+Review cycle: [weekly] (lần cuối: [date])
+
+Key Indicators
+  KI1: [tên]  ≥[ngưỡng]  current: [N]  [status]  streak: [N] tuần
+
+Trend: [improving/stable/declining]
+Inbox: [N] items
+
+Cần chú ý
+  - [KI dưới ngưỡng, streak milestones]
 ```
 
 ## Mode deep (phân tích sâu)

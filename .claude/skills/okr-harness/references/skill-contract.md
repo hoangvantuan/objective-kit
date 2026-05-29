@@ -18,9 +18,7 @@ Mô tả input/output từng skill khi orchestrator chạy inline. Đây là "h�
 
 ```markdown
 ## Dashboard
-[Objective summary 1 dòng]
-[KR/KI progress bảng: ID | Tên | Current | Target | % | Status | Trend]
-[Action summary: X done / Y total, Z blocked, W overdue]
+[Layout canonical ở okr-analyze SKILL "Dashboard layout" — Project/Ongoing, nhắc review, period overdue, streak]
 
 ## Issues (nếu có)
 [Severity] [Type]: [description]

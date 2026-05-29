@@ -112,7 +112,7 @@ Field meanings:
 Quy tắc:
 - ID practice (`P1`, `P2`...) duy nhất trong file. Không reuse khi xoá.
 - 1 practice link tới đúng 1 KI. 1 KI có thể có nhiều practices.
-- `current_streak` được update bởi `okr-track` Ongoing flow (Phase 4a Ongoing step 4 "Update practice streak"): với mỗi practice, agent hỏi "Tuần vừa rồi đạt target chưa? (y/n/skip)". `y` → +1, `n` → reset 0, `skip` → giữ nguyên. Track ghi đè `current_streak` trong `plan.md` body khi user confirm.
+- `current_streak` được update bởi `okr-track` Ongoing flow (`flow-light.md` Ongoing step 4 "Update practice streak"): với mỗi practice, agent hỏi "Tuần vừa rồi đạt target chưa? (y/n/skip)". `y` → +1, `n` → reset 0, `skip` → giữ nguyên. Track ghi đè `current_streak` trong `plan.md` body khi user confirm.
 - `okr-plan` mode `update` thêm/sửa/xoá Practices structure (frequency, target_count, description, ki_link). KHÔNG sửa `current_streak`.
 
 ## actions/archive/

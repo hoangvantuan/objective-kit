@@ -16,20 +16,21 @@ Chạy inline, thao tác nhẹ: chỉ phân loại + ghi inbox.
 
 ## Schema
 
-Xem `references/data-format.md` cho inbox file format.
+Canonical đầy đủ ở `references/data-format.md`. Frontmatter (khớp canonical):
 
 ```yaml
 ---
-type: {type}
+captured_at: "YYYY-MM-DDTHH:mm"   # thời điểm user gọi capture (có giờ), không phải lúc ghi file
+type: action | blocker | resource | thought
+title: "string"
+description: "string (1-2 câu)"
+related_kr: KR1 | null            # gợi ý, track verify lại
+related_action: A005 | null       # gợi ý, track verify lại
 status: pending
-captured_at: {YYYY-MM-DD}
-related_kr: {nếu xác định được}
-related_action: {nếu xác định được}
-tags: []
 ---
-
-{Nội dung user nhập}
 ```
+
+Body: `## Mô tả` (agent viết, actionable) + `## Context gốc` (nguyên văn user, để trace). Chi tiết: `references/data-format.md`.
 
 ## Quy tắc
 

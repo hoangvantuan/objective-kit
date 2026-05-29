@@ -22,6 +22,8 @@ Quản lý 2 SOT: `plan.md` và `actions/`.
 | plan.md | Milestones, counters (khi tạo plan) |
 | actions/*.md | title, deadline, deps, effort, priority, DoD, quality criteria, notes, external_ids |
 
+> Subset của bảng canonical `../okr-shared/references/sot-ownership.md`. Sửa canonical trước, bảng này theo sau.
+
 ## Điều kiện tiên quyết
 
 - `objective.md` tồn tại. Thiếu → cần init trước.

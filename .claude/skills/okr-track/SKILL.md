@@ -31,6 +31,7 @@ Shared logic (dashboard, mode detection, rules): `references/flow-shared.md`
 | inbox/*.md       | Status transition (pending → processed/discarded) |
 | actions/archive/ | Move done actions                                 |
 
+> Subset của bảng canonical `../okr-shared/references/sot-ownership.md`. Sửa canonical trước, bảng này theo sau.
 
 **KHÔNG được sửa**: Objective text, KR target, action title/deadline/deps. Đề xuất → áp dụng qua `okr-init`/`okr-plan` (pre-confirmed).
 

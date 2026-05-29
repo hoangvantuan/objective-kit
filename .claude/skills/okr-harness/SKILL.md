@@ -28,10 +28,8 @@ Entry point quản lý mục tiêu OKR. Đọc state, route, **chạy skill inli
 if .okr/ không tồn tại:
     → chạy okr-init mode new (inline)
     return
-
-if _workspace/ tồn tại:
-    if user yêu cầu sửa cụ thể → partial re-run (chỉ chạy skill liên quan)
-    if user input mới → rename _workspace/ → _workspace_prev/, new run
+else:
+    → Phase 1 (đọc state + xác định intent)
 ```
 
 ## Phase 1: Đọc state + xác định intent
@@ -124,11 +122,7 @@ Chạy `okr-track` với mode tương ứng (inbox-only / closure / trace).
 
 ## Nhắc review
 
-Khi hiển thị dashboard, kiểm tra:
-
-- `last_track_date` > 3 ngày → nhắc "Chưa track 3 ngày"
-- `last_review_date` > 14 ngày → nhắc "Nên review sâu"
-- Period overdue → cảnh báo đầu dashboard
+Khi hiển thị dashboard, áp quy tắc "Nhắc review" canonical ở `okr-shared/references/metrics.md` (first match, phân Project/Ongoing). Period overdue (Project) là cảnh báo riêng, ưu tiên cao hơn, render block đầu dashboard. KHÔNG định nghĩa ngưỡng riêng ở đây để tránh lệch với analyze/track.
 
 ## Test scenarios
 

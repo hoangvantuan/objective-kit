@@ -22,6 +22,8 @@ Quản lý 2 SOT: `objective.md` và `resources.md`.
 | objective.md | Objective text, KR/KI target/baseline/ngưỡng, period, status |
 | resources.md | Solo Profile (capacity, skills), tool, tài liệu, ngân sách |
 
+> Subset của bảng canonical `../okr-shared/references/sot-ownership.md`. Sửa canonical trước, bảng này theo sau.
+
 ## Nguyên tắc
 
 - Hỏi từng câu một, không hỏi hàng loạt.

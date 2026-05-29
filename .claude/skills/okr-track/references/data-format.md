@@ -75,7 +75,7 @@ type: [tracking]          # array, giá trị hợp lệ: tracking | review | cl
 ### Progress fields (track mode `light` hoặc `deep` được ghi đè)
 
 `.okr/objective.md`:
-- Bảng KR: cột `Current`, `Status` (in-progress/achieved/missed)
+- Bảng KR: cột `Current`, `Status` (pending/in-progress/achieved/missed; compute theo metrics.md "KR Status auto-compute")
 - Frontmatter `status` (chỉ ở mode `closure`, qua delegate sang `okr-init` để xác nhận)
 
 `.okr/plan.md`:
@@ -139,7 +139,7 @@ Mục đích: deep luôn nắm (a) xu hướng dài hạn qua 3 review trước,
 
 Sync 2 chiều giữa OKR action files và tool bên thứ 3 (Things 3, Notion, Jira...). Chỉ chạy nếu action có field `external_ids` (xem `../../okr-plan/references/data-format.md`).
 
-### Pull (trước tracking, Phase 4a/4b)
+### Pull (trước tracking; flow-light step 1, flow-deep Bước 1)
 
 1. Đọc tất cả active action files có `external_ids` trong frontmatter.
 2. Với mỗi tool trong `external_ids`:
@@ -150,7 +150,7 @@ Sync 2 chiều giữa OKR action files và tool bên thứ 3 (Things 3, Notion, 
    - User confirm → update action status trong OKR (progress field, track tự xử lý).
 4. Tool không có skill/MCP hoặc cột "Cách dùng" rỗng → skip, log cảnh báo.
 
-### Push (sau tracking, Phase 4a/4b)
+### Push (sau tracking; flow-light step 3b, flow-deep Bước 1)
 
 1. Với mỗi action vừa thay đổi status + có `external_ids`:
    a. Tra integration method từ `resources.md`.

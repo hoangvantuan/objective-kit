@@ -49,16 +49,16 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 
   - **Re-render bảng Roadmap**: đọc lại tất cả `actions/*.md` (không archive), sinh lại toàn bộ bảng per-milestone trong `plan.md` body. Format xem `okr-shared/references/schemas.md` section "Roadmap format".
 
-6. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
+6. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem `flow-inbox.md`).
 7. Đề xuất next action: chọn theo thuật toán [action-priority.md](../../okr-shared/references/action-priority.md) với `max_items=3`, `horizon_days=7`. Mỗi gợi ý kèm 1 lý do ≤10 từ.
 
 **Ongoing type:**
 
 1. Hiển thị KI hiện tại (tên, ngưỡng, current, status).
 2. Hỏi user update từng KI: "KI1 (Tập thể dục, hiện tại: 2, ngưỡng: ≥3). Tuần này bao nhiêu?"
-3. Tính status mới theo logic: healthy (≥ ngưỡng), warning (< ngưỡng, chênh < 20%), critical (< 80% ngưỡng). Xem `../../okr-shared/references/metrics.md`.
+3. Tính status mới (healthy / warning / critical) theo công thức canonical ở `../../okr-shared/references/metrics.md` ("Key Indicator Status"). KHÔNG chép ngưỡng ở đây.
 4. **Update practice streak**: đọc `plan.md` body section `## Practices`.
-  - **Fallback (Minor2):** nếu `plan.md` không tồn tại HOẶC body không có heading `## Practices` HOẶC section rỗng (không có `### PN:`), in 1 dòng `(Ongoing chưa có practices. Skip step 4. Tạo practices qua /okr plan để track streak.)` rồi đi tiếp step 5. KHÔNG báo lỗi.
+  - **Fallback:** nếu `plan.md` không tồn tại HOẶC body không có heading `## Practices` HOẶC section rỗng (không có `### PN:`), in 1 dòng `(Ongoing chưa có practices. Skip step 4. Tạo practices qua /okr plan để track streak.)` rồi đi tiếp step 5. KHÔNG báo lỗi.
   - Với mỗi practice (`### PN: <Tên>` kèm field `frequency`, `target_count`, `current_streak`, `ki_link`):
     - Tính chu kỳ vừa qua dựa trên `frequency` (vd `weekly` = tuần vừa rồi, `daily` = hôm qua). Hỏi: "Practice **P1: Tập thể dục** (target ≥3 lần/tuần, streak hiện tại: 2). Tuần vừa rồi đạt target chưa? (y = đạt → streak +1 / n = không đạt → reset streak về 0 / skip = bỏ qua không update)".
     - User trả lời `y` → `current_streak += 1`. `n` → `current_streak = 0`. `skip` → giữ nguyên.
@@ -67,7 +67,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 6. CONFIRM trước khi ghi (tương tự Project: ≤2 field → 1 dòng, ≥3 field → bảng). Bao gồm cả `current_streak` thay đổi vào diff list.
 7. Áp dụng: ghi đè `objective.md` (KI current, status), ghi đè `plan.md` body section `## Practices` (chỉ field `current_streak` cho practice nào thay đổi) + frontmatter `last_track_date: today`. Nếu có actions → cập nhật `plan.md` counters + `actions/*.md`.
 8. Append log: ngoài KI/action, ghi cả practice streak thay đổi (vd `## Thay đổi → P1.current_streak: 2 > 3`).
-9. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem Phase 5).
+9. **Xử lý inbox** (nếu có items pending): chạy Inbox Processing Flow (xem `flow-inbox.md`).
 10. Đề xuất:
   - Nếu KI warning/critical → gợi ý tạo action cải thiện qua `/okr plan`.
   - Nếu practice streak vừa reset về 0 → cảnh báo "Practice P1 đã reset streak, KI1 có thể giảm tuần tới. Cân nhắc điều chỉnh practice (giảm target_count, đổi thời gian) qua `/okr plan update`".
