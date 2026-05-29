@@ -1,0 +1,24 @@
+---
+name: okr-shared
+description: "Domain knowledge dùng chung cho mọi OKR skill: SOT ownership, schemas (Roadmap, Inbox Aging, Archive), Quality Gate, delegate protocol, action priority algo. Load khi cần tra cứu quy tắc chung."
+---
+
+# OKR Shared: Domain Knowledge dùng chung
+
+Chứa quy tắc và schema áp dụng cho mọi skill OKR. Không chạy độc lập. Đọc khi cần.
+
+## Nội dung
+
+| File | Mô tả | Skill dùng |
+|------|-------|------------|
+| `references/schemas.md` | Roadmap table format, Inbox Aging, Inbox type → Delegate mapping, Archive Rules | `okr-plan` (render Roadmap), `okr-track` (archive, inbox) |
+| `references/sot-ownership.md` | Bảng phân vai field: skill nào được sửa gì | Mọi skill (check trước ghi) |
+| `references/quality-gate.md` | 3 câu check: đủ cụ thể? giả định ẩn? mâu thuẫn? | `okr-init`, `okr-plan` (trước mỗi follow-up) |
+| `references/delegate-protocol.md` | Pre-confirmed flow + reason display khi áp dụng thay đổi cấu trúc | `okr-track` (gửi), `okr-init`/`okr-plan` (nhận) |
+| `references/action-priority.md` | Thuật toán chọn action ưu tiên (first-match, top N) | `okr-analyze` (xếp priority), `okr-track` (đề xuất next) |
+
+## Khi nào đọc
+
+- **okr-analyze**: `action-priority.md` khi xếp priority. `schemas.md` khi cần hiểu Roadmap format.
+- **okr-init / okr-plan**: `quality-gate.md` trước mỗi follow-up. `schemas.md` khi render Roadmap. `sot-ownership.md` khi check quyền ghi. `delegate-protocol.md` khi nhận pre-confirmed payload.
+- **okr-track**: `delegate-protocol.md` khi đề xuất thay đổi cấu trúc. `schemas.md` khi archive + xử lý inbox. `action-priority.md` khi đề xuất next action. `sot-ownership.md` khi check quyền ghi.

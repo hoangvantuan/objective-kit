@@ -1,0 +1,47 @@
+---
+name: okr-track
+description: "Cập nhật progress, status action, review sâu, xử lý inbox, closure, trace, external sync. Load khi cần light, deep, inbox-only, closure, trace."
+---
+
+# OKR Track: Track + Review + Inbox Processing
+
+Ghi progress fields, log, archive. KHÔNG sửa cấu trúc.
+
+## Modes
+
+| Mode | Trigger | Flow chi tiết |
+|------|---------|---------------|
+| `light` | Daily tracking | `references/flow-light.md` |
+| `deep` | Review sâu, milestone, at-risk | `references/flow-deep.md` |
+| `inbox-only` | Xử lý inbox, skip progress | `references/flow-inbox.md` |
+| `closure` | Tổng kết khi hết period | `references/flow-closure.md` |
+| `trace` | Xem lại history/log/archive | `references/flow-trace.md` |
+
+Shared logic (dashboard, mode detection, rules): `references/flow-shared.md`
+
+## SOT quyền ghi
+
+| File | Fields |
+|------|--------|
+| objective.md | KR.current, KI.current |
+| plan.md | counters, last_track_date, last_review_date |
+| actions/*.md | status, `## Output/Deliverable` section |
+| log/*.md | Append entries |
+| inbox/*.md | Status transition (pending → processed/discarded) |
+| actions/archive/ | Move done actions |
+
+**KHÔNG được sửa**: Objective text, KR target, action title/deadline/deps. Đề xuất → áp dụng qua `okr-init`/`okr-plan` (pre-confirmed).
+
+## Nguyên tắc
+
+- Dashboard TRƯỚC khi hỏi update.
+- Confirm trước ghi. Light ≤2 field → 1 dòng, ≥3 → bảng.
+- Deep: root cause ≥3 lần "tại sao?". Đề xuất, không tự sửa cấu trúc.
+- Append-only log. Không ghi đè.
+- External sync: pull trước, confirm, push sau. Fail → skip, không block.
+- Cuối flow đề xuất next action (xem `okr-shared` action-priority).
+
+## Schema
+
+- `references/data-format.md`: schema log, progress fields, inbox processing rules
+- `references/metrics.md`: KR%, KI status, trend, period overdue

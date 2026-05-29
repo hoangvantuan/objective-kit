@@ -141,7 +141,7 @@ Mục đích: deep luôn nắm (a) xu hướng dài hạn qua 3 review trước,
 
 ## External Sync (optional)
 
-Sync 2 chiều giữa OKR action files và tool bên thứ 3 (Things 3, Notion, Jira...). Chỉ chạy nếu action có field `external_ids` (xem `skills/okr-plan/references/data-format.md`).
+Sync 2 chiều giữa OKR action files và tool bên thứ 3 (Things 3, Notion, Jira...). Chỉ chạy nếu action có field `external_ids` (xem `data-format-plan.md`).
 
 ### Pull (trước tracking, Phase 4a/4b)
 
