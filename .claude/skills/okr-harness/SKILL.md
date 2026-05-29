@@ -7,19 +7,17 @@ description: "Quản lý mục tiêu OKR (skill-only, chạy inline): dashboard,
 
 Entry point quản lý mục tiêu OKR. Đọc state, route, **chạy skill inline**, tổng hợp kết quả.
 
-**Kiến trúc skill-only**: KHÔNG spawn sub-agent, KHÔNG dùng agent team. Cùng một agent đọc state rồi đọc skill phù hợp và thực thi theo flow của skill đó. Chuyển giữa các skill = đọc tiếp SKILL.md kế tiếp. Lý do: harness chạy được ở bất kỳ project Claude Code nào, chỉ cần copy `.claude/skills/`, không lệ thuộc runtime agent team.
-
 ## Bản đồ skill
 
-| Skill         | Vai trò                                                       | Ghi          |
-| ------------- | ------------------------------------------------------------- | ------------ |
+| Skill         | Vai trò                                                                            | Ghi          |
+| ------------- | ---------------------------------------------------------------------------------- | ------------ |
 | `okr-analyze` | Phân tích read-only: metrics, issues, priority, dashboard, trace (xem lại history) | Không        |
-| `okr-init`    | Tạo/sửa objective, KR/KI, resources                           | Có           |
-| `okr-plan`    | Tạo/sửa plan, milestones, actions                             | Có           |
-| `okr-track`   | Track progress, deep review, inbox, closure, sync             | Có           |
-| `okr-capture` | Ghi nhanh vào inbox                                           | Có (inbox)   |
-| `okr-retro`   | Rút bài học từ phiên, ghi `.okr/lessons/` (record-only)       | Có (lessons) |
-| `okr-shared`  | Quy tắc chung: SOT, schemas, quality gate, delegate, priority | Không        |
+| `okr-init`    | Tạo/sửa objective, KR/KI, resources                                                | Có           |
+| `okr-plan`    | Tạo/sửa plan, milestones, actions                                                  | Có           |
+| `okr-track`   | Track progress, deep review, inbox, closure, sync                                  | Có           |
+| `okr-capture` | Ghi nhanh vào inbox                                                                | Có (inbox)   |
+| `okr-retro`   | Rút bài học từ phiên, ghi `.okr/lessons/` (record-only)                            | Có (lessons) |
+| `okr-shared`  | Quy tắc chung: SOT, schemas, quality gate, delegate, priority                      | Không        |
 
 
 ## Phase 0: Context check
@@ -176,6 +174,7 @@ Thay cho cơ chế tự cải tiến cũ. Việc rút bài học do skill `okr-r
 KHÔNG tự chạy. User đồng ý hoặc tự gõ "rút bài học" → chạy `okr-retro` inline.
 
 `okr-retro` ghi 2 loại bài học vào `.okr/lessons/`:
+
 - **Loại A (cải tiến skill)**: hàng đợi, user port thủ công về repo gốc `objective-kit` để cải tiến harness.
 - **Loại B (project cụ thể)**: tri thức tại chỗ, auto-load mỗi phiên qua index.
 
@@ -185,5 +184,3 @@ Record-only: `okr-retro` KHÔNG tự sửa file skill, KHÔNG ghi CHANGELOG. Chi
 
 - I/O từng skill: `references/skill-contract.md`
 - Sơ đồ luồng: `references/flows.md`
-
-  
