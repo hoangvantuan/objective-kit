@@ -97,6 +97,28 @@ next_actions:                   # top 3
     reason: string
 ```
 
+## okr-retro
+
+### Input
+
+| Param | Bắt buộc | Mô tả |
+|-------|---------|-------|
+| okr_path | Có | Đường dẫn `.okr/` |
+| trigger | Không | "user" (chủ động) hoặc "nudge" (gợi ý cuối flow) |
+
+### Output
+
+```yaml
+status: success | nothing       # nothing = không có bài học đáng ghi
+lessons_added:                  # bài mới
+  - id: string                  # Sxxx | Pxxx
+    type: skill | project
+    essence: string
+lessons_updated: [Sxxx, Pxxx]   # bài cập nhật (dedup)
+lessons_obsoleted: [Pxxx]       # bài đánh dấu lỗi thời
+pending_skill_lessons: number   # loại A pending, nhắc port về repo gốc
+```
+
 ## Chuyển skill inline (thay cho dispatch)
 
 Khi một flow cần kết quả của skill khác, cùng agent đọc tiếp SKILL.md kia và thực thi:
