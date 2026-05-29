@@ -1,6 +1,6 @@
 ---
 name: okr-harness
-description: "Quản lý mục tiêu OKR (skill-only, chạy inline): dashboard, init, plan, track, review, inbox, capture, closure, trace. Trigger khi user nhắc: OKR, mục tiêu, dự án, kế hoạch, tracking, review sâu, tài nguyên, capacity, inbox, capture, ghi nhanh, dashboard, tiến độ, quá hạn, at-risk, blocker, tổng kết. Cũng trigger khi: 'chạy lại', 'cập nhật tiến độ', 'xem tiến độ', 'hôm nay làm gì', 'review mục tiêu', 'sửa plan'. Gọi trực tiếp: /okr-harness."
+description: "Quản lý mục tiêu OKR (skill-only, chạy inline): dashboard, init, plan, track, review, inbox, capture, closure, trace. Trigger khi user nhắc: OKR, mục tiêu, dự án, kế hoạch, tracking, review sâu, tài nguyên, capacity, inbox, capture, ghi nhanh, dashboard, tiến độ, quá hạn, at-risk, blocker, tổng kết, rút bài học, retro, bài học. Cũng trigger khi: 'chạy lại', 'cập nhật tiến độ', 'xem tiến độ', 'hôm nay làm gì', 'review mục tiêu', 'sửa plan'. Gọi trực tiếp: /okr-harness."
 ---
 
 # OKR Harness: Orchestrator (skill-only)
@@ -11,14 +11,15 @@ Entry point quản lý mục tiêu OKR. Đọc state, route, **chạy skill inli
 
 ## Bản đồ skill
 
-| Skill         | Vai trò                                                       | Ghi        |
-| ------------- | ------------------------------------------------------------- | ---------- |
-| `okr-analyze` | Phân tích read-only: metrics, issues, priority, dashboard     | Không      |
-| `okr-init`    | Tạo/sửa objective, KR/KI, resources                           | Có         |
-| `okr-plan`    | Tạo/sửa plan, milestones, actions                             | Có         |
-| `okr-track`   | Track progress, deep review, inbox, closure, trace, sync      | Có         |
-| `okr-capture` | Ghi nhanh vào inbox                                           | Có (inbox) |
-| `okr-shared`  | Quy tắc chung: SOT, schemas, quality gate, delegate, priority | Không      |
+| Skill         | Vai trò                                                       | Ghi          |
+| ------------- | ------------------------------------------------------------- | ------------ |
+| `okr-analyze` | Phân tích read-only: metrics, issues, priority, dashboard     | Không        |
+| `okr-init`    | Tạo/sửa objective, KR/KI, resources                           | Có           |
+| `okr-plan`    | Tạo/sửa plan, milestones, actions                             | Có           |
+| `okr-track`   | Track progress, deep review, inbox, closure, trace, sync      | Có           |
+| `okr-capture` | Ghi nhanh vào inbox                                           | Có (inbox)   |
+| `okr-retro`   | Rút bài học từ phiên, ghi `.okr/lessons/` (record-only)       | Có (lessons) |
+| `okr-shared`  | Quy tắc chung: SOT, schemas, quality gate, delegate, priority | Không        |
 
 
 ## Phase 0: Context check
@@ -40,13 +41,14 @@ if _workspace/ tồn tại:
 Orchestrator tự đọc nhanh (không gọi skill) để xác định state:
 
 ```
-objective.md   → type (project/ongoing), status, period
-plan.md        → có/không, counters
-actions/       → count active, có overdue/blocked?
-inbox/         → count pending
+objective.md      → type (project/ongoing), status, period
+plan.md           → có/không, counters
+actions/          → count active, có overdue/blocked?
+inbox/            → count pending
+lessons/index.md  → đọc TOÀN BỘ (bài học, auto-load mỗi phiên)
 ```
 
-Chỉ đọc frontmatter. Không đọc body, log, archive.
+Chỉ đọc frontmatter (trừ `lessons/index.md` đọc toàn bộ vì nhỏ, chứa câu lõi bài học). Không đọc body action, log, archive, hay file detail bài học (load on-demand khi cần).
 
 ### Intent routing
 
@@ -64,6 +66,7 @@ Chỉ đọc frontmatter. Không đọc body, log, archive.
 |                         | "inbox / xử lý inbox"                  | `okr-track` inbox-only                |
 |                         | "tổng kết / closure / kết thúc"        | `okr-track` closure                   |
 |                         | "trace / history / xem lại"            | `okr-track` trace                     |
+|                         | "rút bài học / tổng kết phiên / retro" | `okr-retro`                           |
 
 
 **Collision**: state gợi ý khác user intent → ưu tiên user intent + xác nhận lại.
@@ -107,6 +110,7 @@ Chạy `okr-track` với mode tương ứng (inbox-only / closure / trace).
 
 - Gom kết quả các bước.
 - Render tóm tắt cho user: thay đổi gì, next step gì.
+- Gợi ý rút bài học nếu flow có thực chất (xem `## Rút bài học`).
 
 ## Error handling
 
@@ -161,63 +165,21 @@ Khi hiển thị dashboard, kiểm tra:
 2. Báo cụ thể file/field thiếu
 3. Tiếp tục track với phần dữ liệu có, ghi chú phần thiếu trong tóm tắt
 
-## Tự cải tiến
+## Rút bài học
 
-Sau mỗi phiên (trừ capture, trace đơn giản), hỏi user:
+Thay cho cơ chế tự cải tiến cũ. Việc rút bài học do skill `okr-retro` đảm nhiệm, **user chủ động**.
 
-1. "Kết quả có cần cải thiện gì không?"
-2. "Workflow có chỗ nào vướng không?"
+**Gợi ý cuối flow**: sau khi tổng hợp (Phase 3), với flow có thực chất (track, deep review, init, plan, inbox; trừ dashboard/capture/trace đơn giản), thêm đúng 1 dòng:
 
-Không ép trả lời. Có feedback thì phân loại:
+> "Muốn rút bài học phiên này? (chạy okr-retro)"
 
-| Feedback                | Sửa ở đâu                                |
-| ----------------------- | ---------------------------------------- |
-| Kết quả skill kém       | SKILL.md hoặc reference của skill đó     |
-| Flow thiếu/thừa bước    | Skill reference `flow-*.md`              |
-| Thiếu/thừa skill        | Tạo/gộp skill + cập nhật routing Phase 1 |
-| Routing sai             | Intent routing table ở Phase 1           |
-| Trigger không bắt       | Skill description frontmatter            |
-| Data format thiếu field | Skill reference `data-format.md`         |
-| Quy tắc chung sai       | `okr-shared/references/`                 |
+KHÔNG tự chạy. User đồng ý hoặc tự gõ "rút bài học" → chạy `okr-retro` inline.
 
+`okr-retro` ghi 2 loại bài học vào `.okr/lessons/`:
+- **Loại A (cải tiến skill)**: hàng đợi, user port thủ công về repo gốc `objective-kit` để cải tiến harness.
+- **Loại B (project cụ thể)**: tri thức tại chỗ, auto-load mỗi phiên qua index.
 
-**Tự đề xuất** (không chờ user):
-
-- Cùng feedback lặp ≥2 lần → đề xuất sửa SKILL.md
-- Skill flow lỗi lặp cùng pattern → đề xuất sửa flow hoặc tách bước
-- User bypass harness (tự sửa `.okr/`) → đề xuất thêm mode hoặc rút gọn flow
-- Skill không trigger → đề xuất mở rộng description
-
-Đề xuất 1 câu cụ thể. User đồng ý thì sửa ngay.
-
-**Nguyên tắc cải tiến:**
-
-- Tổng quát hoá: feedback 1 case → rule chung. Không overfit.
-- Nhỏ và verify: sửa 1 thứ, test, rồi tiếp.
-- Kiểm tra consistency sau sửa. Cùng concept nói giống nhau ở mọi file.
-
-## Ghi nhận thay đổi
-
-Mỗi lần cải tiến skill (từ feedback hoặc tự đề xuất), ghi vào `CHANGELOG.md`:
-
-```markdown
-| Ngày | Thay đổi | Đối tượng | Lý do |
-|------|----------|-----------|-------|
-| YYYY-MM-DD | Mô tả ngắn | File/skill bị sửa | Feedback/lý do |
-```
-
-Nếu `CHANGELOG.md` chưa tồn tại, tạo mới:
-
-```markdown
-# OKR Harness Changelog
-
-Lịch sử cải tiến harness tại project này.
-
-| Ngày | Thay đổi | Đối tượng | Lý do |
-|------|----------|-----------|-------|
-```
-
-File này theo dõi harness tiến hoá theo hướng nào, phòng regression.
+Record-only: `okr-retro` KHÔNG tự sửa file skill, KHÔNG ghi CHANGELOG. Chi tiết: `okr-retro` SKILL.md.
 
 ## Tham khảo
 
