@@ -19,6 +19,8 @@ description: "Phân tích trạng thái OKR read-only: đọc .okr/, tính metri
 
 ## Đọc state
 
+**Tái dùng preload**: khi chạy qua orchestrator (mặc định), `objective.md`/`plan.md` frontmatter + actions count ĐÃ nằm trong context từ `okr-harness` Phase 1. KHÔNG Read lại các file đó; chỉ đọc thêm phần body cần để render (KR/KI bảng, Roadmap body, `## Practices` Ongoing, actions frontmatter). Chạy ĐỘC LẬP (không qua orchestrator, data chưa có trong context) → đọc đầy đủ bảng dưới. Nhất quán với `okr-track` `flow-shared.md` Phase 1.
+
 Đọc song song (nhiều Read call cùng lúc):
 
 | File           | Đọc gì                                | Ghi chú                                                 |

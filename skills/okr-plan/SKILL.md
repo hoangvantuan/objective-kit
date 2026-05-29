@@ -37,6 +37,7 @@ Quản lý 2 SOT: `plan.md` và `actions/`.
 - Action mơ hồ ("Nghiên cứu thêm" không output) → CẤM.
 - Effort xl → BẮT BUỘC Checkpoints hoặc tách.
 - Confirm bảng trước ghi. Render Roadmap sau ghi.
+- Lessons: trước khi đề xuất/ghi, đảm bảo `.okr/lessons/index.md` đã nạp + áp dụng lesson liên quan (xem `okr-shared` skill "Auto-load lessons"). Quan trọng khi chạy lẻ, không qua `okr-harness`.
 
 ## Schema
 

@@ -145,5 +145,6 @@ Không cần sửa `CLAUDE.md` của project đích. Skill description của `ok
 7. Đợt 10: Gom logic phân tích về `okr-shared` - dời `metrics.md` thành canonical dùng chung, okr-analyze/okr-track trỏ công thức chung thay vì chép, chống drift công thức.
 8. Đợt 11: Layer lessons - thêm skill `okr-retro` rút bài học (2 loại: cải tiến skill / project), auto-load `.okr/lessons/index.md` mỗi phiên. Gỡ cơ chế "Tự cải tiến" + ghi CHANGELOG khỏi `okr-harness`.
 9. Đợt 12: Review drift tầng sâu (prompt-master). P0 done-count: done rate lấy từ counter `plan.md`, KR% cách 2 chỉ deep/closure, thêm "Tốc độ hoàn thành" (deep/closure). Thêm `action.completed_date`. Guard `paused` ở track. Chuyển mode `trace` từ `okr-track` sang `okr-analyze` (read-only về đúng nhà). Closure bỏ "## Lessons", gợi ý `okr-retro`. Wire "Áp dụng lessons". Bảng phân loại type cho capture. Sửa 4 tham chiếu chết + dọn em-dash.
+10. Đợt 13: Tối ưu load file. `okr-analyze` tái dùng SOT đã preload từ orchestrator (không Read trùng `objective.md`/`plan.md`, nhất quán với `okr-track` flow-shared Phase 1). Guard lessons hạ xuống SKILL của `okr-init`/`okr-plan`/`okr-track`: đảm bảo `lessons/index.md` được nạp + áp dụng khi chạy lẻ không qua harness (trước chỉ ở `okr-shared` SKILL mà skill khác không bắt buộc đọc).
 
 Chi tiết thay đổi: xem `CHANGELOG.md`.

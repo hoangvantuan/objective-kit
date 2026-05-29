@@ -29,6 +29,7 @@ Quản lý 2 SOT: `objective.md` và `resources.md`.
 - Hỏi từng câu một, không hỏi hàng loạt.
 - BẮT BUỘC confirm bảng trước khi ghi file.
 - Quality Gate 3 câu trước mỗi follow-up (xem `okr-shared` skill).
+- Lessons: trước khi đề xuất/ghi, đảm bảo `.okr/lessons/index.md` đã nạp + áp dụng lesson liên quan (xem `okr-shared` skill "Auto-load lessons"). Quan trọng khi chạy lẻ, không qua `okr-harness`.
 - Solo only: 1 user, 1 objective.
 - Đề xuất + lý do, user quyết.
 

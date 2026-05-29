@@ -38,6 +38,7 @@ Shared logic (dashboard, mode detection, rules): `references/flow-shared.md`
 
 - Dashboard TRƯỚC khi hỏi update.
 - Confirm trước ghi. Light ≤2 field → 1 dòng, ≥3 → bảng.
+- Lessons: trước khi đề xuất điều chỉnh (deep), đảm bảo `.okr/lessons/index.md` đã nạp + áp dụng lesson liên quan (xem `okr-shared` skill "Auto-load lessons"). Quan trọng khi chạy lẻ, không qua `okr-harness`.
 - Deep: trình bày + tinh chỉnh root cause (analyze deep tính ≥3 lần "tại sao?"). Đề xuất, không tự sửa cấu trúc.
 - Append-only log. Không ghi đè.
 - External sync: pull trước, confirm, push sau. Fail → skip, không block.
