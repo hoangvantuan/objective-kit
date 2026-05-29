@@ -113,3 +113,7 @@ Inbox đã xử lý: 2/3 items
   - #2 → giữ inbox (chờ rõ hơn)
 Inbox còn lại: 1 item pending
 ```
+
+## Ghi chú: last_track_date
+
+Khi chạy inbox-only **độc lập** (không qua light/deep): KHÔNG cập nhật `plan.md` `last_track_date`. Inbox triage không phải track tiến độ. Nhắc "chưa track N ngày" trên dashboard vẫn dựa theo lần light/deep gần nhất — đúng ý đồ, không phải bug. (Khi inbox chạy như Bước 6 của light/deep thì last_track_date đã được các flow đó cập nhật.)

@@ -1,18 +1,18 @@
 # Mode DEEP (review sâu + delegate điều chỉnh cấu trúc)
 
-Phạm vi: phân tích root cause + ĐỀ XUẤT điều chỉnh. KHÔNG tự sửa cấu trúc. Việc apply đẩy sang `okr-init` hoặc `okr-plan`.
+Phạm vi: trình bày root cause (từ `okr-analyze` deep) + ĐỀ XUẤT điều chỉnh. KHÔNG tự sửa cấu trúc. Việc apply đẩy sang `okr-init` hoặc `okr-plan`.
 
 ## Bước 1: Update progress nếu cần
 
 Hỏi user có update progress nào trước phân tích (giống light). Nếu có → áp dụng + log + **nhắc output cho actions done** (step 4 light) + **archive actions done** như light (Phase 4a bước 5). Bao gồm sync pull/push (step 0 + 3b) và re-render Roadmap (step 5) như light.
 
-## Bước 2: Phân tích root cause
+## Bước 2: Trình bày + tinh chỉnh root cause
 
-Cho mỗi vấn đề (KR at-risk, KI critical/warning, blocker, quá hạn):
+Root cause do `okr-analyze` mode deep đã tính (đọc log history, hỏi "tại sao?" ≥3 lần, phân biệt nhân/duyên, tách triệu chứng vs nguyên nhân) và truyền qua `analysis`. Track KHÔNG làm lại từ đầu:
 
-- Hỏi "tại sao?" tối thiểu 3 lần.
-- Phân biệt nhân (gốc) vs duyên (điều kiện).
-- Tách triệu chứng vs nguyên nhân.
+- Trình bày root cause từ `analysis` cho từng vấn đề: KR at-risk, KI critical/warning, blocker, quá hạn, **checkpoint slip** (action `effort: xl` trượt mốc).
+- Đào sâu THÊM chỉ khi user cung cấp thông tin mới mà analyze chưa có (vd lý do thật phía sau 1 blocker). Khi đó hỏi tiếp "tại sao?" riêng cho điểm đó.
+- Nếu track chạy deep KHÔNG qua analyze → tự phân tích root cause theo cùng quy tắc (≥3 "tại sao?", nhân/duyên, triệu chứng vs nguyên nhân).
 
 Hiển thị:
 

@@ -112,15 +112,9 @@ Skill OKR phục vụ persona **solo only** (1 user, 1 objective). Mọi action 
 
 ## Phát hiện xung đột (solo)
 
-Áp dụng khi `okr-init update-resource` hoàn tất, hoặc khi `okr-plan` đọc resources để check fit:
+Bảng tín hiệu xung đột capacity/tài nguyên là canonical ở `../../okr-shared/references/metrics.md` (section "Capacity / xung đột tài nguyên"): quá tải, dồn deadline, skill gap, tool missing, capacity drop.
 
-| Tín hiệu | Cảnh báo |
-|----------|----------|
-| Tổng giờ ước tính của actions chưa done > capacity còn lại đến end_date | Quá tải, đề xuất giảm scope hoặc dời deadline |
-| ≥3 actions cùng deadline (±2 ngày) | Tuần đó dồn việc, đề xuất tách deadline |
-| Action cần skill chưa có trong Solo Profile | Đề xuất thêm action học/outsource trước |
-| Tool/tài liệu status `missing` mà có action phụ thuộc | Block, đề xuất bổ sung trước |
-| Capacity giảm rõ rệt (vd <60% so với cũ) mà còn nhiều actions chưa done | Cảnh báo scope rủi ro, đề xuất xem lại plan |
+Áp dụng: `okr-init update-resource` khi hoàn tất; `okr-plan` khi check fit lúc tạo/sửa plan; `okr-analyze` khi phát hiện issue runtime.
 
 Mỗi cảnh báo phải kèm đề xuất giải pháp cụ thể: dời deadline, tách task, học/outsource skill, hoặc giảm scope.
 

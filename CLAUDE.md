@@ -22,11 +22,11 @@ Khi làm việc trong repo này, bạn đang **phát triển/sửa harness**, kh
 ├── okr-plan/                   ← milestones, actions, dependencies
 │   └── references/             ← data-format, action-guide, task-format, flow-*
 ├── okr-track/                  ← progress, review (deep), inbox, sync, closure, trace
-│   └── references/             ← data-format, metrics, flow-light/deep/inbox/closure/trace
+│   └── references/             ← data-format, flow-shared/light/deep/inbox/closure/trace
 ├── okr-capture/                ← ghi nhanh vào inbox (inline)
 │   └── references/             ← data-format
 └── okr-shared/                 ← quy tắc chung dùng cho mọi skill
-    └── references/             ← schemas, sot-ownership, quality-gate, delegate-protocol, action-priority
+    └── references/             ← schemas, sot-ownership, quality-gate, delegate-protocol, action-priority, metrics
 ```
 
 ### Skill → Vai trò
@@ -58,17 +58,17 @@ Một agent đọc state rồi đọc tiếp SKILL.md phù hợp và thực thi.
 
 | Field | Skill được sửa |
 |-------|----------------|
-| Objective text, KR/KI target/baseline/ngưỡng, period, status | `okr-init` |
-| Solo Profile (capacity, skills), tool, ngân sách | `okr-init` |
-| Milestones, action structure (title, deadline, deps) | `okr-plan` |
-| Action `## Output/Deliverable` (output thực tế) | `okr-track` |
-| KR.current, KI.current, plan counters | `okr-track` |
-| plan.last_track_date, plan.last_review_date | `okr-track` |
-| action.status | `okr-track`, `okr-plan` |
+| Objective text, KR/KI target/baseline/ngưỡng, period, status | `okr-init` `update-objective` |
+| Solo Profile (capacity, skills), tool, ngân sách | `okr-init` `update-resource` |
+| Milestones, action structure (title, deadline, deps, deliverable) | `okr-plan` `update` |
+| Action `## Output/Deliverable` (ghi đè output thực tế) | `okr-track` `light`/`deep` |
+| KR.current, KI.current, plan counters | `okr-track` `light`/`deep` |
+| plan.last_track_date, plan.last_review_date | `okr-track` `light`/`deep` |
+| action.status | `okr-track` `light`/`deep`, `okr-plan` `update` |
 | Inbox items (tạo mới) | `okr-capture` |
 | Inbox items (xử lý: status transition) | `okr-track` |
-| Action notes, external_ids | `okr-plan` |
-| External sync (pull/push status) | `okr-track` |
+| Action notes, external_ids (tạo/sửa) | `okr-plan` `new`/`update` |
+| External sync (pull/push status) | `okr-track` `light`/`deep` |
 
 > Canonical: `.claude/skills/okr-shared/references/sot-ownership.md`. Sửa ở đó, bảng trên giữ đồng bộ.
 

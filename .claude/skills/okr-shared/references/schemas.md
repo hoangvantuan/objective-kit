@@ -4,7 +4,7 @@ Schema dùng chung giữa nhiều skill. Load 1 lần qua orchestrator `okr`.
 
 ## Roadmap format
 
-> Nguồn gốc: `okr-plan/references/data-format.md`. Bản tại đây là canonical.
+> Canonical. Các skill khác (okr-plan render, okr-track re-render) link về đây, không chép lại.
 
 Mỗi milestone heading chứa bảng action bên dưới:
 
@@ -70,7 +70,7 @@ Ví dụ Ongoing Roadmap (có actions):
 
 ## Inbox Aging
 
-> Nguồn gốc: `okr-capture/references/data-format.md`. Bản tại đây là canonical.
+> Canonical. Các skill khác (okr-capture, okr-track) link về đây, không chép lại.
 
 Trường `staleness_days = today - captured_at` được compute **on-the-fly** khi đọc, KHÔNG lưu vào frontmatter.
 
@@ -88,7 +88,7 @@ Phạm vi áp dụng: chỉ items có `status: pending`.
 
 ## Inbox type → Delegate mapping
 
-> Nguồn gốc: `okr-track/references/data-format.md`. Bản tại đây là canonical.
+> Canonical. Các skill khác (okr-track xử lý inbox) link về đây, không chép lại.
 
 | Inbox type | Track tự xử lý? | Delegate sang |
 |------------|-----------------|---------------|
@@ -115,7 +115,7 @@ Gom delegate: nhiều items cùng skill → 1 lần delegate.
 
 ## Archive Rules
 
-> Nguồn gốc: `okr-track/references/data-format.md`. Bản tại đây là canonical.
+> Canonical. Các skill khác (okr-track archive) link về đây, không chép lại.
 
 ### Trigger
 

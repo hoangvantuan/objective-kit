@@ -16,9 +16,10 @@ Chứa quy tắc và schema áp dụng cho mọi skill OKR. Không chạy độc
 | `references/quality-gate.md` | 3 câu check: đủ cụ thể? giả định ẩn? mâu thuẫn? | `okr-init`, `okr-plan` (trước mỗi follow-up) |
 | `references/delegate-protocol.md` | Pre-confirmed flow + reason display khi áp dụng thay đổi cấu trúc | `okr-track` (gửi), `okr-init`/`okr-plan` (nhận) |
 | `references/action-priority.md` | Thuật toán chọn action ưu tiên (first-match, top N) | `okr-analyze` (xếp priority), `okr-track` (đề xuất next) |
+| `references/metrics.md` | Công thức tính (KR%, KR/KI status, trend, period overdue) + tín hiệu chẩn đoán (action health, capacity signals) | `okr-analyze` (render + issue), `okr-track` (compute trước ghi), `okr-init`/`okr-plan` (capacity fit) |
 
 ## Khi nào đọc
 
-- **okr-analyze**: `action-priority.md` khi xếp priority. `schemas.md` khi cần hiểu Roadmap format.
-- **okr-init / okr-plan**: `quality-gate.md` trước mỗi follow-up. `schemas.md` khi render Roadmap. `sot-ownership.md` khi check quyền ghi. `delegate-protocol.md` khi nhận pre-confirmed payload.
-- **okr-track**: `delegate-protocol.md` khi đề xuất thay đổi cấu trúc. `schemas.md` khi archive + xử lý inbox. `action-priority.md` khi đề xuất next action. `sot-ownership.md` khi check quyền ghi.
+- **okr-analyze**: `metrics.md` khi tính metrics + phát hiện issue. `action-priority.md` khi xếp priority. `schemas.md` khi cần hiểu Roadmap format.
+- **okr-init / okr-plan**: `quality-gate.md` trước mỗi follow-up. `schemas.md` khi render Roadmap. `sot-ownership.md` khi check quyền ghi. `delegate-protocol.md` khi nhận pre-confirmed payload. `metrics.md` (section Capacity signals) khi check fit.
+- **okr-track**: `metrics.md` khi compute lại KR/KI status trước ghi (hoặc khi chạy không qua analyze). `delegate-protocol.md` khi đề xuất thay đổi cấu trúc. `schemas.md` khi archive + xử lý inbox. `action-priority.md` khi đề xuất next action. `sot-ownership.md` khi check quyền ghi.

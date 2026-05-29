@@ -1,4 +1,6 @@
-# Metrics: Cách tính và log format
+# Metrics: công thức tính & tín hiệu chẩn đoán (canonical)
+
+Logic ĐỌC dùng chung. `okr-analyze` đọc để render dashboard + phát hiện issue. `okr-track` đọc để compute lại `Current`/`Status` trước khi ghi đè SOT. Đây là bản canonical duy nhất: skill khác link về đây, KHÔNG chép lại công thức (tránh drift).
 
 ## Tiến độ Key Result (Project type)
 
@@ -78,9 +80,9 @@ overdue = (period_overdue_days > 0) AND (objective.status == "active")
 
 Ví dụ: `end_date = 2026-12-31`, `today = 2027-01-12`, `status = active` → `overdue = true`, `period_overdue_days = 12`.
 
-### Hành vi của okr-track
+### Hành vi dashboard (analyze render, track tái sử dụng)
 
-- Phase 2 dashboard: nếu `overdue` → render block cảnh báo ở vị trí đầu (trước Key Results), liệt kê KR chưa `achieved` + đề xuất hành động (extend end_date hoặc đổi status).
+- Dashboard: nếu `overdue` → render block cảnh báo ở vị trí đầu (trước Key Results), liệt kê KR chưa `achieved` + đề xuất hành động (extend end_date hoặc đổi status).
 - Không tự đổi status. Chỉ ĐỀ XUẤT, user quyết.
 - Nếu `objective.status` đã là `completed` / `cancelled` / `paused` / `archived` → KHÔNG render cảnh báo (period overdue chỉ relevant khi user vẫn theo đuổi).
 
@@ -94,20 +96,25 @@ Ví dụ: `end_date = 2026-12-31`, `today = 2027-01-12`, `status = active` → `
 
 Đề xuất chỉ là gợi ý. Track không enforce, user tự chọn.
 
-## Cập nhật SOT
+## Action health
 
-Khi track, cập nhật:
-1. `objective.md`: cột Current và Status trong bảng KR (Project) hoặc KI (Ongoing)
-2. `plan.md`: frontmatter `completed`, `in_progress`, `blocked` (chỉ Project)
-3. Mỗi action có thay đổi: frontmatter `status` (chỉ Project)
+Tính từ frontmatter `actions/*.md` (chỉ active, không tính archive):
 
-## Log format
+- **Done rate**: `completed / total`.
+- **Overdue**: `due_date < today` AND status ∈ {doing, blocked, pending}. Ghi số ngày quá hạn.
+- **Blocked**: status = blocked. Liệt kê blocker reason.
+- **Checkpoint slip**: action `effort: xl` có body section `## Checkpoints`, mốc `- [ ]` quá hạn (`by YYYY-MM-DD < today`) mà chưa tick. Ghi rõ "Action AXXX trượt checkpoint N".
 
-Mỗi lần track = 1 entry trong `log/YYYY-MM-DD.md`. Nếu file ngày đó đã có, append thêm section mới.
+## Capacity / xung đột tài nguyên (signals)
 
-Log ghi:
-- Giá trị thay đổi (cũ → mới)
-- Actions thay đổi status (Project)
-- KI status thay đổi (Ongoing)
-- Blockers mới phát hiện
-- Ghi chú của user
+Đọc `resources.md` (Solo Profile capacity, skills, tool/tài liệu status) đối chiếu `actions/*.md`. Dùng khi: `okr-analyze` phát hiện issue runtime, `okr-init update-resource` hoàn tất, `okr-plan` check fit lúc tạo/sửa plan.
+
+| Tín hiệu | Cảnh báo |
+|----------|----------|
+| Tổng giờ ước tính của actions chưa done > capacity còn lại đến end_date | Quá tải, đề xuất giảm scope hoặc dời deadline |
+| ≥3 actions cùng deadline (±2 ngày) | Tuần đó dồn việc, đề xuất tách deadline |
+| Action cần skill chưa có trong Solo Profile | Đề xuất thêm action học/outsource trước |
+| Tool/tài liệu status `missing` mà có action phụ thuộc | Block, đề xuất bổ sung trước |
+| Capacity giảm rõ rệt (vd <60% so với cũ) mà còn nhiều actions chưa done | Cảnh báo scope rủi ro, đề xuất xem lại plan |
+
+Mỗi cảnh báo phải kèm đề xuất giải pháp cụ thể: dời deadline, tách task, học/outsource skill, hoặc giảm scope.

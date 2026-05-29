@@ -102,7 +102,7 @@ next_actions:                   # top 3
 Khi một flow cần kết quả của skill khác, cùng agent đọc tiếp SKILL.md kia và thực thi:
 
 - Track deep phát hiện cần sửa cấu trúc → đọc `okr-init`/`okr-plan` mode pre-confirmed, mang theo `context.reason` + `pre_confirmed: true`. Xem `okr-shared/references/delegate-protocol.md`.
-- Dashboard/track cần metrics → đọc `okr-analyze` trước, dùng output làm input bước sau.
+- Dashboard/track cần metrics → đọc `okr-analyze` trước, dùng output (`analysis`) làm input. Track/dashboard KHÔNG tự tính lại metrics hay root cause; chỉ tự tính khi chạy KHÔNG qua analyze (vd inbox-only độc lập).
 
 Quy tắc:
 - Truyền `okr_path` tuyệt đối, không relative.

@@ -110,13 +110,9 @@ type: [tracking]          # array, giá trị hợp lệ: tracking | review | cl
 | **Log thường** | `.okr/log/YYYY-MM-DD.md` | Append-only |
 | **Inbox** | `.okr/inbox/*.md` | Status transition (pending → processed/discarded) |
 
-## Inbox Processing
+## Inbox & Archive Rules
 
-> Đã chuyển sang schemas.md (đã có trong context từ orchestrator okr).
-
-## Archive Rules
-
-> Đã chuyển sang schemas.md (đã có trong context từ orchestrator okr).
+> Canonical ở `okr-shared/references/schemas.md`: "Inbox type → Delegate mapping" + "Archive Rules". Đã có trong context từ orchestrator, không lặp ở đây.
 
 ## Log Reading Rules
 

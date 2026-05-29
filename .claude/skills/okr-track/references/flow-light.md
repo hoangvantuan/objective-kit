@@ -56,7 +56,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 
 1. Hiển thị KI hiện tại (tên, ngưỡng, current, status).
 2. Hỏi user update từng KI: "KI1 (Tập thể dục, hiện tại: 2, ngưỡng: ≥3). Tuần này bao nhiêu?"
-3. Tính status mới theo logic: healthy (≥ ngưỡng), warning (< ngưỡng, chênh < 20%), critical (< 80% ngưỡng). Xem `references/metrics.md`.
+3. Tính status mới theo logic: healthy (≥ ngưỡng), warning (< ngưỡng, chênh < 20%), critical (< 80% ngưỡng). Xem `../../okr-shared/references/metrics.md`.
 4. **Update practice streak**: đọc `plan.md` body section `## Practices`.
   - **Fallback (Minor2):** nếu `plan.md` không tồn tại HOẶC body không có heading `## Practices` HOẶC section rỗng (không có `### PN:`), in 1 dòng `(Ongoing chưa có practices. Skip step 4. Tạo practices qua /okr plan để track streak.)` rồi đi tiếp step 5. KHÔNG báo lỗi.
   - Với mỗi practice (`### PN: <Tên>` kèm field `frequency`, `target_count`, `current_streak`, `ki_link`):

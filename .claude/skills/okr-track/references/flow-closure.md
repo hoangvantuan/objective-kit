@@ -4,7 +4,7 @@
 
 Như deep + thêm:
 
-1. Tính tổng kết toàn period: KR đạt vs target, % thời gian, lessons learned.
+1. Tính tổng kết toàn period: KR đạt vs target, % thời gian, lessons learned. Soi actions `effort: xl` đã done: mốc `## Checkpoints` nào từng trượt deadline → rút bài học ước lượng cho `## Lessons`.
 2. Hỏi user: chuyển status objective → `completed`, hay tạo follow-up project?
 3. Nếu user đồng ý → delegate sang `okr-init` mode `update-objective` để đổi `status: completed`.
 4. Xử lý inbox còn lại (nếu có).

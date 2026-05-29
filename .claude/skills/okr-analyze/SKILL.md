@@ -35,45 +35,13 @@ Nếu `.okr/` không tồn tại → trả ngay: "Chưa khởi tạo OKR. Cần 
 
 ## Tính metrics
 
-Công thức chi tiết: `../okr-track/references/metrics.md` (KR%, KI status, trend, period overdue).
+Mọi công thức ở `../okr-shared/references/metrics.md` (canonical). KHÔNG chép lại ở đây để tránh drift. Áp dụng đúng theo loại mục tiêu:
 
-### Project type
+- **Project**: KR Progress %, KR Status (4 giá trị, first-match), Trend (on-track/at-risk/off-track), Period Overdue.
+- **Ongoing**: KI Status (healthy/warning/critical), Trend (improving/stable/declining).
+- **Cả hai**: Action health (done rate, overdue, blocked, checkpoint slip).
 
-**KR Progress**: `% = (Current - Baseline) / (Target - Baseline) * 100`
-
-**KR Status** (first match):
-
-| #   | Status      | Điều kiện                               |
-| --- | ----------- | --------------------------------------- |
-| 1   | achieved    | current >= target                       |
-| 2   | missed      | current < target AND now > end_date     |
-| 3   | pending     | current == baseline AND now <= end_date |
-| 4   | in-progress | còn lại                                 |
-
-
-**Trend**:
-
-- on-track: tiến độ thực >= % thời gian đã trôi
-- at-risk: chênh < 20%
-- off-track: chênh >= 20% hoặc có actions blocked
-
-**Period Overdue**: `end_date < today` AND `objective.status == active`
-
-### Ongoing type
-
-**KI Status**:
-
-- healthy: current >= ngưỡng min
-- warning: 80% × min <= current < min
-- critical: current < 80% × min
-
-**Trend**: so status hiện tại vs lần review trước (improving/stable/declining)
-
-### Action health
-
-- Done rate: completed / total
-- Overdue: due_date < today AND status ∈ {doing, blocked, pending}
-- Blocked: status = blocked (liệt kê blocker reason)
+Mỗi số liệu phải trích được từ file (Nguyên tắc 3). Không ước lượng.
 
 ## Phát hiện issues
 
@@ -83,17 +51,13 @@ Quét theo thứ tự nghiêm trọng:
 2. **Action overdue**: due_date < today + status chưa done. Ghi số ngày quá hạn
 3. **Action blocked**: liệt kê blocker + action bị chặn
 4. **KR at-risk/off-track**: trend tính từ metrics
-5. **Inbox aging**: items pending > 30 ngày
-6. **Capacity mismatch**: actions in-progress > capacity
+5. **Checkpoint slip**: action `effort: xl` có `## Checkpoints`, mốc quá hạn chưa tick (xem metrics.md "Action health")
+6. **Inbox aging**: items pending > 30 ngày
+7. **Capacity / xung đột tài nguyên**: dùng bảng signals ở `../okr-shared/references/metrics.md` ("Capacity / xung đột tài nguyên") — quá tải, dồn deadline, skill gap, tool missing, capacity drop
 
 ## Xếp priority (top N actions)
 
-Thuật toán first-match, tham khảo `../okr-shared/references/action-priority.md`:
-
-1. Quá hạn + đang block action khác
-2. Deadline trong horizon_days ngày
-3. Priority critical/high đang doing
-4. Gắn KR at-risk
+Dùng thuật toán first-match canonical ở `../okr-shared/references/action-priority.md` (5 bước: overdue → đang block action khác → deadline trong horizon → priority cao đang doing → KR at-risk). Truyền `max_items` + `horizon_days` từ tham số. KHÔNG chép lại các bước ở đây để tránh lệch.
 
 Format mỗi gợi ý: `→ AXXX: Title (lý do ≤10 từ)`
 
@@ -149,9 +113,9 @@ Khi gọi cho review deep, bổ sung:
 
 ## Tham khảo chi tiết
 
-- Metrics: `../okr-track/references/metrics.md`
+- Metrics + capacity signals: `../okr-shared/references/metrics.md`
 - Priority algo: `../okr-shared/references/action-priority.md`
 - Shared schemas: `../okr-shared/references/schemas.md`
-- Data format: `../okr-track/references/data-format.md`
+- Log/progress format: `../okr-track/references/data-format.md`
 
   

@@ -14,16 +14,18 @@
 - `.okr/plan.md` + `.okr/actions/` nên có (project). Thiếu → cảnh báo, vẫn cho track KR/KI + inbox.
 - Ongoing có thể track chỉ với `objective.md` (KI status).
 
-## Phase 1: Tính toán metrics + đọc thêm
+## Phase 1: Lấy metrics (từ analysis) + đọc thêm
 
-SOT data từ orchestrator (objective, plan frontmatter, actions frontmatter, resources). KHÔNG đọc lại.
+**Metrics đã được `okr-analyze` tính** (orchestrator chạy analyze TRƯỚC track light/deep). Track NHẬN qua input `analysis`, KHÔNG tự tính lại. Nếu track chạy KHÔNG qua analyze (vd inbox-only hoặc trace độc lập) → tự tính theo `../../okr-shared/references/metrics.md`.
+
+SOT data (objective, plan frontmatter, actions frontmatter, resources) đã có từ orchestrator. KHÔNG đọc lại.
 
 Đọc thêm:
 - `.okr/inbox/*.md` status=pending: frontmatter
 - `.okr/log/`: light → KHÔNG đọc. Deep → adaptive rule (xem `data-format.md` Log Reading Rules). Closure → tất cả.
 - Trace: đọc `log/` theo yêu cầu user.
 
-Tính metrics (xem `metrics.md`):
+`analysis` cung cấp (công thức ở `../../okr-shared/references/metrics.md`):
 
 **Project:**
 - KR % đạt, trend, timeline
@@ -142,7 +144,7 @@ Heuristic, hỏi user xác nhận:
 - Mọi thay đổi qua phase confirm.
 - Light: chỉ progress fields. Cấm sửa cấu trúc.
 - Deep: KHÔNG tự sửa KR target / action mới / deadline. Áp dụng qua `okr-init`/`okr-plan`.
-- Root cause BẮT BUỘC ≥3 lần "tại sao".
+- Root cause (≥3 lần "tại sao") do `okr-analyze` deep tính. Track deep trình bày + tinh chỉnh, không làm lại từ đầu (trừ khi chạy không qua analyze).
 - Ghi đè SOT progress fields, append log. Không ngược lại.
 - Output: ghi đè `## Output/Deliverable`. Nhắc khi mark done, cho phép skip.
 - Log vào `log/YYYY-MM-DD.md`. Deep/closure append sections review.
