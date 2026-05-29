@@ -15,5 +15,6 @@ Mỗi field SOT chỉ được sửa bởi skill được chỉ định. `okr-tr
 | Inbox items (xử lý: status transition)                            | `okr-track`                   |
 | Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`     |
 | External sync (pull/push status)                                  | `okr-track` `light`/`deep`    |
+| Bài học (`.okr/lessons/**`: tạo/sửa/đánh dấu obsolete, ported)   | `okr-retro`                   |
 
 > Bảng này là bản canonical. Load cùng skill okr khi chạy.

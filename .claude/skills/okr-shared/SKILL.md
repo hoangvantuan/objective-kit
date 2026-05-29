@@ -23,3 +23,7 @@ Chứa quy tắc và schema áp dụng cho mọi skill OKR. Không chạy độc
 - **okr-analyze**: `metrics.md` khi tính metrics + phát hiện issue. `action-priority.md` khi xếp priority. `schemas.md` khi cần hiểu Roadmap format.
 - **okr-init / okr-plan**: `quality-gate.md` trước mỗi follow-up. `schemas.md` khi render Roadmap. `sot-ownership.md` khi check quyền ghi. `delegate-protocol.md` khi nhận pre-confirmed payload. `metrics.md` (section Capacity signals) khi check fit.
 - **okr-track**: `metrics.md` khi compute lại KR/KI status trước ghi (hoặc khi chạy không qua analyze). `delegate-protocol.md` khi đề xuất thay đổi cấu trúc. `schemas.md` khi archive + xử lý inbox. `action-priority.md` khi đề xuất next action. `sot-ownership.md` khi check quyền ghi.
+
+## Auto-load lessons (an toàn)
+
+Layer bài học (`okr-retro`) được `okr-harness` Phase 1 nạp sẵn `.okr/lessons/index.md` mỗi phiên. An toàn: nếu một skill chạy mà `index.md` chưa có trong context và `.okr/lessons/index.md` tồn tại, đọc nó trước khi thao tác. Chỉ đọc `index.md`, không đọc file detail (load on-demand).
