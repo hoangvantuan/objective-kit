@@ -66,6 +66,8 @@ Body sections (giữ section header dù rỗng):
 - `## Ngân sách` (bảng: Khoản mục, Dự kiến, Thực tế, Ghi chú)
 - `## Thiếu hụt & Rủi ro` (danh sách bullet)
 
+> `## Tài liệu & Knowledge Base` chỉ chứa *con trỏ tới nguồn DÙNG/THAM CHIẾU* (thường ngoài `.okr/` hoặc deliverable cần tra). Nội dung cross-cutting do dự án TẠO RA (glossary, playbook, bảng tra) thuộc `.okr/context/`, KHÔNG nhét vào đây. Ranh giới canonical: `../../okr-shared/references/schemas.md` "Context layer".
+
 ### Schema 6 cột thống nhất (Công cụ + Tài liệu/KB)
 
 Cả 2 section dùng cùng 6 cột:
