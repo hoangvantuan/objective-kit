@@ -18,11 +18,10 @@
 
 **Metrics đã được `okr-analyze` tính** (orchestrator chạy analyze TRƯỚC track light/deep). Track NHẬN qua input `analysis`, KHÔNG tự tính lại. Nếu track chạy KHÔNG qua analyze (vd inbox-only độc lập) → tự tính theo `../../okr-shared/references/metrics.md`.
 
-SOT data (objective, plan frontmatter, actions frontmatter) đã có từ orchestrator. KHÔNG đọc lại.
+SOT data Tier 1 (objective/plan frontmatter, actions frontmatter, `resources.md` full body, inbox count, `lessons/index.md`) đã có từ orchestrator (Preload Contract Tier 1, `../../okr-shared/references/preload.md`). KHÔNG đọc lại. Chạy lẻ (inbox-only độc lập, hoặc không qua harness) → tự nạp Tier 1 phần thiếu trước khi thao tác.
 
-Đọc thêm:
-- `.okr/resources.md` (Solo Profile capacity, skills, tool status): orchestrator KHÔNG preload. Đọc khi cần capacity check (deep, hoặc khi đề xuất liên quan tài nguyên). Light thuần progress → có thể skip.
-- `.okr/inbox/*.md` status=pending: frontmatter
+Đọc thêm (on-demand, KHÔNG nằm trong preload):
+- `.okr/inbox/*.md` body: đọc khi xử lý từng item (count pending đã có từ preload)
 - `.okr/log/`: light → KHÔNG đọc. Deep → adaptive rule (xem `data-format.md` Log Reading Rules). Closure → tất cả.
 - Trace: đọc `log/` theo yêu cầu user.
 

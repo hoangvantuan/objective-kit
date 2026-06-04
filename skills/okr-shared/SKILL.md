@@ -1,6 +1,6 @@
 ---
 name: okr-shared
-description: "Domain knowledge dùng chung cho mọi OKR skill: SOT ownership, schemas (Roadmap, Inbox Aging, Archive), Quality Gate, delegate protocol, action priority algo. Load khi cần tra cứu quy tắc chung."
+description: "Quy tắc chung mọi OKR skill: SOT ownership, schemas, Quality Gate, priority."
 ---
 
 # OKR Shared: Domain Knowledge dùng chung
@@ -11,6 +11,7 @@ Chứa quy tắc và schema áp dụng cho mọi skill OKR. Không chạy độc
 
 | File | Mô tả | Skill dùng |
 |------|-------|------------|
+| `references/preload.md` | Preload Contract: context nền phải nạp trước khi chạy (Tier 1 full / Tier 2 minimal), idempotent | Mọi skill (chạy ở đầu flow) |
 | `references/schemas.md` | Roadmap table format, Inbox Aging, Inbox type → Delegate mapping, Archive Rules | `okr-plan` (render Roadmap), `okr-track` (archive, inbox) |
 | `references/sot-ownership.md` | Bảng phân vai field: skill nào được sửa gì | Mọi skill (check trước ghi) |
 | `references/quality-gate.md` | 3 câu check: đủ cụ thể? giả định ẩn? mâu thuẫn? | `okr-init`, `okr-plan` (trước mỗi follow-up) |
@@ -20,13 +21,14 @@ Chứa quy tắc và schema áp dụng cho mọi skill OKR. Không chạy độc
 
 ## Khi nào đọc
 
+- **Mọi skill (đầu flow)**: `preload.md` xác định context nền phải nạp trước khi thao tác. Idempotent: qua harness thì đã nạp, gọi lẻ thì tự nạp phần thiếu. Tier 1 (analyze/init/plan/track/harness) full; Tier 2 (capture/retro) minimal.
 - **okr-analyze**: `metrics.md` khi tính metrics + phát hiện issue. `action-priority.md` khi xếp priority. `schemas.md` khi cần hiểu Roadmap format.
 - **okr-init / okr-plan**: `quality-gate.md` trước mỗi follow-up. `schemas.md` khi render Roadmap. `sot-ownership.md` khi check quyền ghi. `delegate-protocol.md` khi nhận pre-confirmed payload. `metrics.md` (section Capacity signals) khi check fit.
 - **okr-track**: `metrics.md` khi compute lại KR/KI status trước ghi (hoặc khi chạy không qua analyze). `delegate-protocol.md` khi đề xuất thay đổi cấu trúc. `schemas.md` khi archive + xử lý inbox. `action-priority.md` khi đề xuất next action. `sot-ownership.md` khi check quyền ghi.
 - **okr-retro**: `sot-ownership.md` khi check quyền ghi `.okr/lessons/**`.
 
-## Auto-load lessons (an toàn)
+## Auto-load + áp dụng lessons
 
-Layer bài học (`okr-retro`) được `okr-harness` Phase 1 nạp sẵn `.okr/lessons/index.md` mỗi phiên. An toàn: nếu một skill chạy mà `index.md` chưa có trong context và `.okr/lessons/index.md` tồn tại, đọc nó trước khi thao tác. Chỉ đọc `index.md`, không đọc file detail (load on-demand).
+`lessons/index.md` là một phần của **Preload Contract** (`references/preload.md`): Tier 1 và Tier 2 đều nạp toàn bộ index mỗi phiên (idempotent, không đọc trùng). Chỉ index, không đọc file detail (load on-demand khi cần một bài cụ thể).
 
-**Áp dụng lessons (không chỉ load cho có)**: trước khi đề xuất KR/action/điều chỉnh hoặc ghi file, đối chiếu lessons có essence liên quan việc đang làm (loại B theo `area`, loại A theo `target`). Nếu một lesson cảnh báo điều gì (vd "đừng đặt baseline KR = 0 khi chưa đo được"), bám theo. Cần detail → đọc file lesson tương ứng. Lesson là context định hướng, không phải lệnh cứng; user vẫn quyết.
+Cách áp dụng lessons (đối chiếu essence liên quan trước khi đề xuất/ghi) định nghĩa canonical ở `references/preload.md` mục "Áp dụng lessons". Không lặp lại ở đây để tránh drift.

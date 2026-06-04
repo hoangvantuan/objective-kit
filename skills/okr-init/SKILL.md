@@ -1,6 +1,6 @@
 ---
 name: okr-init
-description: "Tạo hoặc sửa objective, KR, KI, period, deadline, resources, capacity, skill, tool, ngân sách. Load khi cần init-new, update-objective, update-resource. Cũng nhận pre-confirmed từ okr-track deep để áp dụng thay đổi cấu trúc."
+description: "Tạo/sửa objective, KR, KI, period, deadline, resources, capacity, tool, ngân sách."
 ---
 
 # OKR Init: Khởi tạo + cập nhật objective & resource
@@ -29,7 +29,7 @@ Quản lý 2 SOT: `objective.md` và `resources.md`.
 - Hỏi từng câu một, không hỏi hàng loạt.
 - BẮT BUỘC confirm bảng trước khi ghi file.
 - Quality Gate 3 câu trước mỗi follow-up (xem `okr-shared` skill).
-- Lessons: trước khi đề xuất/ghi, đảm bảo `.okr/lessons/index.md` đã nạp + áp dụng lesson liên quan (xem `okr-shared` skill "Auto-load lessons"). Quan trọng khi chạy lẻ, không qua `okr-harness`.
+- Preload Contract Tier 1 (`../okr-shared/references/preload.md`): trước khi đề xuất/ghi, đảm bảo nền Tier 1 đã nạp (objective/plan frontmatter, `resources.md` full body, actions/inbox count, `lessons/index.md` toàn bộ) + áp dụng lesson liên quan. Idempotent: qua harness đã có, chạy lẻ tự nạp phần thiếu. Quan trọng khi chạy lẻ, không qua `okr-harness`.
 - Solo only: 1 user, 1 objective.
 - Đề xuất + lý do, user quyết.
 

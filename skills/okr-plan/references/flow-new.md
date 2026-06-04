@@ -33,7 +33,7 @@
 
 ## Phase 2: Đề xuất phân rã
 
-Trước khi chốt effort/deadline, đối chiếu lessons loại B đã auto-load (area liên quan, vd "capacity", "ước lượng effort"): nếu phiên trước rút ra task loại này hay overrun, điều chỉnh ước lượng (xem `okr-shared` "Áp dụng lessons").
+Trước khi chốt effort/deadline, đối chiếu lessons loại B đã nạp (Preload Contract, area liên quan, vd "capacity", "ước lượng effort"): nếu phiên trước rút ra task loại này hay overrun, điều chỉnh ước lượng (xem `../../okr-shared/references/preload.md` "Áp dụng lessons").
 
 Với mỗi KR:
 

@@ -57,7 +57,7 @@ Một agent đọc state rồi đọc tiếp SKILL.md phù hợp và thực thi.
 3. **Confirm trước ghi**: Skill ghi (init/plan) hiển thị bảng tóm tắt, user xác nhận trước khi ghi.
 4. **Track đề xuất, init/plan áp dụng**: `okr-track` không sửa cấu trúc. Muốn sửa → chạy tiếp `okr-init`/`okr-plan` (pre-confirmed).
 5. **Quality Gate internal**: 3 câu check ngầm. Chi tiết tại `skills/okr-shared/references/quality-gate.md`.
-6. **Tiết kiệm token**: Archive invisible by default. Log chỉ đọc mới nhất. Orchestrator preload SOT.
+6. **Tiết kiệm token, có chủ đích**: Archive invisible by default. Log chỉ đọc mới nhất. Preload theo **Preload Contract** (`skills/okr-shared/references/preload.md`): nạp đủ nền (gồm `resources.md` full body) trước khi thao tác để tránh đề xuất sai, nhưng giữ body objective/plan + action + log/archive on-demand. Cân bằng "đủ context" vs token, không nạp mù.
 
 ## Phân vai SOT
 
@@ -146,5 +146,6 @@ Không cần sửa `CLAUDE.md` của project đích. Skill description của `ok
 8. Đợt 11: Layer lessons - thêm skill `okr-retro` rút bài học (2 loại: cải tiến skill / project), auto-load `.okr/lessons/index.md` mỗi phiên. Gỡ cơ chế "Tự cải tiến" + ghi CHANGELOG khỏi `okr-harness`.
 9. Đợt 12: Review drift tầng sâu (prompt-master). P0 done-count: done rate lấy từ counter `plan.md`, KR% cách 2 chỉ deep/closure, thêm "Tốc độ hoàn thành" (deep/closure). Thêm `action.completed_date`. Guard `paused` ở track. Chuyển mode `trace` từ `okr-track` sang `okr-analyze` (read-only về đúng nhà). Closure bỏ "## Lessons", gợi ý `okr-retro`. Wire "Áp dụng lessons". Bảng phân loại type cho capture. Sửa 4 tham chiếu chết + dọn em-dash.
 10. Đợt 13: Tối ưu load file. `okr-analyze` tái dùng SOT đã preload từ orchestrator (không Read trùng `objective.md`/`plan.md`, nhất quán với `okr-track` flow-shared Phase 1). Guard lessons hạ xuống SKILL của `okr-init`/`okr-plan`/`okr-track`: đảm bảo `lessons/index.md` được nạp + áp dụng khi chạy lẻ không qua harness (trước chỉ ở `okr-shared` SKILL mà skill khác không bắt buộc đọc).
+11. Đợt 14: Preload Contract. Vá lỗ hổng "entry point lẻ thiếu context": tạo `okr-shared/references/preload.md` canonical (Tier 1 full cho analyze/init/plan/track/harness, Tier 2 minimal cho capture/retro, idempotent). Thêm `resources.md` full body vào preload (trước chỉ on-demand, lại còn bị `okr-analyze` mô tả nhầm là "Frontmatter" dù data ở body). Mục "KHÔNG preload" liệt kê rõ thứ on-demand (body objective/plan, action, log, archive, lesson detail) để flow không giả định nhầm. Gộp guard lessons rời rạc (Đợt 13) vào contract. Drift-fix `flow-shared.md` ("resources KHÔNG preload" → đã preload full).
 
 Chi tiết thay đổi: xem `CHANGELOG.md`.

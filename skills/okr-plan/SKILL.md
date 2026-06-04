@@ -1,6 +1,6 @@
 ---
 name: okr-plan
-description: "Tạo hoặc sửa plan, milestones, actions, dependencies, deadline, external_ids. Load khi cần plan-new, plan-update. Cũng nhận pre-confirmed từ okr-track deep để áp dụng thay đổi cấu trúc."
+description: "Tạo/sửa plan, milestones, actions, dependencies, deadline, external_ids."
 ---
 
 # OKR Plan: Tạo + cập nhật plan & actions
@@ -37,7 +37,7 @@ Quản lý 2 SOT: `plan.md` và `actions/`.
 - Action mơ hồ ("Nghiên cứu thêm" không output) → CẤM.
 - Effort xl → BẮT BUỘC Checkpoints hoặc tách.
 - Confirm bảng trước ghi. Render Roadmap sau ghi.
-- Lessons: trước khi đề xuất/ghi, đảm bảo `.okr/lessons/index.md` đã nạp + áp dụng lesson liên quan (xem `okr-shared` skill "Auto-load lessons"). Quan trọng khi chạy lẻ, không qua `okr-harness`.
+- Preload Contract Tier 1 (`../okr-shared/references/preload.md`): trước khi đề xuất/ghi, đảm bảo nền Tier 1 đã nạp (objective/plan frontmatter, `resources.md` full body để check fit, actions/inbox count, `lessons/index.md` toàn bộ) + áp dụng lesson liên quan. Idempotent: qua harness đã có, chạy lẻ tự nạp phần thiếu. Quan trọng khi chạy lẻ, không qua `okr-harness`.
 
 ## Schema
 

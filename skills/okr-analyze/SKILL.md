@@ -1,6 +1,6 @@
 ---
 name: okr-analyze
-description: "Phân tích trạng thái OKR read-only: đọc .okr/, tính metrics (KR%, KI status, trend), phát hiện issues (overdue, blocked, at-risk, period overdue), xếp priority top N, render dashboard. Load khi cần: dashboard, xem tiến độ, 'hôm nay làm gì', phân tích trước track/review, hoặc bước phân tích đầu của track light/deep. Read-only, KHÔNG ghi file."
+description: "Phân tích OKR read-only: metrics, issues, priority, dashboard, trace."
 ---
 
 # OKR Analyze: Phân tích trạng thái (read-only)
@@ -19,7 +19,9 @@ description: "Phân tích trạng thái OKR read-only: đọc .okr/, tính metri
 
 ## Đọc state
 
-**Tái dùng preload**: khi chạy qua orchestrator (mặc định), `objective.md`/`plan.md` frontmatter + actions count ĐÃ nằm trong context từ `okr-harness` Phase 1. KHÔNG Read lại các file đó; chỉ đọc thêm phần body cần để render (KR/KI bảng, Roadmap body, `## Practices` Ongoing, actions frontmatter). Chạy ĐỘC LẬP (không qua orchestrator, data chưa có trong context) → đọc đầy đủ bảng dưới. Nhất quán với `okr-track` `flow-shared.md` Phase 1.
+**Preload Contract Tier 1** (`../okr-shared/references/preload.md`): trước khi đọc, đảm bảo nền Tier 1 đã có trong context (`objective.md`/`plan.md` frontmatter, `resources.md` full body, actions/inbox count, `lessons/index.md`). Idempotent.
+
+**Tái dùng preload**: khi chạy qua orchestrator (mặc định), nền Tier 1 ĐÃ nằm trong context từ `okr-harness` Phase 1. KHÔNG Read lại (gồm cả `resources.md` đã có full body); chỉ đọc thêm phần body cần để render (KR/KI bảng, Roadmap body, `## Practices` Ongoing, actions frontmatter). Chạy ĐỘC LẬP (không qua orchestrator, data chưa có trong context) → tự nạp Tier 1 rồi đọc bảng dưới. Nhất quán với `okr-track` `flow-shared.md` Phase 1.
 
 Đọc song song (nhiều Read call cùng lúc):
 
@@ -27,7 +29,7 @@ description: "Phân tích trạng thái OKR read-only: đọc .okr/, tính metri
 | -------------- | ------------------------------------- | ------------------------------------------------------- |
 | `objective.md` | Frontmatter + KR/KI bảng              | Loại mục tiêu (project/ongoing) quyết định metrics      |
 | `plan.md`      | Frontmatter + Roadmap body + `## Practices` (Ongoing) | Counters + practices streak (render dashboard Ongoing)  |
-| `resources.md` | Frontmatter                           | Capacity, skills, tools                                 |
+| `resources.md` | TOÀN BỘ body                          | Capacity, skills, tools (data ở body, không phải frontmatter) |
 | `actions/*.md` | Frontmatter only                      | Dùng Bash `ls` rồi đọc từng file, skip body trừ khi cần |
 | `inbox/`       | Count + đọc frontmatter pending items | Compute staleness on-the-fly                            |
 | `log/`         | Ongoing: review log gần nhất (tính trend). Project default: KHÔNG đọc | Deep/closure đọc nhiều hơn (xem okr-track Log Reading Rules) |

@@ -1,6 +1,6 @@
 ---
 name: okr-retro
-description: "Rút bài học từ phiên làm việc OKR và lưu vào layer lessons. Trigger khi user nhắc: rút bài học, tổng kết phiên, retro, bài học, lesson, lesson learned, học được gì, nhìn lại phiên. Trích xuất tự động từ hội thoại hiện tại, phân 2 loại (cải tiến skill / project cụ thể), confirm bảng trước khi ghi. Record-only, không tự sửa skill."
+description: "Rút bài học từ phiên OKR, lưu vào layer lessons. Record-only."
 ---
 
 # OKR Retro: Rút bài học từ phiên
@@ -23,8 +23,8 @@ Phân biệt nhanh: sửa được bằng cách đổi file trong `.claude/skill
 
 ## Flow
 
-### Bước 1: Đọc index hiện có
-Đọc `.okr/lessons/index.md` (nếu chưa có trong context). Dùng để dedup. Folder chưa tồn tại → sẽ tạo khi ghi (Bước 6).
+### Bước 1: Đọc index hiện có (Preload Contract Tier 2)
+Đảm bảo nền Tier 2 đã có trong context (`../okr-shared/references/preload.md` Tier 2): `.okr/lessons/index.md` (toàn bộ, để dedup) + `objective.md` frontmatter (để gắn `area`/`period` cho bài học). Idempotent: qua harness đã có, chạy lẻ tự đọc phần thiếu. Folder `lessons/` chưa tồn tại → sẽ tạo khi ghi (Bước 6).
 
 ### Bước 2: Quét phiên
 Nhìn lại TOÀN BỘ hội thoại phiên hiện tại (kể cả phần không phải OKR). Tìm khoảnh khắc sinh bài học:

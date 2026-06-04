@@ -1,6 +1,6 @@
 ---
 name: okr-track
-description: "Cập nhật progress, status action, review sâu, xử lý inbox, closure, external sync. Load khi cần light, deep, inbox-only, closure."
+description: "Cập nhật progress, review sâu, inbox, closure, external sync."
 ---
 
 # OKR Track: Track + Review + Inbox Processing
@@ -38,7 +38,7 @@ Shared logic (dashboard, mode detection, rules): `references/flow-shared.md`
 
 - Dashboard TRƯỚC khi hỏi update.
 - Confirm trước ghi. Light ≤2 field → 1 dòng, ≥3 → bảng.
-- Lessons: trước khi đề xuất điều chỉnh (deep), đảm bảo `.okr/lessons/index.md` đã nạp + áp dụng lesson liên quan (xem `okr-shared` skill "Auto-load lessons"). Quan trọng khi chạy lẻ, không qua `okr-harness`.
+- Preload Contract Tier 1 (`../okr-shared/references/preload.md`): trước khi thao tác, đảm bảo nền Tier 1 đã nạp (objective/plan frontmatter, `resources.md` full body, actions/inbox count, `lessons/index.md` toàn bộ) + áp dụng lesson liên quan khi đề xuất điều chỉnh (deep). Idempotent: qua harness đã có, chạy lẻ tự nạp phần thiếu. Quan trọng khi chạy lẻ, không qua `okr-harness`.
 - Deep: trình bày + tinh chỉnh root cause (analyze deep tính ≥3 lần "tại sao?"). Đề xuất, không tự sửa cấu trúc.
 - Append-only log. Không ghi đè.
 - External sync: pull trước, confirm, push sau. Fail → skip, không block.

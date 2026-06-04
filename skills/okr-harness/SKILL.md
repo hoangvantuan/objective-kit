@@ -1,6 +1,6 @@
 ---
 name: okr-harness
-description: "Quản lý mục tiêu OKR (skill-only, chạy inline): dashboard, init, plan, track, review, inbox, capture, closure, trace. Trigger khi user nhắc: OKR, mục tiêu, dự án, kế hoạch, tracking, review sâu, tài nguyên, capacity, inbox, capture, ghi nhanh, dashboard, tiến độ, quá hạn, at-risk, blocker, tổng kết, rút bài học, retro, bài học. Cũng trigger khi: 'chạy lại', 'cập nhật tiến độ', 'xem tiến độ', 'hôm nay làm gì', 'review mục tiêu', 'sửa plan'. Gọi trực tiếp: /okr-harness."
+description: "Quản lý mục tiêu OKR. Trigger: OKR, mục tiêu, dự án, kế hoạch, tracking, review, dashboard, tiến độ, inbox, capture, retro, bài học."
 ---
 
 # OKR Harness: Orchestrator (skill-only)
@@ -34,19 +34,20 @@ else:
 
 ### Preload
 
-Orchestrator tự đọc nhanh (không gọi skill) để xác định state:
+Orchestrator tự đọc nhanh (không gọi skill) để xác định state. Đây là **Tier 1 của Preload Contract** (canonical: `okr-shared/references/preload.md`):
 
 ```
-objective.md      → type (project/ongoing), status, period
-plan.md           → có/không, counters
-actions/          → count active, có overdue/blocked?
-inbox/            → count pending
+objective.md      → frontmatter: type (project/ongoing), status, period
+plan.md           → frontmatter: có/không, counters
+resources.md      → đọc TOÀN BỘ body (capacity, skills, tool, tài liệu, ngân sách)
+actions/          → scan frontmatter: count active, có overdue/blocked?
+inbox/            → scan frontmatter: count pending
 lessons/index.md  → đọc TOÀN BỘ (bài học, auto-load mỗi phiên)
 ```
 
-Chỉ đọc frontmatter (trừ `lessons/index.md` đọc toàn bộ vì nhỏ, chứa câu lõi bài học). Không đọc body action, log, archive, hay file detail bài học (load on-demand khi cần).
+Chỉ frontmatter (trừ `resources.md` + `lessons/index.md` đọc toàn bộ). Không đọc objective/plan body, action body, log, archive, hay file detail bài học (on-demand, xem contract mục "KHÔNG preload").
 
-Lessons đã nạp → dùng làm **context định hướng** khi skill đề xuất/điều chỉnh trong phiên (đối chiếu area/target liên quan). Quy tắc áp dụng: `okr-shared` SKILL "Áp dụng lessons".
+Lessons đã nạp → dùng làm **context định hướng** khi skill đề xuất/điều chỉnh trong phiên (đối chiếu area/target liên quan). Quy tắc áp dụng: `okr-shared/references/preload.md` "Áp dụng lessons".
 
 ### Intent routing
 

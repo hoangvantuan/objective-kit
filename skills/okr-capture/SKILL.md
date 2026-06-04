@@ -1,11 +1,15 @@
 ---
 name: okr-capture
-description: "Ghi nhanh ý tưởng, ghi chú, action, blocker, resource vào inbox. Load khi cần capture/ghi nhanh/note."
+description: "Ghi nhanh ý tưởng, note, action, blocker, resource vào inbox."
 ---
 
 # OKR Capture: Ghi nhanh vào inbox
 
 Chạy inline, thao tác nhẹ: chỉ phân loại + ghi inbox.
+
+## Preload Contract Tier 2
+
+Trước khi phân loại, đảm bảo `.okr/lessons/index.md` (toàn bộ) đã có trong context (`../okr-shared/references/preload.md` Tier 2). Idempotent: qua harness đã có, chạy lẻ tự đọc index nếu thiếu. Dùng để phân loại type bám bài học đã có. KHÔNG nạp objective/plan/resources/actions (capture không suy luận tiến độ).
 
 ## Flow
 
