@@ -19,7 +19,7 @@ description: "Phân tích OKR read-only: metrics, issues, priority, dashboard, t
 
 ## Đọc state
 
-**Preload Contract Tier 1** (`../okr-shared/references/preload.md`): trước khi đọc, đảm bảo nền Tier 1 đã có trong context (`objective.md`/`plan.md` frontmatter, `resources.md` full body, actions/inbox count, `lessons/index.md`). Idempotent.
+**Preload Contract Tier 1** (`../okr-shared/references/preload.md`): trước khi đọc, đảm bảo nền Tier 1 đã có trong context (`objective.md`/`plan.md` frontmatter, `resources.md` full body, actions/inbox count, `lessons/index.md`, conditional `context/index.md` khi `context/` tồn tại). Idempotent.
 
 **Tái dùng preload**: khi chạy qua orchestrator (mặc định), nền Tier 1 ĐÃ nằm trong context từ `okr-harness` Phase 1. KHÔNG Read lại (gồm cả `resources.md` đã có full body); chỉ đọc thêm phần body cần để render (KR/KI bảng, Roadmap body, `## Practices` Ongoing, actions frontmatter). Chạy ĐỘC LẬP (không qua orchestrator, data chưa có trong context) → tự nạp Tier 1 rồi đọc bảng dưới. Nhất quán với `okr-track` `flow-shared.md` Phase 1.
 
@@ -33,6 +33,7 @@ description: "Phân tích OKR read-only: metrics, issues, priority, dashboard, t
 | `actions/*.md` | Frontmatter only                      | Dùng Bash `ls` rồi đọc từng file, skip body trừ khi cần |
 | `inbox/`       | Count + đọc frontmatter pending items | Compute staleness on-the-fly                            |
 | `log/`         | Ongoing: review log gần nhất (tính trend). Project default: KHÔNG đọc | Deep/closure đọc nhiều hơn (xem okr-track Log Reading Rules) |
+| `context/index.md` | TOÀN BỘ (conditional: chỉ khi `context/` tồn tại) | Reachability + "Áp dụng context": nạp body `<slug>.md` khi việc hiện tại khớp cột "Khi nào cần đọc" |
 
 
 Nếu `.okr/` không tồn tại → trả ngay: "Chưa khởi tạo OKR. Cần chạy init."
@@ -58,6 +59,7 @@ Quét theo thứ tự nghiêm trọng:
 5. **Checkpoint slip**: action `effort: xl` có `## Checkpoints`, mốc quá hạn chưa tick (xem metrics.md "Action health")
 6. **Inbox aging**: items pending > 30 ngày
 7. **Capacity / xung đột tài nguyên**: dùng bảng signals ở `../okr-shared/references/metrics.md` ("Capacity / xung đột tài nguyên"): quá tải, dồn deadline, skill gap, tool missing, capacity drop
+8. **Reachability (chống file mồ côi)**: chạy "Reachability audit" (xem section dưới). Light = ls cấp 1 (cảnh báo nhẹ). Deep/closure = thuật toán đầy đủ (báo mồ côi + link chết + context lệch).
 
 ## Xếp priority (top N actions)
 
@@ -179,6 +181,51 @@ Khi gọi cho review deep, bổ sung:
 Mode đọc dữ liệu lịch sử khi user muốn "xem lại / trace / history". Vẫn read-only (analyze không bao giờ ghi). Khác default/deep: đọc `actions/archive/` + `log/` thay vì state active, theo nguyên tắc **lazy loading** (frontmatter trước, body khi user yêu cầu). 4 kiểu trace (action / milestone / theo thời gian / log) + quy trình chi tiết: xem `references/flow-trace.md`.
 
 Trigger: "trace A003", "xem lại milestone M1", "actions done tháng 4", "xem log tuần trước".
+
+## Reachability audit (read-only, chống file mồ côi)
+
+Backstop cho "Reachability khi ghi" (canonical `../okr-shared/references/preload.md`). Read-only: CHỈ báo + đề xuất; việc neo do `okr-init`/`okr-plan`/`okr-track` làm (giữ SOT ownership, đúng "track đề xuất, init/plan áp dụng").
+
+### Light (dashboard, mỗi phiên có plan)
+
+Tái dùng kết quả `ls -1 .okr/` (đã chạy ở Preload Contract Bước 0). Chỉ soi CẤP 1, KHÔNG đệ quy, KHÔNG đọc link-set, KHÔNG khẳng định mồ côi. Whitelist đã biết ở root:
+
+- File: `objective.md`, `resources.md`, `plan.md`.
+- Thư mục: `actions`, `inbox`, `log`, `lessons`, `context`.
+
+Bất kỳ file lẻ / thư mục con NGOÀI whitelist trên:
+
+````
+ℹ️ Có file/thư mục ở vị trí lạ: <tên>. Chạy review sâu để xác minh + cách neo.
+````
+
+Giữ claim token-cheap (1 lệnh ls cấp 1, output ngắn).
+
+### Deep / closure (thuật toán reachable set đầy đủ)
+
+`closure` ở đây là pha tái dùng thuật toán trong flow khác, không phải mode riêng của `okr-analyze`.
+
+**Bước 1. Liệt kê thực tế:** `ls -R .okr/` (đệ quy). Chỉ lấy TÊN file, KHÔNG đọc body của `archive/`, `log/` (tôn trọng invisible-by-default: audit chỉ kiểm tồn tại path).
+
+**Bước 2. Tập reachable theo vị trí:** 3 file SOT đơn ở root + các thư mục cấu trúc đã biết (`actions/`, `actions/archive/`, `inbox/`, `log/`, `lessons/`, `context/`). File theo độ sâu chuẩn của từng thư mục = reachable theo vị trí. Riêng `context/` vẫn phải qua Bước 5 để kiểm entry index, dù không bị gọi là mồ côi ở Bước 4.
+
+**Bước 3. Tập reachable qua link/đăng ký** (bắt file ngoài thư mục đã biết + để check link chết):
+- Cột `Resource` của `resources.md` `## Tài liệu & Knowledge Base`.
+- Dòng `Path:` trong `## Output/Deliverable` của action ACTIVE **và** action trong `actions/archive/` (deep/closure vốn đọc archive).
+- `context/index.md` entries (cột `Path`).
+- Link trong `lessons/index.md` của mục còn hiệu lực.
+- Link lesson `ported/obsolete` đọc thành tập riêng chỉ để phân loại cảnh báo nhẹ ở Bước 6, KHÔNG đưa vào reachable set.
+- Roadmap link trong `plan.md` body (đọc on-demand) để check Roadmap link chết.
+
+**Bước 4. Mồ côi = file thực tế KHÔNG thuộc Bước 2 và KHÔNG thuộc Bước 3.** Điển hình: file ở `.okr/` root ngoài 3 SOT, hoặc trong thư mục con lạ (vd `.okr/research/`). Báo path + gợi ý neo theo bản đồ neo (tài liệu DÙNG → resources; cross-cutting → context/).
+
+**Bước 5. Kiểm tra nội bộ context/:** nếu `context/` tồn tại mà thiếu `context/index.md` → báo "context lệch". Mọi `context/<slug>.md` (trừ `index.md`) phải có entry trong `index.md`; mọi entry phải trỏ file tồn tại. Lệch → báo "context lệch".
+
+**Bước 6. Kiểm tra link chết:** mọi path Bước 3 và tập lesson `ported/obsolete` riêng phải trỏ file tồn tại.
+- Roadmap link trỏ `actions/*` không tồn tại, entry context trỏ file đã xóa, cột Resource trỏ file `.okr/` không tồn tại → **lỗi cứng**.
+- File NGOÀI `.okr/` không tồn tại (deliverable ngoài chưa tạo), lesson ported/obsolete đã xóa khỏi `.okr/` (hàng đợi port hợp lệ) → **cảnh báo nhẹ**, không lỗi cứng.
+
+Output mỗi vấn đề: path + loại (mồ côi / link chết / context lệch) + gợi ý neo + skill áp dụng. KHÔNG tự sửa.
 
 ## Error handling
 
