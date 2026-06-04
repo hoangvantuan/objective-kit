@@ -37,17 +37,20 @@ else:
 Orchestrator tự đọc nhanh (không gọi skill) để xác định state. Đây là **Tier 1 của Preload Contract** (canonical: `okr-shared/references/preload.md`):
 
 ```
+ls -1 .okr/       → cấp 1, KHÔNG đệ quy: phát hiện context/ + file lẻ/thư mục lạ (cho audit)
 objective.md      → frontmatter: type (project/ongoing), status, period
 plan.md           → frontmatter: có/không, counters
 resources.md      → đọc TOÀN BỘ body (capacity, skills, tool, tài liệu, ngân sách)
 actions/          → scan frontmatter: count active, có overdue/blocked?
 inbox/            → scan frontmatter: count pending
 lessons/index.md  → đọc TOÀN BỘ (bài học, auto-load mỗi phiên)
+context/index.md  → conditional: nạp TOÀN BỘ nếu context/ tồn tại (như lessons/index.md)
 ```
 
-Chỉ frontmatter (trừ `resources.md` + `lessons/index.md` đọc toàn bộ). Không đọc objective/plan body, action body, log, archive, hay file detail bài học (on-demand, xem contract mục "KHÔNG preload").
+Chỉ frontmatter (trừ `resources.md`, `lessons/index.md`, và `context/index.md` khi tồn tại đọc toàn bộ). Không đọc objective/plan body, action body, log, archive, file detail bài học, hay `context/<slug>.md` body (on-demand, xem contract mục "KHÔNG preload").
 
 Lessons đã nạp → dùng làm **context định hướng** khi skill đề xuất/điều chỉnh trong phiên (đối chiếu area/target liên quan). Quy tắc áp dụng: `okr-shared/references/preload.md` "Áp dụng lessons".
+`context/index.md` (nếu nạp) → áp dụng quy tắc `okr-shared/references/preload.md` "Áp dụng context": trước khi skill ghi/đề xuất, quét cột "Khi nào cần đọc", nạp body file khớp. Mọi file mới sinh trong phiên phải reachable theo **bản đồ neo** (canonical: `preload.md` "Reachability khi ghi").
 
 ### Intent routing
 

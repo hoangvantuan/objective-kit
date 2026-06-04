@@ -111,12 +111,14 @@ sequenceDiagram
     H->>U: Cảnh báo cũ > 30 ngày
     H->>U: Gợi ý xử lý per item
     U->>H: Quyết định per item
-    H->>H: Xử lý: blocker → tự ghi, thought → log/giữ
+    H->>H: Xử lý: blocker → tự ghi, thought → action/log/context/giữ
     opt action / resource item
         H->>H: → okr-init / okr-plan: tạo action / update resource
     end
     H->>U: Báo cáo inbox đã xử lý
 ```
+
+`thought` có 4 nhánh xử lý canonical ở `okr-track/references/flow-inbox.md`: tạo action, append log, nâng thành `context/<slug>.md` + `context/index.md`, hoặc giữ inbox.
 
 ## 7. Retro flow (rút bài học)
 
@@ -136,4 +138,3 @@ sequenceDiagram
 ```
 
 Record-only: `okr-retro` KHÔNG sửa file skill. Loại A là hàng đợi port thủ công về repo gốc. Chỉ user chủ động (hoặc đồng ý gợi ý cuối flow) mới chạy.
-
