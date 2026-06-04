@@ -48,7 +48,7 @@ Liệt kê rõ để skill KHÔNG giả định nhầm các thứ này đã có 
 | `plan.md` body (`## Roadmap`, `## Practices`) | `okr-track` light re-render Roadmap; Ongoing streak; `okr-init` impact check `review_cycle` |
 | `actions/*.md` body (`## Checkpoints`, `## Output/Deliverable`) | `okr-track` khi update output / check checkpoint (effort `xl`) |
 | `log/**`                          | `okr-track`/`okr-analyze` deep + closure theo Log Reading Rules (`okr-track` `data-format.md`). Light KHÔNG đọc |
-| `actions/archive/**`              | `okr-track` closure; `okr-analyze` trace. Default ẩn |
+| `actions/archive/**`              | `okr-track` closure; `okr-analyze` trace + Reachability audit Deep. Default ẩn |
 | `lessons/skill/*`, `lessons/project/*` (file detail) | Đọc khi cần detail một bài (index chỉ chứa essence) |
 | `context/<slug>.md` body | Skill đọc khi cột "Khi nào cần đọc" trong `context/index.md` khớp việc hiện tại (xem "Áp dụng context"). Index chỉ chứa 4 trường, body on-demand |
 
