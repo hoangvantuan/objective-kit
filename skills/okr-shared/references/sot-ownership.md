@@ -17,5 +17,10 @@ Mỗi field SOT chỉ được sửa bởi skill được chỉ định. `okr-tr
 | Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`     |
 | External sync (pull/push status)                                  | `okr-track` `light`/`deep`    |
 | Bài học (`.okr/lessons/**`: tạo/sửa/đánh dấu obsolete, ported)   | `okr-retro`                   |
+| `## Tài liệu & Knowledge Base` (resources.md): đăng ký nguồn DÙNG | `okr-init` `update-resource`  |
+| `context/<slug>.md` (nội dung cross-cutting)                     | Owner = skill tạo file (`okr-init`/`okr-plan`/`okr-track`), 1 file 1 owner |
+| `context/index.md` entry (đăng ký file context)                 | Append-only đa-skill. KEY = cột `Path`. Mỗi entry single-owner = skill tạo. Cấm sửa entry owner khác |
+| Reachability audit (phát hiện mồ côi / link chết)               | `okr-analyze` (read-only, Light + Deep)          |
 
+> **`context/index.md` đa-skill nhưng không vi phạm "1 field 1 skill":** index chỉ là TẬP HỢP entry single-owner. Mỗi entry có 1 owner (skill tạo file), chỉ owner đó được sửa entry của mình. Nhiều skill ghi cùng bảng, nhưng không skill nào sửa entry của skill khác. Bản đồ neo canonical: `preload.md` "Reachability khi ghi".
 > Bảng này là bản canonical. Load cùng skill okr khi chạy.
