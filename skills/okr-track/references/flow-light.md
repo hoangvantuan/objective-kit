@@ -8,7 +8,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
 
 1. **Sync pull** (nếu có action với `external_ids`): chạy External Sync pull flow (xem `data-format.md` section "External Sync"). Diff status hiển thị trước bảng hỏi update. User confirm sync → merge vào danh sách thay đổi step 1. Không có `external_ids` → skip.
 2. Hỏi user có thay đổi: KR current, action status (pending/doing/done/blocked), blocker mới, output (nếu user chủ động cung cấp).
-  - User cung cấp output cho action đang `doing` hoặc `done` → ghi đè section `## Output/Deliverable` trong action file. Không cần chờ mark done.
+  - User cung cấp output cho action đang `doing` hoặc `done` → ghi đè section `## Output/Deliverable` trong action file theo `data-format.md`, giữ/cập nhật `Path:` nếu deliverable là file riêng. Không cần chờ mark done.
 
 1b. **Checkpoint update** (nếu có action status=doing với `effort: xl` và section `## Checkpoints`): hiển thị checklist, hỏi user tick mốc đã đạt. Mốc quá hạn chưa tick → cảnh báo "Action AXXX trượt checkpoint N".
 2. CONFIRM trước khi ghi (đếm số field thay đổi rồi chọn UI):
@@ -30,6 +30,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
   - A005.status: doing > blocked, lý do: chờ approve
   Xác nhận? (y/sửa/huỷ)
   ```
+> **Gate neo file mới**: nếu lần track này tạo hoặc đăng ký file ở vị trí lạ (vd nâng inbox thành `context/<slug>.md`, hoặc output thực tế là deliverable file riêng mới), chèn vào confirm 1 dòng TRƯỚC "Xác nhận?": `Sẽ tạo/đăng ký <path>, neo vào <context-index / Output-Deliverable AXXX>, vai trò <1 câu>.` (Xem `../../okr-shared/references/preload.md` "Cây quyết định gate". Action/log không cần vì là nhánh 1.)
 - Cả 2 nhánh: user trả lời `sửa` → hỏi field nào cần sửa, sửa xong CONFIRM lại. `huỷ` → bỏ toàn bộ thay đổi, kết thúc light mode.
 
 3. Áp dụng:
@@ -43,7 +44,7 @@ Phạm vi: CHỈ progress fields. Không sửa cấu trúc.
   A003 done. Output là gì? (file path, link, text... hoặc "skip")
   ```
 
-  - User cung cấp output → ghi đè section `## Output/Deliverable` trong action file bằng output thực tế (free-form markdown). Append output vào log entry (format: `A003.output:` + danh sách items).
+  - User cung cấp output → ghi đè section `## Output/Deliverable` trong action file bằng output thực tế (free-form markdown), giữ/cập nhật `Path:` nếu deliverable là file riêng. Append output vào log entry (format: `A003.output:` + danh sách items).
   - User nói "skip" → giữ nguyên section dự kiến, không ghi output vào log.
   - Nếu section đã được ghi đè trước đó (user đã ghi output giữa chừng) → skip, không hỏi lại.
 

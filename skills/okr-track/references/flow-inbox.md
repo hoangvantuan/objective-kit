@@ -58,7 +58,7 @@ Gợi ý xử lý dựa trên:
 - `action`: map vào KR/milestone nào, capacity còn lại bao nhiêu, deadline nào hợp lý
 - `blocker`: action nào bị ảnh hưởng?
 - `resource`: resources.md cần thêm gì (Công cụ / Tài liệu)?
-- `thought`: đủ rõ để thành action chưa? Nếu rõ → tạo action; nếu chưa rõ → giữ inbox; nếu chỉ là ghi chú → append log ngày
+- `thought`: phân 4 nhánh. (a) Đủ rõ thành action → tạo action. (b) Là tri thức/nội dung cross-cutting dùng nhiều lần (glossary, playbook, bảng tra) → nâng thành `context/<slug>.md` + entry `context/index.md`. (c) Chỉ là ghi chú thời điểm → append log ngày. (d) Chưa rõ → giữ inbox.
 
 ## Bước 3: Xử lý từng item user chọn
 
@@ -93,6 +93,9 @@ Sau validate, đi tiếp xử lý từng item theo bảng:
 
 Xử lý từng item theo bảng "Inbox type → Delegate mapping" (xem `okr-shared/references/schemas.md`). Migrate dữ liệu cũ (`idea`/`note` → `thought`) cũng theo quy tắc ở schemas.
 
+**Nâng `thought` thành context (nhánh b):** nếu item là tri thức cross-cutting, `okr-track` ghi `.okr/context/<slug>.md` (nội dung từ item) + thêm entry vào `.okr/context/index.md` (KEY = `Path`, idempotent, owner = okr-track, 4 trường theo `schemas.md` "Context layer"). Tạo `context/index.md` nếu chưa có. Trước khi ghi, hiển thị dòng confirm gate:
+> Sẽ tạo `.okr/context/<slug>.md`, neo vào `context/index.md` entry, vai trò `<1 câu>`.
+Xong → đổi `status: processed` cho inbox item.
 
 Với mỗi item xử lý xong → đổi `status: processed` trong file inbox.
 

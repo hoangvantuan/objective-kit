@@ -87,7 +87,7 @@ type: [tracking]          # array, giá trị hợp lệ: tracking | review | cl
 `.okr/actions/AXXX-*.md`:
 - Frontmatter `status`: `pending` | `doing` | `done` | `blocked` (cũng được sửa bởi `okr-plan` `update`)
 - Frontmatter `completed_date`: set `<today>` khi status chuyển sang `done` (1 lần, không ghi đè nếu đã có). Theo action vào `archive/`.
-- Body section `## Output/Deliverable`: ghi đè nội dung dự kiến bằng output thực tế (free-form markdown). Chỉ ghi khi user cung cấp output.
+- Body section `## Output/Deliverable`: ghi đè nội dung dự kiến bằng output thực tế (free-form markdown). Chỉ ghi khi user cung cấp output. **Giữ reachability**: nếu deliverable là file riêng, GIỮ/cập nhật dòng `Path: <đường dẫn>` ở ĐẦU section (xem `../../okr-shared/references/preload.md` "Giữ path deliverable bền"). Output thực tế là file mới → cập nhật `Path:` trỏ đúng; không có file riêng → không cần dòng `Path:`.
 
 ### Structure fields (track CHỈ đề xuất, delegate để apply)
 
@@ -112,6 +112,7 @@ type: [tracking]          # array, giá trị hợp lệ: tracking | review | cl
 | **SOT** | `.okr/objective.md`, `plan.md`, `resources.md`, `actions/` | Ghi đè |
 | **Log thường** | `.okr/log/YYYY-MM-DD.md` | Append-only |
 | **Inbox** | `.okr/inbox/*.md` | Status transition (pending → processed/discarded) |
+| **Context** | `.okr/context/` | Tạo từ inbox `thought` cross-cutting; body on-demand, index conditional preload |
 
 ## Inbox & Archive Rules
 

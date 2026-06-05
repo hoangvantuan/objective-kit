@@ -18,11 +18,12 @@
 
 **Metrics đã được `okr-analyze` tính** (orchestrator chạy analyze TRƯỚC track light/deep). Track NHẬN qua input `analysis`, KHÔNG tự tính lại. Nếu track chạy KHÔNG qua analyze (vd inbox-only độc lập) → tự tính theo `../../okr-shared/references/metrics.md`.
 
-SOT data Tier 1 (objective/plan frontmatter, actions frontmatter, `resources.md` full body, inbox count, `lessons/index.md`) đã có từ orchestrator (Preload Contract Tier 1, `../../okr-shared/references/preload.md`). KHÔNG đọc lại. Chạy lẻ (inbox-only độc lập, hoặc không qua harness) → tự nạp Tier 1 phần thiếu trước khi thao tác.
+SOT data Tier 1 (objective/plan frontmatter, actions frontmatter, `resources.md` full body, inbox count, `lessons/index.md`, conditional `context/index.md` khi `context/` tồn tại) đã có từ orchestrator (Preload Contract Tier 1, `../../okr-shared/references/preload.md`). KHÔNG đọc lại. Chạy lẻ (inbox-only độc lập, hoặc không qua harness) → tự nạp Tier 1 phần thiếu trước khi thao tác.
 
 Đọc thêm (on-demand, KHÔNG nằm trong preload):
 - `.okr/inbox/*.md` body: đọc khi xử lý từng item (count pending đã có từ preload)
 - `.okr/log/`: light → KHÔNG đọc. Deep → adaptive rule (xem `data-format.md` Log Reading Rules). Closure → tất cả.
+- `.okr/context/<slug>.md` body: đọc khi `context/index.md` đã nạp và cột "Khi nào cần đọc" khớp việc hiện tại (xem `../../okr-shared/references/preload.md` "Áp dụng context").
 - Trace: đọc `log/` theo yêu cầu user.
 
 `analysis` cung cấp (công thức ở `../../okr-shared/references/metrics.md`):
@@ -79,7 +80,7 @@ Heuristic, hỏi user xác nhận:
 - Deep: KHÔNG tự sửa KR target / action mới / deadline. Áp dụng qua `okr-init`/`okr-plan`.
 - Root cause (≥3 lần "tại sao") do `okr-analyze` deep tính. Track deep trình bày + tinh chỉnh, không làm lại từ đầu (trừ khi chạy không qua analyze).
 - Ghi đè SOT progress fields, append log. Không ngược lại.
-- Output: ghi đè `## Output/Deliverable`. Nhắc khi mark done, cho phép skip.
+- Output: ghi đè `## Output/Deliverable` theo `data-format.md`, giữ/cập nhật dòng `Path:` nếu deliverable là file riêng. Nhắc khi mark done, cho phép skip.
 - Log vào `log/YYYY-MM-DD.md`. Deep/closure append sections review.
 - Cuối flow LUÔN đề xuất next action cụ thể (theo `action-priority.md`).
 - Ongoing: KI status + practices adherence thay vì % target.
