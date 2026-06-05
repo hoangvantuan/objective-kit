@@ -211,7 +211,7 @@ Giữ claim token-cheap (1 lệnh ls cấp 1, output ngắn).
 
 **Bước 3. Tập reachable qua link/đăng ký** (bắt file ngoài thư mục đã biết + để check link chết):
 - Cột `Resource` của `resources.md` `## Tài liệu & Knowledge Base`.
-- Dòng `Path:` trong `## Output/Deliverable` của action ACTIVE **và** action trong `actions/archive/` (deep/closure vốn đọc archive).
+- Dòng `Path:` trong `## Output/Deliverable` của action ACTIVE **và** action trong `actions/archive/` (đọc body on-demand, không nằm trong preload; deep/closure vốn đọc archive).
 - `context/index.md` entries (cột `Path`).
 - Link trong `lessons/index.md` của mục còn hiệu lực.
 - Link lesson `ported/obsolete` đọc thành tập riêng chỉ để phân loại cảnh báo nhẹ ở Bước 6, KHÔNG đưa vào reachable set.
