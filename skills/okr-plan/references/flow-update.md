@@ -55,6 +55,10 @@ Tác động
 - A013 mới → gắn KR2
 - Dời M2 → actions con tự dời theo? (y/giữ nguyên)
 
+[Nếu thay đổi tạo deliverable file riêng hoặc file context/, in dòng neo TRƯỚC "Xác nhận?":]
+Neo file mới
+  - Sẽ tạo/đăng ký `<path>`, neo vào `<Output-Deliverable của AXXX / context-index>`, vai trò `<1 câu>`.
+
 Xác nhận? (y / sửa / huỷ)
 ```
 
@@ -63,4 +67,5 @@ Xác nhận? (y / sửa / huỷ)
 1. Ghi đè `plan.md` (counters, milestones).
 2. Ghi/sửa `actions/AXXX-*.md`. KHÔNG tạo/sửa trong `actions/archive/`.
 3. **Re-render Roadmap** trong `plan.md` body `## Roadmap`. Format xem `okr-shared/references/schemas.md`.
-4. Đề xuất chạy `okr-track` mode light để confirm state mới.
+4. **Nếu tạo file context/**: ghi `.okr/context/<slug>.md` (nội dung) + thêm/cập nhật entry trong `.okr/context/index.md` (KEY = `Path`, idempotent, owner = okr-plan). Format index: `okr-shared/references/schemas.md` "Context layer". Tạo `context/index.md` nếu chưa có.
+5. Đề xuất chạy `okr-track` mode light để confirm state mới.

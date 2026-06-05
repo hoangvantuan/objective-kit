@@ -79,6 +79,10 @@ Actions (N total, pic mặc định self)
   Rủi ro:
   - [dependency ngoài, skill thiếu, field TBD]
 
+[Nếu plan tạo deliverable file riêng (action có dòng Path:) hoặc file context/, in dòng neo cho mỗi file TRƯỚC "Xác nhận?":]
+Neo file mới
+  - Sẽ tạo/đăng ký `<path>`, neo vào `<Output-Deliverable của AXXX / context-index>`, vai trò `<1 câu>`.
+
 Xác nhận? (y / sửa <ID>: <field>=<value> / xoá <ID> / thêm)
 ```
 
@@ -95,6 +99,7 @@ Quy tắc đánh giá:
 3. Ghi mỗi action thành `AXXX-slug.md`. Schema xem `data-format.md`. Mặc định `pic: self`.
 4. Cập nhật counters trong `plan.md`.
 5. **Render bảng Roadmap** trong `plan.md` body `## Roadmap`. Format xem `okr-shared/references/schemas.md` section "Roadmap format". Sắp: Priority → Deadline. Ongoing không có milestone → heading `### Chưa phân milestone`.
+6. **Nếu tạo file context/**: ghi `.okr/context/<slug>.md` (nội dung) + thêm/cập nhật entry trong `.okr/context/index.md` (KEY = `Path`, idempotent, owner = okr-plan). Format index: `okr-shared/references/schemas.md` "Context layer". Tạo `context/index.md` nếu chưa có.
 
 ## Phase 5: Hậu xử lý
 

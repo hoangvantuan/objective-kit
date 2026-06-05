@@ -35,6 +35,7 @@ external_ids: {}
 
 ## Output/Deliverable
 
+Path: [chỉ khi deliverable là FILE riêng: đường dẫn file, vd `docs/report.md` hoặc `.okr/context/...`. Không phải file riêng thì bỏ dòng Path]
 [Mô tả sản phẩm đầu ra khi task hoàn thành. Phải cụ thể: file gì, ở đâu, chứa gì]
 
 ## Tiêu chí chất lượng
@@ -51,6 +52,8 @@ external_ids: {}
 
 [Context bổ sung, ràng buộc, link tham khảo]
 ```
+
+> **Dòng `Path:` để reachability** (`../../okr-shared/references/preload.md` "Giữ path deliverable bền"): nếu deliverable là file riêng, dòng `Path: <đường dẫn>` đặt ở ĐẦU section. `okr-track` khi ghi đè output thực tế PHẢI giữ/cập nhật dòng này, không làm đứt link. Audit Deep dựa vào dòng `Path:`. Deliverable không phải file (vd "KR1 đạt 5k DAU") thì không có dòng `Path:`.
 
 ## Quy tắc đặt tên
 
