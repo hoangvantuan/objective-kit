@@ -12,14 +12,38 @@ Chạy inline. Trích bài học từ hội thoại phiên hiện tại, phân l
 - **User chủ động**: "rút bài học", "tổng kết phiên", "retro".
 - **Harness gợi ý cuối flow** (1 dòng), user đồng ý mới chạy. KHÔNG tự chạy ngầm.
 
-## Hai loại bài học
+## Ba loại bài học
 
-| Loại | Là gì | Lưu ở | Vòng đời |
-|------|-------|-------|----------|
-| A - Cải tiến skill | Bài học về chính bộ skill OKR (flow vướng, routing sai, thiếu field, mô tả không trigger) | `.okr/lessons/skill/` | Record-only, `pending` → user port về repo gốc → `ported` |
-| B - Project cụ thể | Tri thức về project đang làm (định nghĩa KR, ước lượng capacity, đặc thù domain) | `.okr/lessons/project/` | `active` → `obsolete` khi hết đúng |
+| Loại | Là gì | Phép thử nhận diện | Lưu ở | Scope | Vòng đời |
+|------|-------|--------------------|-------|-------|----------|
+| A - skill (công cụ) | Năng lực nguyên tử của harness: làm được việc gì mới | Trả lời **"how?"** | `lessons/skill/` | luôn `shared` | `pending` → port → `ported` |
+| C - workflow (bản đồ) | Trình tự điều phối công cụ để đạt mục tiêu | Trả lời **"khi nào / thứ tự nào?"** | `lessons/workflow/` | **lưỡng tính** | shared: `pending`→`ported` · local: `active`→`obsolete` |
+| B - project (tri thức) | Sự thật/định nghĩa tĩnh của project | Là **dữ kiện**, không làm theo bước được | `lessons/project/` | luôn `local` | `active` → `obsolete` |
 
-Phân biệt nhanh: sửa được bằng cách đổi file trong `.claude/skills/` → **loại A**. Về nội dung công việc/mục tiêu → **loại B**.
+### Hai phép thử khi quét phiên
+
+1. **Phân loại (A/C/B)**: "how?" → skill · "thứ tự/khi nào dùng cái gì?" → workflow · "dữ kiện tĩnh, không thực hiện theo bước?" → project.
+2. **Phân tuyến scope (chỉ workflow)**: hỏi **"Copy harness sang một project OKR khác, cái này còn dùng được không?"** Còn → `shared` (ứng viên port về harness). Phụ thuộc domain/objective cụ thể → `local` (playbook sống tại project).
+
+## Ngưỡng đúc kết (bất đối xứng theo chi phí-khi-sai)
+
+Càng đụng vào harness chung, càng phải có bằng chứng lặp lại. Tiêu chí chất lượng cũ (tái dùng + không hiển nhiên + actionable) giữ nguyên cho cả ba loại; ngưỡng lặp-lại là lớp lọc CỘNG THÊM chỉ cho nhánh create-shared.
+
+| Việc đúc kết | Chi phí nếu sai | Ngưỡng |
+| --- | --- | --- |
+| `mode=improve` cái có sẵn (skill/workflow shared) | Thấp (có file để sửa) | **1 lần** gặp, nếu rõ + actionable |
+| `mode=create` + `scope=local` (playbook / tri thức riêng) | Thấp (sống tại `.okr/`) | **1 lần**, nếu tái dùng được |
+| `mode=create` + `scope=shared` (port về harness) | **Cao** (mọi project gánh, khó gỡ) | **≥3 lần thực tế** (≥3 mốc ở `## Bằng chứng`), HOẶC user chủ động yêu cầu đưa vào harness |
+
+### Phòng chờ: local là cửa vào của shared
+
+Một workflow hiếm khi lặp 3 lần trong CÙNG một phiên. Bằng chứng ≥3 lần tích luỹ XUYÊN phiên qua dedup đã có (Bước 4):
+
+1. Lần đầu gặp pattern chưa chắc tổng quát: ghi `workflow`, `scope=local`, `mode=create` (ngưỡng local = 1, hợp lệ ngay, rẻ). Bằng chứng: [mốc 1].
+2. Phiên sau gặp lại: dedup, cập nhật ĐÚNG file đó, thêm [mốc 2], [mốc 3].
+3. Đủ 3 mốc + qua phép thử "copy sang project khác vẫn đúng": ĐỀ XUẤT **thăng scope** local → shared (đổi `scope=shared`, `status` active → pending). Giờ là ứng viên port về harness.
+
+Hệ quả có chủ đích: không ý tưởng nào nhảy thẳng vào "đề xuất sửa harness chung". Phải sống ở project, chứng minh qua 3 lần, mới được xét lên.
 
 ## Flow
 
@@ -40,16 +64,18 @@ Chỉ giữ bài học **tái dùng được + không hiển nhiên + actionable
 - Việc đã ghi sẵn trong skill/CLAUDE.md.
 
 ### Bước 4: Phân loại + soạn essence + dedup
-Mỗi bài: gán `type` (A/B), soạn `essence` 1 dòng (câu lõi hành động), gán `target` (loại A) hoặc `area` (loại B). Đối chiếu index: trùng/giao bài cũ → đánh dấu "Cập nhật Sxxx/Pxxx" thay vì tạo mới.
+Mỗi bài: chạy 2 phép thử (phân loại A/C/B + phân tuyến scope), gán `type` + `mode` + `scope`, soạn `essence` 1 dòng, gán `target` (skill/workflow) hoặc `area` (project). Áp ngưỡng đúc kết: bài `workflow create-shared` chưa đủ 3 mốc thì hạ xuống `workflow local` (phòng chờ), KHÔNG ghi thẳng shared. Đối chiếu index: trùng/giao bài cũ → "Cập nhật Sxxx/Wxxx/Pxxx". Workflow-local đã đủ 3 mốc + tổng quát → đánh dấu "Thăng W0xx → shared".
 
 ### Bước 5: Trình bảng ứng viên + tự dọn nhẹ
 Hiển thị bảng cho user tick/cắt/sửa:
 
 ```
-| # | Loại | Essence | Target/Area | Mới/Cập nhật |
-|---|------|---------|-------------|--------------|
-| 1 | A | ... | okr-plan/flow-new.md | Mới |
-| 2 | B | ... | capacity | Cập nhật P003 |
+| # | Loại | Mode | Scope | Essence | Target/Area | Mới/Cập nhật/Thăng |
+|---|------|------|-------|---------|-------------|--------------------|
+| 1 | A skill | improve | shared | ... | okr-track/flow-light.md | Mới |
+| 2 | C workflow | create | local | ... | playbook tuần | Mới |
+| 3 | C workflow | create | shared | ... | flow mới: okr-track/flow-weekly-sync | Thăng W002 local→shared |
+| 4 | B project | - | local | ... | capacity | Cập nhật P003 |
 ```
 
 Đồng thời nêu bài loại B nghi **lỗi thời** (objective đã đổi, blocker đã hết) để user xác nhận `obsolete`/xoá. Chờ user duyệt. KHÔNG ghi trước khi user chọn.
@@ -58,17 +84,18 @@ Hiển thị bảng cho user tick/cắt/sửa:
 Với mỗi bài user giữ:
 - **Mới**: tạo file theo template (`references/data-format.md`), `id` tăng dần trong loại.
 - **Cập nhật**: sửa file cũ (tinh chỉnh essence/bối cảnh).
+- **Thăng scope** (chỉ workflow local → shared): sửa file `Wxxx` cùng chỗ, đổi `scope: local` → `shared`, `status: active` → `pending`. Chuyển dòng index từ cột scope `local`/`active` sang `shared`/`pending`. KHÔNG đổi `id`, KHÔNG tạo file mới.
 - Cập nhật `index.md`: thêm/sửa dòng. Bài `obsolete`/`ported` chuyển mục "Lưu trữ".
-- Folder `.okr/lessons/` chưa có → tạo `index.md` + `skill/` + `project/`.
+- Folder `.okr/lessons/` chưa có → tạo `index.md` + `skill/` + `workflow/` + `project/`.
 
 ### Bước 7: Báo cáo
-Tóm tắt: ghi mới mấy bài, cập nhật mấy, đánh dấu lỗi thời mấy. Nếu có loại A `pending` → nhắc: "X bài cải tiến skill đang chờ port về repo gốc objective-kit."
+Tóm tắt: ghi mới mấy bài, cập nhật mấy, thăng scope mấy, đánh dấu lỗi thời mấy. **Hàng đợi port** = skill `pending` + workflow `shared pending`: nếu >0 → nhắc "X bài chờ port về repo gốc objective-kit (Y công cụ + Z workflow tổng quát)."
 
 ## Quy tắc
 
 - **Record-only**. KHÔNG sửa file trong `.claude/skills/`. KHÔNG tự áp dụng cải tiến.
 - **Confirm trước ghi** (bảng ứng viên).
-- **Trùng thì cập nhật**, không đẻ bản mới.
+- **Trùng thì cập nhật**, không đẻ bản mới. Workflow local đủ chín thì thăng scope, không đẻ bản shared mới.
 - **SOT**: chỉ `okr-retro` ghi `.okr/lessons/**`. Xem `okr-shared/references/sot-ownership.md`.
 - **Schema**: `references/data-format.md`.
 
@@ -87,6 +114,13 @@ Tóm tắt: ghi mới mấy bài, cập nhật mấy, đánh dấu lỗi thời 
 2. Bài về capacity trùng P002 đã có.
 3. Bảng đánh dấu "Cập nhật P002". User đồng ý.
 4. Tinh chỉnh essence P002, KHÔNG tạo P00x mới.
+
+### Thăng workflow local lên shared
+1. Phiên 1: user lập quy trình "thứ Hai sync action với lịch rồi mới track". Ghi W001 workflow/local/create, 1 mốc.
+2. Phiên 2, 3: gặp lại cùng quy trình. Dedup cập nhật W001, thêm mốc 2, 3.
+3. Phiên 3: đủ 3 mốc + phép thử "copy sang project khác vẫn đúng" = PASS (không phụ thuộc domain).
+4. Đề xuất thăng W001 → shared. User đồng ý. Đổi scope=shared, status=pending.
+5. Báo: "Thăng 1 workflow. 1 bài chờ port về repo gốc (workflow tổng quát)."
 
 ### Không có bài học đáng ghi
 1. Phiên ngắn, chỉ xem dashboard.
