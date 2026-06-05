@@ -57,7 +57,7 @@ Một agent đọc state rồi đọc tiếp SKILL.md phù hợp và thực thi.
 3. **Confirm trước ghi**: Skill ghi (init/plan) hiển thị bảng tóm tắt, user xác nhận trước khi ghi.
 4. **Track đề xuất, init/plan áp dụng**: `okr-track` không sửa cấu trúc. Muốn sửa → chạy tiếp `okr-init`/`okr-plan` (pre-confirmed).
 5. **Quality Gate internal**: 3 câu check ngầm. Chi tiết tại `skills/okr-shared/references/quality-gate.md`.
-6. **Tiết kiệm token, có chủ đích**: Archive invisible by default. Log chỉ đọc mới nhất. Preload theo **Preload Contract** (`skills/okr-shared/references/preload.md`): nạp đủ nền (gồm `resources.md` full body) trước khi thao tác để tránh đề xuất sai, nhưng giữ body objective/plan + action + log/archive on-demand. Cân bằng "đủ context" vs token, không nạp mù.
+6. **Tiết kiệm token, có chủ đích**: Archive invisible by default. Log chỉ đọc mới nhất. Preload theo **Preload Contract** (`skills/okr-shared/references/preload.md`): nạp đủ nền (gồm `resources.md` full body) trước khi thao tác để tránh đề xuất sai, nhưng giữ body objective/plan + action + log/archive on-demand. Cân bằng "đủ context" vs token, không nạp mù. Đợt 15 bổ sung **Reachability khi ghi** (cùng file): mọi file mới phải neo về gốc preload, `context/` là nhà cho tri thức cross-cutting (conditional preload), audit backstop ở `okr-analyze`.
 
 ## Phân vai SOT
 
@@ -76,6 +76,9 @@ Một agent đọc state rồi đọc tiếp SKILL.md phù hợp và thực thi.
 | Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`                       |
 | External sync (pull/push status)                                  | `okr-track` `light`/`deep`                      |
 | Bài học (`.okr/lessons/**`)                                       | `okr-retro`                                     |
+| `## Tài liệu & Knowledge Base` (resources.md): nguồn DÙNG          | `okr-init` `update-resource`                    |
+| `context/<slug>.md` và `context/index.md` entry                   | Owner = skill tạo file (`okr-init`/`okr-plan`/`okr-track`) |
+| Reachability audit (read-only)                                    | `okr-analyze`                                   |
 
 
 > Canonical: `skills/okr-shared/references/sot-ownership.md`. Sửa ở đó, bảng trên giữ đồng bộ.
@@ -98,8 +101,22 @@ Harness sinh ra `.okr/` tại **project đích** (không phải repo này):
 │   └── archive/          # Actions done, read-only
 ├── inbox/                # Capture items chờ xử lý
 ├── log/                  # Append-only, type: [tracking|review|closure]
+├── context/              # Tri thức/data cross-cutting do dự án tạo (index.md + <slug>.md)
 └── lessons/              # Bài học (okr-retro): index.md + skill/ + project/
 ```
+
+### Reachability khi ghi trong `.okr/`
+
+Canonical: `skills/okr-shared/references/preload.md` "Reachability khi ghi". Bảng dưới chỉ là tóm tắt đối chiếu:
+
+| Loại file/runtime data | Neo vào |
+| --- | --- |
+| Tài liệu/nguồn DÙNG | `resources.md` `## Tài liệu & Knowledge Base`, cột `Resource` |
+| Deliverable file riêng của action | Dòng `Path:` ở đầu `## Output/Deliverable` của action |
+| Bài học | `lessons/index.md` |
+| Inbox item | `inbox/` |
+| Log entry | `log/` |
+| Tri thức/data cross-cutting do dự án tạo | `context/<slug>.md` + `context/index.md` |
 
 Schema chi tiết: `references/data-format.md` trong mỗi skill.
 
@@ -147,5 +164,6 @@ Không cần sửa `CLAUDE.md` của project đích. Skill description của `ok
 9. Đợt 12: Review drift tầng sâu (prompt-master). P0 done-count: done rate lấy từ counter `plan.md`, KR% cách 2 chỉ deep/closure, thêm "Tốc độ hoàn thành" (deep/closure). Thêm `action.completed_date`. Guard `paused` ở track. Chuyển mode `trace` từ `okr-track` sang `okr-analyze` (read-only về đúng nhà). Closure bỏ "## Lessons", gợi ý `okr-retro`. Wire "Áp dụng lessons". Bảng phân loại type cho capture. Sửa 4 tham chiếu chết + dọn em-dash.
 10. Đợt 13: Tối ưu load file. `okr-analyze` tái dùng SOT đã preload từ orchestrator (không Read trùng `objective.md`/`plan.md`, nhất quán với `okr-track` flow-shared Phase 1). Guard lessons hạ xuống SKILL của `okr-init`/`okr-plan`/`okr-track`: đảm bảo `lessons/index.md` được nạp + áp dụng khi chạy lẻ không qua harness (trước chỉ ở `okr-shared` SKILL mà skill khác không bắt buộc đọc).
 11. Đợt 14: Preload Contract. Vá lỗ hổng "entry point lẻ thiếu context": tạo `okr-shared/references/preload.md` canonical (Tier 1 full cho analyze/init/plan/track/harness, Tier 2 minimal cho capture/retro, idempotent). Thêm `resources.md` full body vào preload (trước chỉ on-demand, lại còn bị `okr-analyze` mô tả nhầm là "Frontmatter" dù data ở body). Mục "KHÔNG preload" liệt kê rõ thứ on-demand (body objective/plan, action, log, archive, lesson detail) để flow không giả định nhầm. Gộp guard lessons rời rạc (Đợt 13) vào contract. Drift-fix `flow-shared.md` ("resources KHÔNG preload" → đã preload full).
+12. Đợt 15: Reachability khi ghi (chống file mồ côi). Đối xứng Đợt 14 (reachability khi đọc). Nguyên tắc lõi + bản đồ neo canonical ở `preload.md`: mọi file sinh trong `.okr/` phải reachable qua link/đăng ký hoặc vị trí cấu trúc đã biết. Nâng `context/` thành nhà độc lập first-class (index 4 trường, conditional preload, model ghi đa-skill owner-per-entry). Thêm `ls -1 .okr/` + conditional `context/index.md` vào Tier 1. Enforcement 2 lớp: gate dòng confirm lúc tạo (init/plan/track, nhánh 2 theo vị trí) + audit backstop read-only ở okr-analyze (Light ls cấp 1, Deep thuật toán reachable set 6 bước). Giữ dòng `Path:` deliverable bền qua track ghi đè. okr-capture/okr-retro không đổi. Chỉ runtime `.okr/`, tách dev-time.
 
 Chi tiết thay đổi: xem `CHANGELOG.md`.
