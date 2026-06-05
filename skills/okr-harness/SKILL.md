@@ -177,10 +177,11 @@ Thay cho cơ chế tự cải tiến cũ. Việc rút bài học do skill `okr-r
 
 KHÔNG tự chạy. User đồng ý hoặc tự gõ "rút bài học" → chạy `okr-retro` inline.
 
-`okr-retro` ghi 2 loại bài học vào `.okr/lessons/`:
+`okr-retro` ghi 3 loại bài học vào `.okr/lessons/` (skill = công cụ, workflow = bản đồ điều phối, project = tri thức):
 
-- **Loại A (cải tiến skill)**: hàng đợi, user port thủ công về repo gốc `objective-kit` để cải tiến harness.
-- **Loại B (project cụ thể)**: tri thức tại chỗ, auto-load mỗi phiên qua index.
+- **Loại A (skill/công cụ)**: năng lực harness, luôn shared. Hàng đợi port thủ công về repo gốc `objective-kit`.
+- **Loại C (workflow/bản đồ)**: lưỡng tính. Shared = quy trình tổng quát chờ port; local = playbook riêng project, sống tại chỗ.
+- **Loại B (project/tri thức)**: dữ kiện tại chỗ, auto-load mỗi phiên qua index.
 
 Record-only: `okr-retro` KHÔNG tự sửa file skill, KHÔNG ghi CHANGELOG. Chi tiết: `okr-retro` SKILL.md.
 

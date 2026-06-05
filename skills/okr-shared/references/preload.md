@@ -49,12 +49,12 @@ Liệt kê rõ để skill KHÔNG giả định nhầm các thứ này đã có 
 | `actions/*.md` body (`## Checkpoints`, `## Output/Deliverable`) | `okr-track` khi update output / check checkpoint (effort `xl`) |
 | `log/**`                          | `okr-track`/`okr-analyze` deep + closure theo Log Reading Rules (`okr-track` `data-format.md`). Light KHÔNG đọc |
 | `actions/archive/**`              | `okr-track` closure; `okr-analyze` trace + Reachability audit Deep. Default ẩn |
-| `lessons/skill/*`, `lessons/project/*` (file detail) | Đọc khi cần detail một bài (index chỉ chứa essence) |
+| `lessons/skill/*`, `lessons/workflow/*`, `lessons/project/*` (file detail) | Đọc khi cần detail một bài (index chỉ chứa essence) |
 | `context/<slug>.md` body | Skill đọc khi cột "Khi nào cần đọc" trong `context/index.md` khớp việc hiện tại (xem "Áp dụng context"). Index chỉ chứa 4 trường, body on-demand |
 
 ## Áp dụng lessons (không chỉ load cho có)
 
-`lessons/index.md` đã nạp → dùng làm **context định hướng**, không phải lệnh cứng. Trước khi đề xuất KR/action/điều chỉnh hoặc ghi file: đối chiếu lesson có essence liên quan việc đang làm (loại B theo `area`, loại A theo `target`). Lesson cảnh báo điều gì thì bám theo. Cần detail → đọc file lesson tương ứng. User vẫn quyết.
+`lessons/index.md` đã nạp → dùng làm **context định hướng**, không phải lệnh cứng. Trước khi đề xuất KR/action/điều chỉnh hoặc ghi file: đối chiếu lesson có essence liên quan việc đang làm (loại B theo `area`; loại A và workflow theo `target`). Lesson cảnh báo điều gì thì bám theo. Cần detail → đọc file lesson tương ứng. User vẫn quyết.
 
 ## Reachability khi ghi (chống file mồ côi)
 
@@ -84,7 +84,7 @@ Format chi tiết `context/` + ranh giới ngữ nghĩa vs `resources.md`: xem `
 Thư mục/file mà preload/skill biết cách quét. Audit coi reachable theo vị trí, KHÔNG báo mồ côi:
 
 - File SOT đơn ở `.okr/` root: `objective.md`, `resources.md`, `plan.md`.
-- Thư mục: `actions/`, `actions/archive/`, `inbox/`, `log/`, `lessons/` (gồm `index.md`, `skill/`, `project/`), `context/` (gồm `index.md`, các `<slug>.md`).
+- Thư mục: `actions/`, `actions/archive/`, `inbox/`, `log/`, `lessons/` (gồm `index.md`, `skill/`, `workflow/`, `project/`), `context/` (gồm `index.md`, các `<slug>.md`).
 
 Riêng `context/<slug>.md` còn phải có entry tương ứng trong `context/index.md`. Light audit chỉ thấy `context/` ở cấp 1 nên không cảnh báo. Đối chiếu file thật trong `context/` với `context/index.md` là việc của Deep audit trong `okr-analyze`. Thiếu entry thì là `context lệch`, không phải reachable đủ.
 

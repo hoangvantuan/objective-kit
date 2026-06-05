@@ -16,7 +16,7 @@ Mỗi field SOT chỉ được sửa bởi skill được chỉ định. `okr-tr
 | Inbox items (xử lý: status transition)                            | `okr-track`                   |
 | Action notes, external_ids (tạo/sửa)                              | `okr-plan` `new`/`update`     |
 | External sync (pull/push status)                                  | `okr-track` `light`/`deep`    |
-| Bài học (`.okr/lessons/**`: tạo/sửa/đánh dấu obsolete, ported)   | `okr-retro`                   |
+| Bài học (`.okr/lessons/**`: 3 ngăn skill/workflow/project, tạo/sửa/thăng scope/đánh dấu obsolete, ported) | `okr-retro` |
 | `## Tài liệu & Knowledge Base` (resources.md): đăng ký nguồn DÙNG | `okr-init` `update-resource`  |
 | `context/<slug>.md` (nội dung cross-cutting)                     | Owner = skill tạo file (`okr-init`/`okr-plan`/`okr-track`), 1 file 1 owner |
 | `context/index.md` entry (đăng ký file context)                 | Append-only đa-skill. KEY = cột `Path`. Mỗi entry single-owner = skill tạo. Cấm sửa entry owner khác |

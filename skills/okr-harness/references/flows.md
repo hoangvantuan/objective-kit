@@ -130,11 +130,11 @@ sequenceDiagram
     U->>H: "rút bài học" / đồng ý gợi ý cuối flow
     H->>H: → okr-retro: đọc lessons/index.md (dedup)
     H->>H: → okr-retro: quét hội thoại phiên → ứng viên bài học
-    H->>H: → okr-retro: phân loại A/B + soạn essence + dedup
+    H->>H: → okr-retro: phân loại A/C/B (skill/workflow/project) + scope + soạn essence + dedup
     H->>U: Bảng ứng viên + bài nghi lỗi thời
     U->>H: Tick/cắt/sửa
-    H->>H: Ghi file lessons/{skill,project}/ + cập nhật index.md
-    H->>U: Báo: ghi mới/cập nhật/lỗi thời + nhắc port loại A
+    H->>H: Ghi file lessons/{skill,workflow,project}/ + cập nhật index.md
+    H->>U: Báo: ghi mới/cập nhật/thăng scope/lỗi thời + nhắc port (skill + workflow shared)
 ```
 
-Record-only: `okr-retro` KHÔNG sửa file skill. Loại A là hàng đợi port thủ công về repo gốc. Chỉ user chủ động (hoặc đồng ý gợi ý cuối flow) mới chạy.
+Record-only: `okr-retro` KHÔNG sửa file skill. Skill và workflow shared là hàng đợi port thủ công về repo gốc. Chỉ user chủ động (hoặc đồng ý gợi ý cuối flow) mới chạy.

@@ -109,12 +109,14 @@ next_actions:                   # top 3
 ```yaml
 status: success | nothing       # nothing = không có bài học đáng ghi
 lessons_added:                  # bài mới
-  - id: string                  # Sxxx | Pxxx
-    type: skill | project
+  - id: string                  # Sxxx | Wxxx | Pxxx
+    type: skill | workflow | project
+    scope: shared | local
     essence: string
-lessons_updated: [Sxxx, Pxxx]   # bài cập nhật (dedup)
-lessons_obsoleted: [Pxxx]       # bài đánh dấu lỗi thời
-pending_skill_lessons: number   # loại A pending, nhắc port về repo gốc
+lessons_updated: [Sxxx, Wxxx, Pxxx]   # bài cập nhật (dedup)
+lessons_promoted: [Wxxx]        # workflow local → shared (thăng scope)
+lessons_obsoleted: [Pxxx, Wxxx]       # bài đánh dấu lỗi thời
+pending_port_lessons: number    # skill pending + workflow shared pending, nhắc port về repo gốc
 ```
 
 ## Chuyển skill inline (thay cho dispatch)
