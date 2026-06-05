@@ -49,7 +49,7 @@ Bài lạc cụm (không gom được với ai) vẫn xét riêng ở C3 cho tha
 **Mỗi bài (kể cả đứng riêng, lạc cụm):**
 
 - **Tách**: 1 bài ôm ≥2 rule thuộc ≥2 target/area khác nhau → tách thành N bài, mỗi bài 1 rule.
-- **Reclassify**: chạy lại 2 phép thử Đợt 16 (xem SKILL.md "Hai phép thử"):
+- **Reclassify**: chạy lại 2 phép thử Đợt 16 (xem SKILL.md "Hai phép thử khi quét phiên"):
   - Sai ngăn (phép thử phân loại A/C/B cho kết quả khác ngăn hiện tại) → chuyển ngăn.
   - Workflow-local đủ 3 mốc ở `## Bằng chứng` + qua phép thử phân tuyến scope ("copy sang project khác vẫn đúng") mà chưa thăng → đề xuất thăng scope. (Về cơ chế đây là một nhánh của Reclassify, nhưng hiển thị thành dòng riêng ở bảng C4 và mục C6 để user tick độc lập.)
 
