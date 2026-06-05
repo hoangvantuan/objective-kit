@@ -1,6 +1,6 @@
 ---
 name: okr-retro
-description: "Rút bài học từ phiên OKR, lưu vào layer lessons. Record-only."
+description: "Rút bài học từ phiên OKR, lưu vào layer lessons. Record-only. Cũng dọn kho lessons khi user gọi: dọn kho lessons, consolidate, sắp xếp lại bài học, gộp bài học, rà soát lessons."
 ---
 
 # OKR Retro: Rút bài học từ phiên
@@ -9,8 +9,14 @@ Chạy inline. Trích bài học từ hội thoại phiên hiện tại, phân l
 
 ## Khi nào chạy
 
-- **User chủ động**: "rút bài học", "tổng kết phiên", "retro".
+- **User chủ động (retro-thường)**: "rút bài học", "tổng kết phiên", "retro".
+- **User chủ động (consolidate)**: "dọn kho lessons", "consolidate", "sắp xếp lại bài học", "gộp bài học", "rà soát lessons". Chạy mode `consolidate`, xem dưới.
 - **Harness gợi ý cuối flow** (1 dòng), user đồng ý mới chạy. KHÔNG tự chạy ngầm.
+
+### Hai mode
+
+- **retro-thường** (mặc định, Flow Bước 1-7 dưới): quét PHIÊN hiện tại, trích bài MỚI.
+- **consolidate**: quét toàn KHO `lessons/` đã có (không quan tâm phiên), đề xuất gộp / tách / reclassify / giải mâu thuẫn. Flow đầy đủ ở `references/flow-consolidate.md`. Đọc file đó khi trigger consolidate kích hoạt.
 
 ## Ba loại bài học
 
@@ -91,6 +97,8 @@ Với mỗi bài user giữ:
 ### Bước 7: Báo cáo
 Tóm tắt: ghi mới mấy bài, cập nhật mấy, thăng scope mấy, đánh dấu lỗi thời mấy. **Hàng đợi port** = skill `pending` + workflow `shared pending`: nếu >0 → nhắc "X bài chờ port về repo gốc objective-kit (Y công cụ + Z workflow tổng quát)."
 
+**Nhắc ngưỡng consolidate** (1 dòng, confirm-gated): SAU khi ghi xong, đếm bài còn hiệu lực (`pending`+`active`). Nếu **tổng > `NGUONG_TONG`** (mặc định 12) HOẶC **một ngăn bất kỳ > `NGUONG_NGAN`** (mặc định 8) → nhắc 1 dòng, vd: "Kho lessons đã 14 bài (workflow 9). Cân nhắc chạy `consolidate` để gộp/dọn?" User đồng ý mới chạy consolidate. KHÔNG tự chạy. Hằng số định nghĩa ở `references/flow-consolidate.md`. Chấp nhận có thể nhắc lại phiên sau (nhẹ, user bỏ qua được), không ghi nhớ "đã nhắc".
+
 ## Quy tắc
 
 - **Record-only**. KHÔNG sửa file trong `.claude/skills/`. KHÔNG tự áp dụng cải tiến.
@@ -98,6 +106,7 @@ Tóm tắt: ghi mới mấy bài, cập nhật mấy, thăng scope mấy, đánh
 - **Trùng thì cập nhật**, không đẻ bản mới. Workflow local đủ chín thì thăng scope, không đẻ bản shared mới.
 - **SOT**: chỉ `okr-retro` ghi `.okr/lessons/**`. Xem `okr-shared/references/sot-ownership.md`.
 - **Schema**: `references/data-format.md`.
+- **Consolidate**: dọn kho toàn diện ở `references/flow-consolidate.md`. Cùng record-only + confirm từng dòng, zero schema mới.
 
 ## Test scenarios
 
