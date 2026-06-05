@@ -26,7 +26,7 @@ skills/
 │   └── references/             ← data-format, flow-shared/light/deep/inbox/closure
 ├── okr-capture/                ← ghi nhanh vào inbox (inline)
 │   └── references/             ← data-format
-├── okr-retro/                  ← rút bài học từ phiên, ghi .okr/lessons/ (record-only)
+├── okr-retro/                  ← rút bài học 3 ngăn (skill/workflow/project), ghi .okr/lessons/ (record-only)
 │   └── references/             ← data-format
 └── okr-shared/                 ← quy tắc chung dùng cho mọi skill
     └── references/             ← schemas, sot-ownership, quality-gate, delegate-protocol, action-priority, metrics
@@ -42,7 +42,7 @@ skills/
 | okr-plan    | Tạo/sửa plan, milestones, actions. Confirm trước ghi.                                                     |
 | okr-track   | Cập nhật progress, review sâu, xử lý inbox, sync, archive, log, closure.                                  |
 | okr-capture | Ghi nhanh vào inbox (phân loại + ghi).                                                                    |
-| okr-retro   | Rút bài học từ phiên, ghi `.okr/lessons/`. Record-only, confirm trước ghi.                                |
+| okr-retro   | Rút bài học từ phiên, ghi `.okr/lessons/` (3 ngăn: skill/workflow/project). Record-only, confirm trước ghi. |
 | okr-shared  | Quy tắc chung: SOT, schemas, quality gate, delegate, priority. Không chạy độc lập.                        |
 
 
@@ -102,7 +102,7 @@ Harness sinh ra `.okr/` tại **project đích** (không phải repo này):
 ├── inbox/                # Capture items chờ xử lý
 ├── log/                  # Append-only, type: [tracking|review|closure]
 ├── context/              # Tri thức/data cross-cutting do dự án tạo (index.md + <slug>.md)
-└── lessons/              # Bài học (okr-retro): index.md + skill/ + project/
+└── lessons/              # Bài học (okr-retro): index.md + skill/ + workflow/ + project/
 ```
 
 ### Reachability khi ghi trong `.okr/`
@@ -165,5 +165,6 @@ Không cần sửa `CLAUDE.md` của project đích. Skill description của `ok
 10. Đợt 13: Tối ưu load file. `okr-analyze` tái dùng SOT đã preload từ orchestrator (không Read trùng `objective.md`/`plan.md`, nhất quán với `okr-track` flow-shared Phase 1). Guard lessons hạ xuống SKILL của `okr-init`/`okr-plan`/`okr-track`: đảm bảo `lessons/index.md` được nạp + áp dụng khi chạy lẻ không qua harness (trước chỉ ở `okr-shared` SKILL mà skill khác không bắt buộc đọc).
 11. Đợt 14: Preload Contract. Vá lỗ hổng "entry point lẻ thiếu context": tạo `okr-shared/references/preload.md` canonical (Tier 1 full cho analyze/init/plan/track/harness, Tier 2 minimal cho capture/retro, idempotent). Thêm `resources.md` full body vào preload (trước chỉ on-demand, lại còn bị `okr-analyze` mô tả nhầm là "Frontmatter" dù data ở body). Mục "KHÔNG preload" liệt kê rõ thứ on-demand (body objective/plan, action, log, archive, lesson detail) để flow không giả định nhầm. Gộp guard lessons rời rạc (Đợt 13) vào contract. Drift-fix `flow-shared.md` ("resources KHÔNG preload" → đã preload full).
 12. Đợt 15: Reachability khi ghi (chống file mồ côi). Đối xứng Đợt 14 (reachability khi đọc). Nguyên tắc lõi + bản đồ neo canonical ở `preload.md`: mọi file sinh trong `.okr/` phải reachable qua link/đăng ký hoặc vị trí cấu trúc đã biết. Nâng `context/` thành nhà độc lập first-class (index 4 trường, conditional preload, model ghi đa-skill owner-per-entry). Thêm `ls -1 .okr/` + conditional `context/index.md` vào Tier 1. Enforcement 2 lớp: gate dòng confirm lúc tạo (init/plan/track, nhánh 2 theo vị trí) + audit backstop read-only ở okr-analyze (Light ls cấp 1, Deep thuật toán reachable set 6 bước). Giữ dòng `Path:` deliverable bền qua track ghi đè. okr-capture/okr-retro không đổi. Chỉ runtime `.okr/`, tách dev-time.
+13. Đợt 16: Đúc kết quy trình/skill mới ở runtime (retro 3 ngăn). Áp định nghĩa skill = công cụ ("how") / workflow = bản đồ điều phối ("khi nào/thứ tự") / project = tri thức tĩnh. Mức A (lớp nhãn, KHÔNG tách vật lý). `okr-retro` từ 2 ngăn thành 3: thêm `lessons/workflow/` (Wxxx) + 2 field cứng `mode` (improve/create) + `scope` (shared/local), mở rộng `type`. Hai phép thử: phân loại (how/thứ tự/dữ kiện) + phân tuyến scope ("copy sang project khác còn dùng?"). Ngưỡng bất đối xứng chống phình harness: improve = 1, create-local = 1, create-shared ≥3 mốc (hoặc user chủ động). Workflow-local là phòng chờ của shared: đủ 3 mốc + tổng quát thì thăng scope. Cập nhật output schema harness (scope, lessons_promoted, pending_port_lessons). Chỉ `.okr/` runtime.
 
 Chi tiết thay đổi: xem `CHANGELOG.md`.
