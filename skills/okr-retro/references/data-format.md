@@ -111,6 +111,8 @@ Auto-load mỗi phiên. CHỈ chứa dòng tóm tắt, KHÔNG chứa body bài h
 | project | local | `obsolete` | Tri thức hết đúng (objective đổi, đã khắc phục) |
 
 > **Vòng đời theo scope, không theo type:** `shared` đi `pending → ported` (hàng đợi port). `local` đi `active → obsolete` (sống tại chỗ). Workflow là loại duy nhất có thể đổi scope: xem "Thăng scope" ở `SKILL.md`.
+>
+> **Ngoại lệ consolidate:** mode `consolidate` (xem `flow-consolidate.md`) có thể đánh `obsolete` cho bài ở bất kỳ ngăn nào khi bài đó bị gộp / thua mâu thuẫn / chuyển ngăn, kể cả `skill` (shared) và `workflow` shared. Đây KHÔNG phải status value mới (`obsolete` đã có), chỉ là mở rộng phạm vi áp dụng. Bài skill/workflow-shared `obsolete` rời hàng đợi port, xuống bảng "Lưu trữ".
 
 ## Quy ước
 
@@ -119,3 +121,15 @@ Auto-load mỗi phiên. CHỈ chứa dòng tóm tắt, KHÔNG chứa body bài h
 - Slug: tiếng Việt không dấu hoặc tiếng Anh, ≤5 từ, gạch ngang.
 - `essence` là SOT của dòng index: sửa essence trong file thì cập nhật lại dòng index.
 - Trùng bài: cập nhật file cũ (tinh chỉnh essence, có thể thêm ngày gặp lại vào Bối cảnh), KHÔNG tạo file mới.
+
+## Quy ước consolidate (mode `consolidate`)
+
+Dọn kho toàn diện. Flow đầy đủ: `flow-consolidate.md`. Convention archive-trace:
+
+- **Không xoá file.** Bài bị gộp / thua mâu thuẫn / chuyển ngăn → `status: obsolete` (KHÔNG xoá), thêm 1 dòng body trỏ về bài sống sót. Giữ trace.
+- **Dòng trỏ-về** chỉ là text trong body bài `obsolete`, KHÔNG phải field frontmatter. Ba mẫu:
+  - Gộp: "Đã gộp vào Xxxx".
+  - Mâu thuẫn: "Bị thay bởi Xxxx (mâu thuẫn, [lý do])".
+  - Reclassify: "Chuyển ngăn thành Xxxx".
+- **Zero schema mới, zero status enum value mới.** Bốn thao tác consolidate (gộp / tách / reclassify / giải mâu thuẫn) phân rã hết về 4 primitive ghi đã có: tạo file, cập nhật file, đánh `obsolete` + chuyển Lưu trữ, thăng scope local→shared.
+- **Reclassify sai ngăn** đẻ file mới ở ngăn đích (`id` mới theo prefix S/W/P), bài cũ `obsolete`. **Thăng scope** sửa tại chỗ, KHÔNG đổi `id`. Phân biệt rõ hai nhánh ở `flow-consolidate.md` mục "Mô hình ghi".
