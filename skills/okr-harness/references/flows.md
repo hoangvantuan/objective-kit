@@ -138,3 +138,5 @@ sequenceDiagram
 ```
 
 Record-only: `okr-retro` KHÔNG sửa file skill. Skill và workflow shared là hàng đợi port thủ công về repo gốc. Chỉ user chủ động (hoặc đồng ý gợi ý cuối flow) mới chạy.
+
+**Route consolidate**: intent "dọn kho lessons" / "consolidate" / "sắp xếp lại bài học" / "gộp bài học" / "rà soát lessons" → `okr-retro` mode `consolidate` (quét toàn KHO, không quét phiên). Flow C1-C6 ở `okr-retro/references/flow-consolidate.md`. Cũng kích hoạt khi user đồng ý lời nhắc ngưỡng cuối retro-thường (Bước 7). Vẫn record-only, confirm từng dòng.
